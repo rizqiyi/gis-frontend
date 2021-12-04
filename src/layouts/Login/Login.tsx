@@ -1,20 +1,18 @@
 import React from 'react'
-import Input from '@components/Input'
-import { MailOutline } from '@mui/icons-material'
+import { Grid, Box } from '@mui/material'
 
 const Login = (): JSX.Element => {
   return (
-    <div>
-      <Input
-        placeholder="Username"
-        id="reddit-input"
-        variant="filled"
-        InputProps={{
-          disableUnderline: true,
-          startAdornment: <MailOutline />,
-        }}
-      />
-    </div>
+    <Box sx={{ width: '100%' }}>
+      <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid style={{ background: '#EDF9FF', height: '100vh' }} item xs={5}>
+          b
+        </Grid>
+        <Grid item xs={7}>
+          a
+        </Grid>
+      </Grid>
+    </Box>
   )
 }
 
