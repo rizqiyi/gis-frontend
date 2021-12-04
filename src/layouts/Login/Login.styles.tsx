@@ -39,6 +39,9 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       padding: '40px 32px',
     },
+    [theme.breakpoints.only('xs')]: {
+      padding: '40px 20px',
+    },
   },
   paperContent: {
     width: '400px',
@@ -49,7 +52,7 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: 'auto',
       marginTop: '24px',
-      padding: '30px 32px',
+      padding: '30px 20px',
     },
   },
   greetingText: {
