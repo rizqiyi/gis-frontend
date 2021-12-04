@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles'
 const CustomInput = styled((props: TextFieldProps) => (
   <TextField
     InputProps={{
+      disableUnderline: true,
       ...props.InputProps,
     }}
     // eslint-disable-next-line react/jsx-props-no-spreading
@@ -15,22 +16,27 @@ const CustomInput = styled((props: TextFieldProps) => (
     '.MuiFilledInput-input': {
       padding: '14px',
     },
-    border: '1px solid #e2e2e1',
+    border: '1px solid #DDDFE5',
     overflow: 'hidden',
     borderRadius: 8,
-    backgroundColor: theme.palette.mode === 'light' ? '#fcfcfb' : '#2b2b2b',
+    backgroundColor: '#FAFAFA',
     transition: theme.transitions.create([
       'border-color',
       'background-color',
       'box-shadow',
+      'border',
+      'color',
     ]),
+    color: theme.palette.text.disabled,
     '&:hover': {
       backgroundColor: 'transparent',
     },
     '&.Mui-focused': {
       backgroundColor: 'transparent',
+      color: '#404040',
       //   boxShadow: `${alpha(the.palette.primary.main, 0.25)} 0 0 0 2px`,
-      borderColor: theme.palette.primary.main,
+      // borderColor: theme.palette.primary.main,
+      border: '2px solid #1FA9E7',
     },
   },
 }))
