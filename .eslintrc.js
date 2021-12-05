@@ -44,6 +44,7 @@ const config = {
         endOfLine: 'auto',
       },
     ],
+    'react/jsx-props-no-spreading': 'off',
     semi: 'off',
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/comma-dangle': [

@@ -47,7 +47,7 @@ const CardListDrainase = (): JSX.Element => {
               // eslint-disable-next-line react/no-array-index-key
               key={idx}
             >
-              <Box display="flex">
+              <Box display="flex" paddingLeft="14px">
                 <Box>
                   <img
                     src={active[idx] ? WaterActive : Water}
