@@ -8,13 +8,16 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import logo from '@images/logo.png'
 import { useNavigate } from 'react-router-dom'
-// eslint-disable-next-line import/no-cycle
-import { IPosition } from '../../Root'
 import CardInfoDrawer from '../CardInfoDrawer'
 import CardListDrainase from '../CardListDrainase'
 import useStyles from './ClippedDrawer.styles'
 
 const drawerWidth = 460
+
+interface IPosition {
+  lat: number
+  lng: number
+}
 
 interface IClippedDrawer {
   setPosition: React.Dispatch<React.SetStateAction<IPosition>>

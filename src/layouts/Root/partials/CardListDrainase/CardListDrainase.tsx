@@ -4,8 +4,11 @@ import Water from '@icons/maki_water.svg'
 import WaterActive from '@icons/maki_water_active.svg'
 import useStyles from './CardListDrainase.styles'
 import dataset from '../../constant'
-// eslint-disable-next-line import/no-cycle
-import { IPosition } from '../../Root'
+
+interface IPosition {
+  lat: number
+  lng: number
+}
 
 interface ICardListDrainase {
   setPosition: React.Dispatch<React.SetStateAction<IPosition>>

@@ -7,7 +7,6 @@ import Sample from '@images/sample.png'
 import Slider from 'react-slick'
 import sliderConfig from '@helpers/react-slick/config'
 import useStyles from './Root.styles'
-// eslint-disable-next-line import/no-cycle
 import ClippedDrawer from './partials/ClippedDrawer'
 import CustomMarker from './partials/CustomMarker'
 import CustomPopup from './partials/CustomPopup'
@@ -46,7 +45,7 @@ function a11yProps(index: number) {
   }
 }
 
-export interface IPosition {
+interface IPosition {
   lat: number
   lng: number
 }
