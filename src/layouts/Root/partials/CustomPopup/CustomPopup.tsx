@@ -21,6 +21,13 @@ const CustomPopup = styled(Popup)({
   ['.leaflet-popup']: {
     width: 'fit-content',
     height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // eslint-disable-next-line no-useless-computed-key
+  ['.leaflet-popup-tip-container']: {
+    display: 'none',
   },
 })
 

@@ -36,15 +36,6 @@ const CardInfoDrawer = (): JSX.Element => {
           <Box flex={1}>
             <Paper
               elevation={0}
-              // style={{
-              //   background: 'linear-gradient(180deg, #1B99D1 0%, #1290C8 100%)',
-              //   borderRadius: '8px',
-              //   height: '32px',
-              //   padding: '4px 12px',
-              //   display: 'flex',
-              //   justifyContent: 'space-between',
-              //   alignItems: 'center',
-              // }}
               sx={{
                 background: 'linear-gradient(180deg, #1B99D1 0%, #1290C8 100%)',
                 borderRadius: '8px',
@@ -74,15 +65,6 @@ const CardInfoDrawer = (): JSX.Element => {
           <Box flex={1}>
             <Paper
               elevation={0}
-              // style={{
-              //   background: 'linear-gradient(180deg, #1B99D1 0%, #1290C8 100%)',
-              //   borderRadius: '8px',
-              //   height: '32px',
-              //   padding: '4px 12px',
-              //   display: 'flex',
-              //   justifyContent: 'space-between',
-              //   alignItems: 'center',
-              // }}
               sx={{
                 background: 'linear-gradient(180deg, #1B99D1 0%, #1290C8 100%)',
                 borderRadius: '8px',

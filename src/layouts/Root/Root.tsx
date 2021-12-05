@@ -26,7 +26,7 @@ function TabPanel(props: TabPanelProps) {
   return (
     <div
       role="tabpanel"
-      // hidden={value !== index}
+      hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
@@ -59,6 +59,8 @@ const Root = (): JSX.Element => {
   })
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    event.preventDefault()
+
     setValue(newValue)
   }
 
@@ -70,6 +72,8 @@ const Root = (): JSX.Element => {
             <MapConsumer>
               {(map) => {
                 map.setView(position, map.getZoom())
+
+                map.zoomControl.setPosition('bottomright')
 
                 return null
               }}
@@ -87,10 +91,7 @@ const Root = (): JSX.Element => {
                     setPosition({ lat: data.latitude, lng: data.longitude }),
                 }}
               >
-                <CustomPopup
-                  eventHandlers={{ click: () => null }}
-                  closeButton={false}
-                >
+                <CustomPopup autoPan={false} closeButton={false}>
                   <Tabs
                     value={value}
                     onChange={handleChange}

@@ -26,11 +26,11 @@ const useStyles = makeStyles(() => ({
     color: '#FFFFFF',
   },
   textSum: {
-    fontSize: '16px',
+    fontSize: '12px',
     color: '#FFFFFF',
   },
   drainaseText: {
-    fontSize: '12px',
+    fontSize: '10px',
     color: '#FFFFFF',
   },
 }))

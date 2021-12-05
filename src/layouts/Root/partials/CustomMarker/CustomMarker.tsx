@@ -12,7 +12,7 @@ const factory = new (L as any).divIcon({
   className: '',
   iconAnchor: [12, 25],
   labelAnchor: [-6, 0],
-  popupAnchor: [10, -20],
+  popupAnchor: [230, 300],
   iconSize: [45, 45],
   html: realMarker,
 })

@@ -12,7 +12,7 @@ import CardInfoDrawer from '../CardInfoDrawer'
 import CardListDrainase from '../CardListDrainase'
 import useStyles from './ClippedDrawer.styles'
 
-const drawerWidth = 460
+const drawerWidth = 420
 
 interface IPosition {
   lat: number
