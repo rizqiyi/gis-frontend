@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import ReactDOM from 'react-dom'
 import App from './App'
 import theme from './theme'
@@ -7,9 +7,11 @@ import theme from './theme'
 ReactDOM.render(
   <React.StrictMode>
     <Suspense fallback="Loading">
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </StyledEngineProvider>
     </Suspense>
   </React.StrictMode>,
   document.getElementById('root'),
