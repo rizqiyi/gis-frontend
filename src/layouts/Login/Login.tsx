@@ -11,9 +11,9 @@ import {
 import { MailOutline } from '@mui/icons-material'
 import Input from '@components/Input'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import MapsIllustration from '@illust/Maps.svg'
 import VisiblePasswordIcon from './partials/VisibleIcon'
 import useStyles from './Login.styles'
-import MapsIllustration from '../../images/illustrations/Maps.svg'
 
 const Login = (): JSX.Element => {
   const classes = useStyles()
@@ -32,7 +32,7 @@ const Login = (): JSX.Element => {
             <Box width="auto">
               <Box maxWidth={464}>
                 <Typography
-                  className={classes.greetingText}
+                  // className={classes.greetingText}
                   fontWeight={600}
                   variant="h4"
                 >

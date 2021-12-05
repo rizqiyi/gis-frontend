@@ -55,10 +55,6 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
       padding: '30px 20px',
     },
   },
-  greetingText: {
-    fontSize: '40px',
-    color: theme.palette.text.primary,
-  },
   button: {
     height: '44px',
     borderRadius: '12px',
