@@ -6,6 +6,7 @@
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],
       "@layouts/*": ["src/layouts/*"],
+      "@helpers/*": ["src/helpers/*"],
       "@images/*": ["src/images/*"],
       "@illust/*": ["src/images/illustrations/*"],
       "@icons/*": ["src/images/icons/*"]

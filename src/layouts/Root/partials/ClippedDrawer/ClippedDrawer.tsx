@@ -12,10 +12,23 @@ import CardInfoDrawer from '../CardInfoDrawer'
 import CardListDrainase from '../CardListDrainase'
 import useStyles from './ClippedDrawer.styles'
 
-const drawerWidth = 460
+const drawerWidth = 420
+
+interface IPosition {
+  lat: number
+  lng: number
+}
+
+interface IClippedDrawer {
+  setPosition: React.Dispatch<React.SetStateAction<IPosition>>
+  children: React.ReactNode
+}
 
 // eslint-disable-next-line react/prop-types
-const ClippedDrawer: React.FC = ({ children }): JSX.Element => {
+const ClippedDrawer: React.FC<IClippedDrawer> = ({
+  children,
+  setPosition,
+}: IClippedDrawer): JSX.Element => {
   const classes = useStyles()
   const navigate = useNavigate()
 
@@ -85,7 +98,7 @@ const ClippedDrawer: React.FC = ({ children }): JSX.Element => {
         >
           <CardInfoDrawer />
         </Box>
-        <CardListDrainase />
+        <CardListDrainase setPosition={setPosition} />
       </Drawer>
       <Box component="main" sx={{ width: '100%' }}>
         <Toolbar sx={{ marginTop: '9px' }} />

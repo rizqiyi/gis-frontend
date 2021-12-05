@@ -3,16 +3,22 @@ import { Box, ListItemButton, Typography } from '@mui/material'
 import Water from '@icons/maki_water.svg'
 import WaterActive from '@icons/maki_water_active.svg'
 import useStyles from './CardListDrainase.styles'
+import dataset from '../../constant'
 
-const CardListDrainase = (): JSX.Element => {
+interface IPosition {
+  lat: number
+  lng: number
+}
+
+interface ICardListDrainase {
+  setPosition: React.Dispatch<React.SetStateAction<IPosition>>
+}
+
+const CardListDrainase: React.FC<ICardListDrainase> = ({
+  setPosition,
+}: ICardListDrainase): JSX.Element => {
   const classes = useStyles()
   const [active, setActive] = useState(Object)
-
-  const dummy = {
-    street: 'Jl. Raya Puk Sumberrejo',
-    desc: 'Lebar jalan 8 meter. 1 meter STA.',
-    district: 'Bojonegoro, Sumberrejo.',
-  }
 
   return (
     <Box>
@@ -33,8 +39,8 @@ const CardListDrainase = (): JSX.Element => {
         overflow="auto"
         className={classes.scrollStyle}
       >
-        {Array.from({ length: 10 }, () => dummy).map(
-          ({ street, desc, district }, idx) => (
+        {dataset.map(
+          ({ district, street_name, width, latitude, longitude }, idx) => (
             <ListItemButton
               component="a"
               href="#simple-list"
@@ -43,11 +49,15 @@ const CardListDrainase = (): JSX.Element => {
                 marginBottom: idx === 9 ? '24px' : 0,
               }}
               selected={active[idx]}
-              onClick={() => setActive({ [idx]: !active[idx] })}
+              onClick={() => {
+                setActive({ [idx]: !active[idx] })
+
+                setPosition({ lat: latitude, lng: longitude })
+              }}
               // eslint-disable-next-line react/no-array-index-key
               key={idx}
             >
-              <Box display="flex">
+              <Box display="flex" paddingLeft="14px">
                 <Box>
                   <img
                     src={active[idx] ? WaterActive : Water}
@@ -62,14 +72,14 @@ const CardListDrainase = (): JSX.Element => {
                     className={classes.roadDescription}
                     sx={{ marginLeft: '18px' }}
                   >
-                    {street}
+                    {street_name}
                   </Typography>
                   <Typography
                     fontWeight={600}
                     className={classes.roadDescription}
                     sx={{ marginTop: '6px', marginLeft: '18px' }}
                   >
-                    {desc}
+                    Lebar jalan {width} meter
                   </Typography>
                   <Typography
                     fontWeight={500}
