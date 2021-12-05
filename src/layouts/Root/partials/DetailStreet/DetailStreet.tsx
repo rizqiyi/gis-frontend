@@ -6,7 +6,20 @@ import WidthIcon from '@icons/width-ic.svg'
 import ConditionIcon from '@icons/condition-ic.svg'
 import PaperIcon from '@icons/paper-ic.svg'
 
-const DetailStreet = (): JSX.Element => {
+interface IDetailStreet {
+  data: {
+    typical: string
+    drainase_depth: number
+    drainase_width: number
+    drainase_condition: string
+  }
+  note: string
+}
+
+const DetailStreet: React.FC<IDetailStreet> = ({
+  data,
+  note,
+}: IDetailStreet): JSX.Element => {
   return (
     <Box>
       <Box
@@ -41,7 +54,7 @@ const DetailStreet = (): JSX.Element => {
               Tipikal
             </Typography>
             <Typography variant="caption" fontWeight={600}>
-              Trapesium
+              {data.typical}
             </Typography>
           </Box>
         </Paper>
@@ -68,7 +81,7 @@ const DetailStreet = (): JSX.Element => {
               Kedalaman
             </Typography>
             <Typography variant="caption" fontWeight={600}>
-              1.5 Meter
+              {data.drainase_depth} Meter
             </Typography>
           </Box>
         </Paper>
@@ -105,7 +118,7 @@ const DetailStreet = (): JSX.Element => {
               Lebar
             </Typography>
             <Typography variant="caption" fontWeight={600}>
-              -
+              {data.drainase_width || '-'}
             </Typography>
           </Box>
         </Paper>
@@ -132,7 +145,7 @@ const DetailStreet = (): JSX.Element => {
               Kondisi
             </Typography>
             <Typography variant="caption" fontWeight={600}>
-              Baik
+              {data.drainase_condition}
             </Typography>
           </Box>
         </Paper>
@@ -140,7 +153,7 @@ const DetailStreet = (): JSX.Element => {
       <Box marginTop="24px" display="flex" padding="0 24px 24px 24px">
         <img src={PaperIcon} alt="paper" />
         <Typography sx={{ marginLeft: '15px' }} variant="caption">
-          Drainase ada yg tertutup dan terbuka
+          {note || '-'}
         </Typography>
       </Box>
     </Box>

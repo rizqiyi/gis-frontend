@@ -1,7 +1,35 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
 
-const StreetInfo = (): JSX.Element => {
+interface IStreetInfo {
+  data: {
+    latitude: number
+    longitude: number
+    district: string
+    sub_district: string
+    street_name: string
+    width: number
+    sta: string
+    left_drainase?: {
+      typical: string
+      drainase_depth: number
+      drainase_width: number
+      drainase_condition: string
+    }
+    right_drainase?: {
+      typical: string
+      drainase_depth: number
+      drainase_width: number
+      drainase_condition: string
+    }
+    note: string
+    description: string
+  }
+}
+
+const StreetInfo: React.FC<IStreetInfo> = ({
+  data,
+}: IStreetInfo): JSX.Element => {
   return (
     <Box sx={{ position: 'relative' }}>
       <Box
@@ -23,10 +51,10 @@ const StreetInfo = (): JSX.Element => {
         >
           <Box display="flex" flexDirection="column">
             <Typography variant="subtitle1" fontWeight={500}>
-              Jl. Raya Puk Sumberrejo
+              {data.street_name}
             </Typography>
             <Typography variant="caption" fontWeight={300}>
-              Bojonegoro, Sumberrejo.
+              {data.district}, {data.sub_district}.
             </Typography>
           </Box>
           <Box
@@ -35,10 +63,11 @@ const StreetInfo = (): JSX.Element => {
             sx={{ textAlign: 'right', fontSize: '10px' }}
           >
             <Typography variant="caption" fontWeight={400}>
-              Lebar Jalan <span style={{ fontWeight: 600 }}>8 Meter</span>
+              Lebar Jalan{' '}
+              <span style={{ fontWeight: 600 }}>{data.width} Meter</span>
             </Typography>
             <Typography variant="caption" fontWeight={300}>
-              1 Meter <span style={{ fontWeight: 400 }}>STA.</span>
+              {data.sta} Meter <span style={{ fontWeight: 400 }}> STA.</span>
             </Typography>
           </Box>
         </Box>
