@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import SuspenseComponent from '@components/Suspense'
 import ReactDOM from 'react-dom'
 import App from './App'
 import theme from './theme'
@@ -8,13 +9,13 @@ import 'slick-carousel/slick/slick-theme.css'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Suspense fallback="Loading">
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <Suspense fallback={<SuspenseComponent />}>
           <App />
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </Suspense>
+        </Suspense>
+      </ThemeProvider>
+    </StyledEngineProvider>
   </React.StrictMode>,
   document.getElementById('root'),
   undefined

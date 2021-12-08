@@ -1,14 +1,24 @@
 import { lazy } from 'react'
 
+const TIMEOUT = 700
+
 export default [
   {
     path: '/',
-    component: lazy(() => import('@pages/Root')),
+    component: lazy(async () => {
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT))
+
+      return import('@pages/Root')
+    }),
     exact: true,
   },
   {
     path: '/login',
-    component: lazy(() => import('@pages/Login')),
+    component: lazy(async () => {
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT))
+
+      return import('@pages/Login')
+    }),
     exact: true,
   },
 ]
