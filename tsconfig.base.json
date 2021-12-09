@@ -9,7 +9,8 @@
       "@helpers/*": ["src/helpers/*"],
       "@images/*": ["src/images/*"],
       "@illust/*": ["src/images/illustrations/*"],
-      "@icons/*": ["src/images/icons/*"]
+      "@icons/*": ["src/images/icons/*"],
+      "@constant/*": ["src/constant/*"]
     }
   }
 }

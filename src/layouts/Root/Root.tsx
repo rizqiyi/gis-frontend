@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material'
 import { MapContainer, TileLayer, Marker, MapConsumer } from 'react-leaflet'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
+import dataset from '@constant/dataset'
 import Sample from '@images/sample.png'
 import Slider from 'react-slick'
 import sliderConfig from '@helpers/react-slick/config'
@@ -12,7 +13,6 @@ import CustomMarker from './partials/CustomMarker'
 import CustomPopup from './partials/CustomPopup'
 import StreetInfo from './partials/StreetInfo'
 import DetailStreet from './partials/DetailStreet'
-import dataset from './constant'
 
 interface TabPanelProps {
   children: React.ReactNode
