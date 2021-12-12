@@ -9,6 +9,7 @@ import {
   FormControlLabel,
 } from '@mui/material'
 import { MailOutline } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 import Input from '@components/Input'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import MapsIllustration from '@illust/Maps.svg'
@@ -17,6 +18,7 @@ import useStyles from './Login.styles'
 
 const Login = (): JSX.Element => {
   const classes = useStyles()
+  const navigate = useNavigate()
   const [visiblePassword, setVisiblePassword] = useState(false)
 
   return (
@@ -103,6 +105,7 @@ const Login = (): JSX.Element => {
                   variant="contained"
                   color="primary"
                   style={{ textTransform: 'inherit' }}
+                  onClick={() => navigate('/dashboard')}
                 >
                   <Typography variant="button">Login</Typography>
                 </Button>

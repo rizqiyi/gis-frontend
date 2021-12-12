@@ -22,6 +22,8 @@ const dataset = [
     note:
       'Drainase sebelah kiri berupa bronjong dan sebelah kanan tidak ada drainase',
     description: 'Antara sta 1 dan sta 2 ada drainase yang terputus oleh jalan',
+    is_published: true,
+    created_at: new Date(),
   },
   {
     latitude: -7.17803,
@@ -46,6 +48,8 @@ const dataset = [
     note:
       'Drainase sebelah kiri berupa bronjong dan sebelah kanan tidak ada drainase',
     description: 'Antara sta 1 dan sta 2 ada drainase yang terputus oleh jalan',
+    is_published: true,
+    created_at: new Date(),
   },
   {
     latitude: -7.1789,
@@ -70,6 +74,8 @@ const dataset = [
     note:
       'Drainase sebelah kiri berupa bronjong dan sebelah kanan tidak ada drainase',
     description: 'Antara sta 1 dan sta 2 ada drainase yang terputus oleh jalan',
+    is_published: true,
+    created_at: new Date(),
   },
 ]
 

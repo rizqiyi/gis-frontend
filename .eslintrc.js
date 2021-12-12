@@ -37,6 +37,7 @@ const config = {
   rules: {
     'no-console': NODE_ENV === 'development' ? 'off' : 'error',
     'import/newline-after-import': 'error',
+    'react/require-default-props': 'off',
     quotes: ['error', 'single'],
     'prettier/prettier': [
       'error',

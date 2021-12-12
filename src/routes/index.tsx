@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as AppRouter, Route, Routes } from 'react-router-dom'
-import routes from './constant'
+import routes from '@constant/routes'
+import PrivateDrawer from '@components/PrivateDrawer'
 
 const Index = (): JSX.Element => {
   return (
@@ -10,7 +11,15 @@ const Index = (): JSX.Element => {
           <Route
             key={route.path}
             path={route.path}
-            element={<route.component />}
+            element={
+              route.private ? (
+                <PrivateDrawer>
+                  <route.component />
+                </PrivateDrawer>
+              ) : (
+                <route.component />
+              )
+            }
           />
         ))}
       </Routes>
