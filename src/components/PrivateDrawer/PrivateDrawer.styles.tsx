@@ -20,6 +20,14 @@ const useStyles = makeStyles(() => ({
     top: '201px',
     margin: '0 32px',
   },
+  logoutContainer: {
+    position: 'relative',
+    zIndex: 3,
+    top: '80%',
+  },
+  rootMenu: {
+    right: '40px',
+  },
   borderedImage: {
     boxShadow: '0px 12px 32px rgba(112, 144, 176, 0.08)',
     width: '44px',

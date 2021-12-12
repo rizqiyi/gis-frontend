@@ -53,4 +53,14 @@ export default [
     }),
     exact: true,
   },
+  {
+    path: '/settings',
+    private: true,
+    component: lazy(async () => {
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT))
+
+      return import('@pages/Settings')
+    }),
+    exact: true,
+  },
 ]

@@ -7,18 +7,18 @@ const TitlePage = (): JSX.Element => {
 
   const pathname = location.pathname.split('/')[1]
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const title: any = {
+  const title: { [key: string]: string } = {
     dashboard: 'Dashboard',
     drainase: 'Drainase Management',
     'user-management': 'User Management',
+    settings: 'Pengaturan Profile Pengguna',
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const subtitle: any = {
+  const subtitle: { [key: string]: string } = {
     dashboard: 'Overview',
     drainase: 'Drainase Management',
     'user-management': 'User Management',
+    settings: 'Atur Profile Pengguna',
   }
 
   return (
