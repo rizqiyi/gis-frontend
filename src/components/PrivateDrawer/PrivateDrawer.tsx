@@ -35,6 +35,7 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
             background: 'linear-gradient(180deg, #62C1FA 0%, #1FA9E7 100%)',
             width: drawerWidth,
             boxSizing: 'border-box',
+            borderRight: 'none',
           },
         }}
         variant="permanent"
@@ -112,9 +113,18 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
           </Box>
         </Box>
       </Drawer>
-      <Box component="main" sx={{ width: '100%', margin: '56px 72px' }}>
-        <TitlePage />
-        {children}
+      <Box
+        component="main"
+        sx={{
+          backgroundColor: '#F4FBFF',
+          width: '100%',
+          minHeight: '100vh',
+        }}
+      >
+        <Box component="main" sx={{ margin: '56px 72px' }}>
+          <TitlePage />
+          {children}
+        </Box>
       </Box>
     </Box>
   )
