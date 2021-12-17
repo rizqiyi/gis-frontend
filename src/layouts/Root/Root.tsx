@@ -4,9 +4,11 @@ import { MapContainer, TileLayer, Marker, MapConsumer } from 'react-leaflet'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import dataset from '@constant/dataset'
-import Sample from '@images/sample.png'
+// import Sample from '@images/sample.png'
+import useDrainase from '@services/hooks/dashboard'
 import Slider from 'react-slick'
 import sliderConfig from '@helpers/react-slick/config'
+import { IDrainaseImages } from '@interfaces/drainase'
 import useStyles from './Root.styles'
 import ClippedDrawer from './partials/ClippedDrawer'
 import CustomMarker from './partials/CustomMarker'
@@ -53,6 +55,7 @@ interface IPosition {
 const Root = (): JSX.Element => {
   const classes = useStyles()
   const [value, setValue] = useState(0)
+  const { drainase } = useDrainase()
   const [position, setPosition] = useState<IPosition>({
     lat: dataset[0].latitude,
     lng: dataset[0].longitude,
@@ -81,7 +84,7 @@ const Root = (): JSX.Element => {
             <TileLayer
               url={`https://api.mapbox.com/styles/v1/rizqiyi/ckwsae4xm850314o2904zuayz/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAP_BOX_ACCESS_TOKEN}`}
             />
-            {dataset.map((data) => (
+            {drainase?.data?.map((data) => (
               <Marker
                 position={[data.latitude, data.longitude]}
                 icon={CustomMarker}
@@ -131,31 +134,53 @@ const Root = (): JSX.Element => {
                   </Tabs>
                   <TabPanel value={value} index={0}>
                     <Slider className={classes.slider} {...sliderConfig}>
-                      {Array(5)
-                        .fill('')
-                        .map((_, idx) => (
-                          // eslint-disable-next-line react/no-array-index-key
-                          <Box key={idx}>
-                            <img src={Sample} alt="sample" />
+                      {data.images.map(
+                        ({ image_path, image_name }: IDrainaseImages) => (
+                          <Box key={image_name}>
+                            <img
+                              height="250px"
+                              src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
+                              alt={image_name}
+                            />
                           </Box>
-                        ))}
+                        )
+                      )}
                     </Slider>
                     <StreetInfo data={data} />
-                    <DetailStreet data={data.left_drainase} note={data.note} />
+                    <DetailStreet
+                      data={{
+                        typical: data.left_typical,
+                        drainase_depth: data.left_drainase_depth,
+                        drainase_width: data.left_drainase_width,
+                        drainase_condition: data.left_drainase_condition,
+                      }}
+                      note={data.note}
+                    />
                   </TabPanel>
                   <TabPanel value={value} index={1}>
                     <Slider className={classes.slider} {...sliderConfig}>
-                      {Array(5)
-                        .fill('')
-                        .map((_, idx) => (
-                          // eslint-disable-next-line react/no-array-index-key
-                          <Box key={idx}>
-                            <img src={Sample} alt="sample" />
+                      {data.images.map(
+                        ({ image_path, image_name }: IDrainaseImages) => (
+                          <Box key={image_name}>
+                            <img
+                              height="250px"
+                              src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
+                              alt={image_name}
+                            />
                           </Box>
-                        ))}
+                        )
+                      )}
                     </Slider>
                     <StreetInfo data={data} />
-                    <DetailStreet data={data.right_drainase} note={data.note} />
+                    <DetailStreet
+                      data={{
+                        typical: data.right_typical,
+                        drainase_depth: data.right_drainase_depth,
+                        drainase_width: data.right_drainase_width,
+                        drainase_condition: data.right_drainase_condition,
+                      }}
+                      note={data.note}
+                    />
                   </TabPanel>
                 </CustomPopup>
               </Marker>

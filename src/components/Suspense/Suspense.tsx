@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Box, Grow, LinearProgress, Typography } from '@mui/material'
 import LogoBordered from '@images/logo.png'
 import BojonegoroMap from '@illust/bojonegoro-map.svg'
@@ -45,4 +45,4 @@ const Suspense = (): JSX.Element => {
   )
 }
 
-export default Suspense
+export default memo(Suspense)

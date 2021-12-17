@@ -9,8 +9,8 @@ import PaperIcon from '@icons/paper-ic.svg'
 interface IDetailStreet {
   data: {
     typical: string
-    drainase_depth: number
-    drainase_width: number
+    drainase_depth: string
+    drainase_width: string
     drainase_condition: string
   }
   note: string

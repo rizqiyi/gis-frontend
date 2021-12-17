@@ -10,7 +10,9 @@
       "@images/*": ["src/images/*"],
       "@illust/*": ["src/images/illustrations/*"],
       "@icons/*": ["src/images/icons/*"],
-      "@constant/*": ["src/constant/*"]
+      "@constant/*": ["src/constant/*"],
+      "@services/*": ["src/services/*"],
+      "@interfaces/*": ["src/interfaces/*"]
     }
   }
 }

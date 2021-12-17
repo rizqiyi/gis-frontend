@@ -1,6 +1,6 @@
 const config = {
   dots: true,
-  variableWidth: true,
+  // variableWidth: true,
   slidesToScroll: 1,
   initialSlide: 0,
   arrows: false,
@@ -8,7 +8,9 @@ const config = {
   slidesToShow: 1,
   adaptiveHeight: true,
   draggable: true,
-  easing: 'linear',
+  // infinite: true,
+  // useTransform: false,
+  // easing: 'linear',
   // responsive: [
   //   {
   //     breakpoint: 768,
