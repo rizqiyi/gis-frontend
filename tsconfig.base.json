@@ -12,7 +12,8 @@
       "@icons/*": ["src/images/icons/*"],
       "@constant/*": ["src/constant/*"],
       "@services/*": ["src/services/*"],
-      "@interfaces/*": ["src/interfaces/*"]
+      "@interfaces/*": ["src/interfaces/*"],
+      "@validations/*": ["src/validations/*"]
     }
   }
 }

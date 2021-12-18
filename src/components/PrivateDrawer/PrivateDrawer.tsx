@@ -236,7 +236,15 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
             Atur Profile Pengguna
           </Typography>
         </MenuItem>
-        <MenuItem onClick={() => navigate('/')}>
+        <MenuItem
+          onClick={() => {
+            localStorage.removeItem('tokenAccess')
+
+            localStorage.removeItem('userAccess')
+
+            navigate('/')
+          }}
+        >
           <img src={LogoutIcon} alt="logout" />
           <Typography color="error" sx={{ ml: '12px' }}>
             Logout

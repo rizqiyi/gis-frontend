@@ -1,22 +1,33 @@
 import React from 'react'
+import { useField } from 'formik'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { styled } from '@mui/material/styles'
+import { Box, Typography, Theme } from '@mui/material'
+import DangerIcon from '@icons/danger-ic.svg'
 
-const CustomInput = styled((props: TextFieldProps) => (
-  <TextField
-    InputProps={{
-      disableUnderline: true,
-      ...props.InputProps,
-    }}
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    {...props}
-  />
-))(({ theme }) => ({
+interface ICustomInput {
+  isFieldError: boolean | undefined
+}
+
+const CustomInput = styled(
+  ({ isFieldError, ...rest }: ICustomInput & TextFieldProps) => (
+    <TextField
+      InputProps={{
+        disableUnderline: true,
+        ...rest.InputProps,
+      }}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...rest}
+    />
+  )
+)(({ theme, isFieldError }) => ({
   '& .MuiFilledInput-root': {
     '.MuiFilledInput-input': {
       padding: '14px',
     },
-    border: '1px solid #DDDFE5',
+    border: isFieldError
+      ? `2.2px solid ${theme.palette.error.main}`
+      : '1px solid #DDDFE5',
     overflow: 'hidden',
     borderRadius: 8,
     backgroundColor: '#FAFAFA',
@@ -52,12 +63,43 @@ const CustomInput = styled((props: TextFieldProps) => (
   />
 */
 
-const Input = (props: TextFieldProps): JSX.Element => {
+const Input = ({
+  name,
+  required,
+  id,
+  ...rest
+}: TextFieldProps): JSX.Element => {
+  const [field, meta] = useField({ name: name as string })
+  const isFieldError =
+    required &&
+    Boolean(meta.touched) &&
+    Boolean(field.name) &&
+    Boolean(meta.error)
+
   return (
-    <CustomInput
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...props}
-    />
+    <>
+      <CustomInput
+        name={name}
+        id={id}
+        isFieldError={isFieldError}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...rest}
+      />
+      {isFieldError && (
+        <Box
+          sx={{
+            mt: '12px',
+            display: 'flex',
+            color: (theme: Theme) => theme.palette.error.main,
+          }}
+        >
+          <img src={DangerIcon} alt="danger" />
+          <Typography sx={{ ml: '15px' }} variant="caption" fontWeight={600}>
+            {meta.error}
+          </Typography>
+        </Box>
+      )}
+    </>
   )
 }
 
