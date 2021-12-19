@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Box, Button, Grid, Paper, Typography } from '@mui/material'
 import { FastField, Form, Formik } from 'formik'
 import Input from '@components/Input'
-import Select from '@components/Select'
 import {
   drainaseForm,
   leftDrainase,
@@ -17,6 +16,7 @@ import Dropzone from '@components/Dropzone'
 import { IDrainaseForm } from '@interfaces/drainase'
 import { getAccessToken, getCurrentUser } from '@helpers/jwt-decode'
 import api from '@services/common'
+import Field from './partials/Field'
 import Headers from './partials/headers'
 import useStyles from './CreateDrainase.styles'
 
@@ -26,6 +26,8 @@ const CreateDrainase = (): JSX.Element => {
     left_drainase: [],
     right_drainase: [],
   })
+
+  console.log(images)
 
   return (
     <Box>
@@ -153,33 +155,11 @@ const CreateDrainase = (): JSX.Element => {
                       />
                     </Box>
                   </Grid>
-                  {drainaseForm.map((drainase) => (
-                    <Grid key={drainase.name} item xs={6}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          width: '100%',
-                        }}
-                      >
-                        <Box sx={{ width: '25%' }}>
-                          <Typography fontWeight={600} variant="subtitle2">
-                            {drainase.label}
-                          </Typography>
-                        </Box>
-                        <FastField
-                          disabled={isSubmitting}
-                          component={Input}
-                          placeholder={drainase.placeholder}
-                          name={drainase.name}
-                          id={drainase.name}
-                          onChange={handleChange}
-                          variant="filled"
-                          sx={{ width: '75%' }}
-                        />
-                      </Box>
-                    </Grid>
-                  ))}
+                  <Field
+                    data={drainaseForm}
+                    handleChange={handleChange}
+                    isSubmitting={isSubmitting}
+                  />
                 </Grid>
               </Box>
               <Headers
@@ -195,65 +175,19 @@ const CreateDrainase = (): JSX.Element => {
                 }}
               >
                 <Grid container spacing={4}>
-                  {leftDrainase.map((drainase) =>
-                    drainase.type === 'select' ? (
-                      <Grid key={drainase.name} item xs={6}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            width: '100%',
-                          }}
-                        >
-                          <Box sx={{ width: '25%' }}>
-                            <Typography fontWeight={600} variant="subtitle2">
-                              {drainase.label}
-                            </Typography>
-                          </Box>
-                          <Select
-                            disabled={isSubmitting}
-                            value={
-                              drainase.name === 'left_typical'
-                                ? values.left_typical
-                                : values.left_drainase_condition
-                            }
-                            id={drainase.name}
-                            onChange={handleChange}
-                            options={drainase.options}
-                            sx={{ width: '75%' }}
-                          />
-                        </Box>
-                      </Grid>
-                    ) : (
-                      <Grid key={drainase.name} item xs={6}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            width: '100%',
-                          }}
-                        >
-                          <Box sx={{ width: '25%' }}>
-                            <Typography fontWeight={600} variant="subtitle2">
-                              {drainase.label}
-                            </Typography>
-                          </Box>
-                          <FastField
-                            component={Input}
-                            disabled={isSubmitting}
-                            placeholder={drainase.placeholder}
-                            name={drainase.name}
-                            id={drainase.name}
-                            onChange={handleChange}
-                            variant="filled"
-                            sx={{ width: '75%' }}
-                          />
-                        </Box>
-                      </Grid>
-                    )
-                  )}
+                  <Field
+                    data={leftDrainase}
+                    handleChange={handleChange}
+                    isSubmitting={isSubmitting}
+                    values={values}
+                  />
                 </Grid>
-                <Dropzone name="left_drainase" setImages={setImages} />
+                <Dropzone
+                  isSubmitting={isSubmitting}
+                  name="left_drainase"
+                  setImages={setImages}
+                  images={images?.left_drainase}
+                />
               </Box>
               <Headers
                 topSpace
@@ -268,66 +202,19 @@ const CreateDrainase = (): JSX.Element => {
                 }}
               >
                 <Grid container spacing={4}>
-                  {rightDrainase.map((drainase) =>
-                    drainase.type === 'select' ? (
-                      <Grid key={drainase.name} item xs={6}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            width: '100%',
-                          }}
-                        >
-                          <Box sx={{ width: '25%' }}>
-                            <Typography fontWeight={600} variant="subtitle2">
-                              {drainase.label}
-                            </Typography>
-                          </Box>
-                          <Select
-                            disabled={isSubmitting}
-                            placeholder={drainase.placeholder}
-                            value={
-                              drainase.name === 'right_typical'
-                                ? values.right_typical
-                                : values.right_drainase_condition
-                            }
-                            id={drainase.name}
-                            onChange={handleChange}
-                            options={drainase.options}
-                            sx={{ width: '75%' }}
-                          />
-                        </Box>
-                      </Grid>
-                    ) : (
-                      <Grid key={drainase.name} item xs={6}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            width: '100%',
-                          }}
-                        >
-                          <Box sx={{ width: '25%' }}>
-                            <Typography fontWeight={600} variant="subtitle2">
-                              {drainase.label}
-                            </Typography>
-                          </Box>
-                          <FastField
-                            component={Input}
-                            disabled={isSubmitting}
-                            placeholder={drainase.placeholder}
-                            name={drainase.name}
-                            onChange={handleChange}
-                            id={drainase.name}
-                            variant="filled"
-                            sx={{ width: '75%' }}
-                          />
-                        </Box>
-                      </Grid>
-                    )
-                  )}
+                  <Field
+                    data={rightDrainase}
+                    handleChange={handleChange}
+                    isSubmitting={isSubmitting}
+                    values={values}
+                  />
                 </Grid>
-                <Dropzone name="right_drainase" setImages={setImages} />
+                <Dropzone
+                  isSubmitting={isSubmitting}
+                  name="right_drainase"
+                  setImages={setImages}
+                  images={images?.right_drainase}
+                />
               </Box>
               <Headers topSpace borderTop icon={DrainaseIc} title="Lainnya" />
               <Box
