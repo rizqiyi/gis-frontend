@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Grid,
   Box,
@@ -17,6 +17,7 @@ import validationLogin from '@validations/auth'
 import MapsIllustration from '@illust/Maps.svg'
 import api from '@services/common'
 import { ILogin } from '@interfaces/user'
+import { AES, enc } from 'crypto-js'
 import VisiblePasswordIcon from './partials/VisibleIcon'
 import useStyles from './Login.styles'
 
@@ -24,6 +25,20 @@ const Login = (): JSX.Element => {
   const classes = useStyles()
   const navigate = useNavigate()
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false)
+  const [authData, setAuthData] = useState<ILogin | null>(null)
+
+  useEffect(() => {
+    if (localStorage.getItem('gis-auth'))
+      setAuthData(
+        JSON.parse(
+          AES.decrypt(
+            localStorage.getItem('gis-auth') as string,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            process.env.REACT_APP_SECRET_CRYPTO!
+          ).toString(enc.Utf8)
+        )
+      )
+  }, [])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = async (values: ILogin, { setSubmitting }: any) => {
@@ -36,7 +51,7 @@ const Login = (): JSX.Element => {
         headers: {
           'Content-Type': 'application/json',
         },
-        data: values,
+        data: { username: values.username, password: values.password },
       })
 
       localStorage.setItem('tokenAccess', response.token)
@@ -45,6 +60,16 @@ const Login = (): JSX.Element => {
       navigate('/dashboard')
 
       setSubmitting(false)
+
+      if (values.rememberMe)
+        localStorage.setItem(
+          'gis-auth',
+          AES.encrypt(
+            JSON.stringify(values),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            process.env.REACT_APP_SECRET_CRYPTO!
+          ).toString()
+        )
     } catch (err) {
       setSubmitting(false)
     }
@@ -73,14 +98,16 @@ const Login = (): JSX.Element => {
                 </Typography>
               </Box>
               <Formik
+                enableReinitialize
                 initialValues={{
-                  username: '',
-                  password: '',
+                  username: authData?.username || '',
+                  password: authData?.password || '',
+                  rememberMe: authData?.rememberMe || false,
                 }}
                 validationSchema={validationLogin}
                 onSubmit={handleSubmit}
               >
-                {({ handleChange, isSubmitting }) => (
+                {({ handleChange, isSubmitting, values }) => (
                   <Form>
                     <Paper className={classes.paperContent} elevation={0}>
                       <Box>
@@ -94,6 +121,7 @@ const Login = (): JSX.Element => {
                               />
                             ),
                           }}
+                          value={values.username || ''}
                           name="username"
                           id="username"
                           onChange={handleChange}
@@ -106,6 +134,7 @@ const Login = (): JSX.Element => {
                         <Input
                           type={visiblePassword ? 'text' : 'password'}
                           placeholder="Password"
+                          value={values.password || ''}
                           InputProps={{
                             disableUnderline: true,
                             startAdornment: (
@@ -130,7 +159,14 @@ const Login = (): JSX.Element => {
                       </Box>
                       <Box marginTop="20px">
                         <FormControlLabel
-                          control={<Checkbox size="small" defaultChecked />}
+                          control={
+                            <Checkbox
+                              size="small"
+                              checked={values.rememberMe}
+                              name="rememberMe"
+                              onChange={handleChange}
+                            />
+                          }
                           label={
                             <Box
                               className={`${classes.disabledText} ${classes.textCenter}`}

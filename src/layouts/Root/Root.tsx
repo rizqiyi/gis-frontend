@@ -84,11 +84,12 @@ const Root = (): JSX.Element => {
             <TileLayer
               url={`https://api.mapbox.com/styles/v1/rizqiyi/ckwsae4xm850314o2904zuayz/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAP_BOX_ACCESS_TOKEN}`}
             />
-            {drainase?.data?.map((data) => (
+            {drainase?.data?.map((data, idx) => (
               <Marker
                 position={[data.latitude, data.longitude]}
                 icon={CustomMarker}
-                key={data.district}
+                // eslint-disable-next-line react/no-array-index-key
+                key={`${data.district}_${idx}`}
                 eventHandlers={{
                   click: () =>
                     setPosition({ lat: data.latitude, lng: data.longitude }),

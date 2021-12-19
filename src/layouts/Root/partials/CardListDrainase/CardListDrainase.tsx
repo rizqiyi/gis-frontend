@@ -64,7 +64,8 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
 
                 setPosition({ lat: latitude, lng: longitude })
               }}
-              key={longitude}
+              // eslint-disable-next-line react/no-array-index-key
+              key={`${longitude}_${idx}`}
             >
               <Box display="flex" paddingLeft="14px">
                 <Box>
