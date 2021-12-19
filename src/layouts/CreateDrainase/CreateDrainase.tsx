@@ -27,8 +27,6 @@ const CreateDrainase = (): JSX.Element => {
     right_drainase: [],
   })
 
-  console.log(images)
-
   return (
     <Box>
       <Formik
@@ -113,6 +111,7 @@ const CreateDrainase = (): JSX.Element => {
 
             setSubmitting(false)
           } catch (err) {
+            // eslint-disable-next-line no-console
             console.error(err)
 
             setSubmitting(false)

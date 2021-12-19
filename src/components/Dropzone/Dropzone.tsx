@@ -134,6 +134,8 @@ const Dropzone: React.FC<IDropzone> = ({
                 minHeight: '44px',
                 borderRadius: '12px',
                 mt: '24px',
+                padding: '14px 24px',
+                boxShadow: '0px 8px 20px rgba(31, 169, 231, 0.12)',
               }}
               onClick={open}
             >

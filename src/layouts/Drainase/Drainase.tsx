@@ -22,6 +22,7 @@ const Drainase = (): JSX.Element => {
         <Box sx={{ width: '455px' }}>
           <Formik
             initialValues={{ search: '' }}
+            // eslint-disable-next-line no-console
             onSubmit={(e) => console.log(e)}
           >
             {() => (
