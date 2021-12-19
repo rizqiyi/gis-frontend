@@ -45,3 +45,25 @@ export interface IDrainase {
   offset: number
   limit: number
 }
+
+export interface IDrainaseForm {
+  street_name: string
+  district: string
+  sub_district: string
+  street_width: string
+  sta: string
+  latitude: string
+  longitude: string
+  left_typical: string
+  left_drainase_depth: string
+  left_drainase_width: string
+  left_drainase_condition: string
+  right_typical: string
+  right_drainase_depth: string
+  right_drainase_width: string
+  right_drainase_condition: string
+  note: string
+  user_id: number
+  description: string
+  is_published: boolean
+}

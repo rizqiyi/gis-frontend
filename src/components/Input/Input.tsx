@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { useField } from 'formik'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { styled } from '@mui/material/styles'
@@ -47,7 +47,9 @@ const CustomInput = styled(
       color: '#404040',
       //   boxShadow: `${alpha(the.palette.primary.main, 0.25)} 0 0 0 2px`,
       // borderColor: theme.palette.primary.main,
-      border: '2px solid #1FA9E7',
+      border: isFieldError
+        ? `2.2px solid ${theme.palette.error.main}`
+        : `2px solid ${theme.palette.primary.main}`,
     },
   },
 }))
@@ -69,7 +71,7 @@ const Input = ({
   id,
   ...rest
 }: TextFieldProps): JSX.Element => {
-  const [field, meta] = useField({ name: name as string })
+  const [field, meta] = useField({ name: id as string })
   const isFieldError =
     required &&
     Boolean(meta.touched) &&
@@ -79,7 +81,7 @@ const Input = ({
   return (
     <>
       <CustomInput
-        name={name}
+        name={id}
         id={id}
         isFieldError={isFieldError}
         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -103,4 +105,4 @@ const Input = ({
   )
 }
 
-export default Input
+export default memo(Input)

@@ -6,6 +6,7 @@ let cancel: Canceler
 
 const api = async (
   payload: AxiosRequestConfig,
+  isAuth?: boolean,
   withCancel?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> => {

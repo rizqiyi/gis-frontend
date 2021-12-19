@@ -18,6 +18,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import UserIcon from '@icons/user-ic.svg'
 import ProfileSettingIcon from '@icons/settings-profile-ic.svg'
 import LogoutIcon from '@icons/logout-ic.svg'
+import truncate from '@helpers/truncate'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useStyles from './PrivateDrawer.styles'
 import TitlePage from '../TitlePage'
@@ -48,14 +49,6 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
 
   const matchPathname = (pathname: string): boolean =>
     location.pathname.split('/')[1] === pathname
-
-  const truncate = (words: string): string => {
-    if (words.length > 10) {
-      return `${words.substring(0, 14)}...`
-    }
-
-    return words
-  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -178,7 +171,7 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
                     </Typography>
                     <Tooltip title="cold.gesture@gmail.com">
                       <Typography variant="caption">
-                        {truncate('cold.gesture@gmail.com')}
+                        {truncate('cold.gesture@gmail.com', 14, 10)}
                       </Typography>
                     </Tooltip>
                   </Box>
