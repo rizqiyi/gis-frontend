@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   logoutContainer: {
     position: 'relative',
     zIndex: 3,
-    top: '80%',
+    top: '76%',
   },
   rootMenu: {
     right: '40px',

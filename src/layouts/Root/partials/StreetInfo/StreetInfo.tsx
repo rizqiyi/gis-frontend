@@ -1,34 +1,13 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
+import { IDrainaseData } from '@interfaces/drainase'
 
 interface IStreetInfo {
-  data: {
-    latitude: number
-    longitude: number
-    district: string
-    sub_district: string
-    street_name: string
-    width: number
-    sta: string
-    left_drainase?: {
-      typical: string
-      drainase_depth: number
-      drainase_width: number
-      drainase_condition: string
-    }
-    right_drainase?: {
-      typical: string
-      drainase_depth: number
-      drainase_width: number
-      drainase_condition: string
-    }
-    note: string
-    description: string
-  }
+  data: IDrainaseData
 }
 
 const StreetInfo: React.FC<IStreetInfo> = ({
-  data,
+  data: { street_name, district, sub_district, street_width: width, sta },
 }: IStreetInfo): JSX.Element => {
   return (
     <Box sx={{ position: 'relative' }}>
@@ -51,10 +30,10 @@ const StreetInfo: React.FC<IStreetInfo> = ({
         >
           <Box display="flex" flexDirection="column">
             <Typography variant="subtitle1" fontWeight={500}>
-              {data.street_name}
+              {street_name}
             </Typography>
             <Typography variant="caption" fontWeight={300}>
-              {data.district}, {data.sub_district}.
+              {district}, {sub_district}.
             </Typography>
           </Box>
           <Box
@@ -63,11 +42,10 @@ const StreetInfo: React.FC<IStreetInfo> = ({
             sx={{ textAlign: 'right', fontSize: '10px' }}
           >
             <Typography variant="caption" fontWeight={400}>
-              Lebar Jalan{' '}
-              <span style={{ fontWeight: 600 }}>{data.width} Meter</span>
+              Lebar Jalan <span style={{ fontWeight: 600 }}>{width} Meter</span>
             </Typography>
             <Typography variant="caption" fontWeight={300}>
-              {data.sta} Meter <span style={{ fontWeight: 400 }}> STA.</span>
+              {sta} Meter <span style={{ fontWeight: 400 }}> STA.</span>
             </Typography>
           </Box>
         </Box>

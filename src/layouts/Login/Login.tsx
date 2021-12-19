@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Grid,
   Box,
@@ -8,18 +8,72 @@ import {
   Checkbox,
   FormControlLabel,
 } from '@mui/material'
-import { MailOutline } from '@mui/icons-material'
+import { PersonOutline } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import { Form, Formik } from 'formik'
 import Input from '@components/Input'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import validationLogin from '@validations/auth'
 import MapsIllustration from '@illust/Maps.svg'
+import api from '@services/common'
+import { ILogin } from '@interfaces/user'
+import { AES, enc } from 'crypto-js'
 import VisiblePasswordIcon from './partials/VisibleIcon'
 import useStyles from './Login.styles'
 
 const Login = (): JSX.Element => {
   const classes = useStyles()
   const navigate = useNavigate()
-  const [visiblePassword, setVisiblePassword] = useState(false)
+  const [visiblePassword, setVisiblePassword] = useState<boolean>(false)
+  const [authData, setAuthData] = useState<ILogin | null>(null)
+
+  useEffect(() => {
+    if (localStorage.getItem('gis-auth'))
+      setAuthData(
+        JSON.parse(
+          AES.decrypt(
+            localStorage.getItem('gis-auth') as string,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            process.env.REACT_APP_SECRET_CRYPTO!
+          ).toString(enc.Utf8)
+        )
+      )
+  }, [])
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSubmit = async (values: ILogin, { setSubmitting }: any) => {
+    setSubmitting(true)
+
+    try {
+      const response = await api({
+        method: 'post',
+        url: '/users/login',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: { username: values.username, password: values.password },
+      })
+
+      localStorage.setItem('tokenAccess', response.token)
+      localStorage.setItem('userAccess', JSON.stringify(response.data))
+
+      navigate('/dashboard')
+
+      setSubmitting(false)
+
+      if (values.rememberMe)
+        localStorage.setItem(
+          'gis-auth',
+          AES.encrypt(
+            JSON.stringify(values),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            process.env.REACT_APP_SECRET_CRYPTO!
+          ).toString()
+        )
+    } catch (err) {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -33,11 +87,7 @@ const Login = (): JSX.Element => {
           <Box className={classes.RightContentWrapper}>
             <Box width="auto">
               <Box maxWidth={464}>
-                <Typography
-                  // className={classes.greetingText}
-                  fontWeight={600}
-                  variant="h4"
-                >
+                <Typography fontWeight={600} variant="h4">
                   Selamat Datang Di Sistem Geografi{' '}
                   <span className={classes.separateText}>Bojonegoro</span>
                 </Typography>
@@ -47,70 +97,107 @@ const Login = (): JSX.Element => {
                   Silahkan login sebagai admin
                 </Typography>
               </Box>
+              <Formik
+                enableReinitialize
+                initialValues={{
+                  username: authData?.username || '',
+                  password: authData?.password || '',
+                  rememberMe: authData?.rememberMe || false,
+                }}
+                validationSchema={validationLogin}
+                onSubmit={handleSubmit}
+              >
+                {({ handleChange, isSubmitting, values }) => (
+                  <Form>
+                    <Paper className={classes.paperContent} elevation={0}>
+                      <Box>
+                        <Input
+                          placeholder="Username"
+                          InputProps={{
+                            disableUnderline: true,
+                            startAdornment: (
+                              <PersonOutline
+                                style={{ width: '26px', height: '18px' }}
+                              />
+                            ),
+                          }}
+                          value={values.username || ''}
+                          name="username"
+                          id="username"
+                          onChange={handleChange}
+                          variant="filled"
+                          fullWidth
+                          required
+                        />
+                      </Box>
+                      <Box marginTop="40px">
+                        <Input
+                          type={visiblePassword ? 'text' : 'password'}
+                          placeholder="Password"
+                          value={values.password || ''}
+                          InputProps={{
+                            disableUnderline: true,
+                            startAdornment: (
+                              <LockOutlinedIcon
+                                style={{ width: '26px', height: '18px' }}
+                              />
+                            ),
+                            endAdornment: (
+                              <VisiblePasswordIcon
+                                visiblePassword={visiblePassword}
+                                setVisiblePassword={setVisiblePassword}
+                              />
+                            ),
+                          }}
+                          id="password"
+                          name="password"
+                          onChange={handleChange}
+                          variant="filled"
+                          fullWidth
+                          required
+                        />
+                      </Box>
+                      <Box marginTop="20px">
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              size="small"
+                              checked={values.rememberMe}
+                              name="rememberMe"
+                              onChange={handleChange}
+                            />
+                          }
+                          label={
+                            <Box
+                              className={`${classes.disabledText} ${classes.textCenter}`}
+                              fontWeight={400}
+                            >
+                              <Typography variant="caption">
+                                Ingat Saya
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </Box>
+                      <Box marginTop="20px">
+                        <Button
+                          fullWidth
+                          className={classes.button}
+                          disableElevation
+                          variant="contained"
+                          type="submit"
+                          color="primary"
+                          style={{ textTransform: 'inherit' }}
+                          disabled={isSubmitting}
+                        >
+                          <Typography variant="button">Login</Typography>
+                        </Button>
+                      </Box>
+                    </Paper>
+                  </Form>
+                )}
+              </Formik>
             </Box>
-            <Paper className={classes.paperContent} elevation={0}>
-              <Box>
-                <Input
-                  placeholder="Email"
-                  InputProps={{
-                    disableUnderline: true,
-                    startAdornment: (
-                      <MailOutline style={{ width: '26px', height: '18px' }} />
-                    ),
-                  }}
-                  variant="filled"
-                  fullWidth
-                />
-              </Box>
-              <Box marginTop="40px">
-                <Input
-                  type={visiblePassword ? 'text' : 'password'}
-                  placeholder="Password"
-                  InputProps={{
-                    disableUnderline: true,
-                    startAdornment: (
-                      <LockOutlinedIcon
-                        style={{ width: '26px', height: '18px' }}
-                      />
-                    ),
-                    endAdornment: (
-                      <VisiblePasswordIcon
-                        visiblePassword={visiblePassword}
-                        setVisiblePassword={setVisiblePassword}
-                      />
-                    ),
-                  }}
-                  variant="filled"
-                  fullWidth
-                />
-              </Box>
-              <Box marginTop="20px">
-                <FormControlLabel
-                  control={<Checkbox size="small" defaultChecked />}
-                  label={
-                    <Box
-                      className={`${classes.disabledText} ${classes.textCenter}`}
-                      fontWeight={400}
-                    >
-                      <Typography variant="caption">Ingat Saya</Typography>
-                    </Box>
-                  }
-                />
-              </Box>
-              <Box marginTop="20px">
-                <Button
-                  fullWidth
-                  className={classes.button}
-                  disableElevation
-                  variant="contained"
-                  color="primary"
-                  style={{ textTransform: 'inherit' }}
-                  onClick={() => navigate('/dashboard')}
-                >
-                  <Typography variant="button">Login</Typography>
-                </Button>
-              </Box>
-            </Paper>
           </Box>
         </Grid>
       </Grid>

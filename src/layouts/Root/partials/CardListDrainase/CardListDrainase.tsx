@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Box, ListItemButton, Typography } from '@mui/material'
 import Water from '@icons/maki_water.svg'
-import dataset from '@constant/dataset'
 import WaterActive from '@icons/maki_water_active.svg'
+import useDrainase from '@services/hooks/dashboard'
+import { IDrainaseData } from '@interfaces/drainase'
 import useStyles from './CardListDrainase.styles'
 
 interface IPosition {
@@ -19,6 +20,7 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
 }: ICardListDrainase): JSX.Element => {
   const classes = useStyles()
   const [active, setActive] = useState(Object)
+  const { drainase } = useDrainase()
 
   return (
     <Box>
@@ -39,11 +41,19 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
         overflow="auto"
         className={classes.scrollStyle}
       >
-        {dataset.map(
-          ({ district, street_name, width, latitude, longitude }, idx) => (
+        {drainase?.data?.map(
+          (
+            {
+              district,
+              street_name,
+              street_width: width,
+              latitude,
+              longitude,
+            }: IDrainaseData,
+            idx
+          ) => (
             <ListItemButton
               component="a"
-              href="#simple-list"
               sx={{
                 marginTop: idx === 0 ? 0 : '24px',
                 marginBottom: idx === 9 ? '24px' : 0,
@@ -55,7 +65,7 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
                 setPosition({ lat: latitude, lng: longitude })
               }}
               // eslint-disable-next-line react/no-array-index-key
-              key={idx}
+              key={`${longitude}_${idx}`}
             >
               <Box display="flex" paddingLeft="14px">
                 <Box>

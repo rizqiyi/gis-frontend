@@ -18,6 +18,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import UserIcon from '@icons/user-ic.svg'
 import ProfileSettingIcon from '@icons/settings-profile-ic.svg'
 import LogoutIcon from '@icons/logout-ic.svg'
+import truncate from '@helpers/truncate'
+import { getCurrentUser } from '@helpers/jwt-decode'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useStyles from './PrivateDrawer.styles'
 import TitlePage from '../TitlePage'
@@ -35,6 +37,7 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
   const location = useLocation()
   const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const currentUser = getCurrentUser()
 
   const open = Boolean(anchorEl)
 
@@ -48,14 +51,6 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
 
   const matchPathname = (pathname: string): boolean =>
     location.pathname.split('/')[1] === pathname
-
-  const truncate = (words: string): string => {
-    if (words.length > 10) {
-      return `${words.substring(0, 14)}...`
-    }
-
-    return words
-  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -168,17 +163,17 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
                   <Box>
                     <Avatar
                       alt="Remy Sharp"
-                      src="https://avatars.githubusercontent.com/u/55864145?v=4"
+                      src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${currentUser.avatar}`}
                       sx={{ width: 48, height: 48 }}
                     />
                   </Box>
                   <Box sx={{ ml: '12px', color: '#FFFFFF' }}>
                     <Typography variant="subtitle1" fontWeight={600}>
-                      Rizqiyanto
+                      {currentUser.fullname.split(' ')[0]}
                     </Typography>
-                    <Tooltip title="cold.gesture@gmail.com">
+                    <Tooltip title={currentUser.email}>
                       <Typography variant="caption">
-                        {truncate('cold.gesture@gmail.com')}
+                        {truncate(currentUser.email, 14, 10)}
                       </Typography>
                     </Tooltip>
                   </Box>
@@ -193,6 +188,48 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
                   >
                     <MoreVertIcon />
                   </IconButton>
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  mt: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Box
+                  sx={{
+                    color: 'white',
+                    flex: 1,
+                  }}
+                >
+                  <Typography variant="caption">
+                    {currentUser.role_name}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    width: '1.5px',
+                    backgroundColor: '#26A1D8',
+                    position: 'relative',
+                    height: '24px',
+                    bottom: 0,
+                    left: currentUser.role_name === 'Admin' ? 0 : '12px',
+                  }}
+                />
+                <Box
+                  sx={{
+                    color: 'white',
+                    flex: 1,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    mr: '10px',
+                  }}
+                >
+                  <Typography variant="caption">
+                    Jalur {currentUser.manage}
+                  </Typography>
                 </Box>
               </Box>
             </Paper>
@@ -236,7 +273,15 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
             Atur Profile Pengguna
           </Typography>
         </MenuItem>
-        <MenuItem onClick={() => navigate('/')}>
+        <MenuItem
+          onClick={() => {
+            localStorage.removeItem('tokenAccess')
+
+            localStorage.removeItem('userAccess')
+
+            navigate('/')
+          }}
+        >
           <img src={LogoutIcon} alt="logout" />
           <Typography color="error" sx={{ ml: '12px' }}>
             Logout
