@@ -20,7 +20,7 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
 }: ICardListDrainase): JSX.Element => {
   const classes = useStyles()
   const [active, setActive] = useState(Object)
-  const { drainase } = useDrainase()
+  const { drainase } = useDrainase(true)
 
   return (
     <Box>

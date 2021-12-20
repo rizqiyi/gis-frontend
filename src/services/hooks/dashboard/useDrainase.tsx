@@ -11,7 +11,7 @@ interface IUseDrainase {
   setDrainase: Dispatch<React.SetStateAction<IDrainase | null>>
 }
 
-const useDrainase = (): IUseDrainase => {
+const useDrainase = (is_published: string | boolean = ''): IUseDrainase => {
   const [loading, setLoading] = useState<boolean>(false)
   const [drainase, setDrainase] = useState<IDrainase | null>(null)
   const [message, setMessage] = useState<unknown>({})
@@ -24,6 +24,7 @@ const useDrainase = (): IUseDrainase => {
         const response = await api({
           method: 'get',
           url: '/drainase',
+          ...(is_published ? { params: { is_published } } : {}),
           headers: { 'Content-Type': 'application/json' },
         })
 
