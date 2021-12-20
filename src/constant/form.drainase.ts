@@ -74,7 +74,7 @@ export const leftDrainase = [
     options: [
       { label: 'Baik', value: 5 },
       { label: 'Rusak Ringan', value: 6 },
-      { label: 'Rusak Ringan', value: 7 },
+      { label: 'Rusak Sedang', value: 7 },
       { label: 'Rusak Berat', value: 8 },
     ],
   },
@@ -117,7 +117,7 @@ export const rightDrainase = [
     options: [
       { label: 'Baik', value: 5 },
       { label: 'Rusak Ringan', value: 6 },
-      { label: 'Rusak Ringan', value: 7 },
+      { label: 'Rusak Sedang', value: 7 },
       { label: 'Rusak Berat', value: 8 },
     ],
   },

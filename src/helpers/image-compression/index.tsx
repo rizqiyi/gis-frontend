@@ -37,6 +37,7 @@ IImageCompressor): Promise<any> => {
 
     return compressedImage
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err)
   }
 }
