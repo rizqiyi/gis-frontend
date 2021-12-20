@@ -69,8 +69,9 @@ const Input = ({
   name,
   required,
   id,
+  withErrorMsg = true,
   ...rest
-}: TextFieldProps): JSX.Element => {
+}: TextFieldProps & { withErrorMsg?: boolean }): JSX.Element => {
   const [field, meta] = useField({ name: id as string })
   const isFieldError =
     required &&
@@ -87,7 +88,7 @@ const Input = ({
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...rest}
       />
-      {isFieldError && (
+      {isFieldError && withErrorMsg && (
         <Box
           sx={{
             mt: '12px',

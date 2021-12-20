@@ -9,15 +9,26 @@ import {
   MenuItem,
   InputBase,
   SelectProps,
+  InputBaseProps,
 } from '@mui/material'
 import DangerIcon from '@icons/danger-ic.svg'
 
-const BootstrapInput = styled(InputBase)(({ theme }) => ({
+interface ICustomInput {
+  isFieldError: boolean | undefined
+}
+
+const BootstrapInput = styled(
+  ({ isFieldError, ...rest }: ICustomInput & InputBaseProps) => (
+    <InputBase {...rest} />
+  )
+)(({ theme, isFieldError }) => ({
   '.MuiInputBase-input': {
     padding: '14px',
     color: theme.palette.text.disabled,
   },
-  border: '1px solid #DDDFE5',
+  border: isFieldError
+    ? `2.2px solid ${theme.palette.error.main}`
+    : '1px solid #DDDFE5',
   overflow: 'hidden',
   borderRadius: 8,
   backgroundColor: '#FAFAFA',
@@ -28,7 +39,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     'border',
     'color',
   ]),
-  // color: '#404040',
+  color: '#404040',
 
   // color: theme.palette.text.disabled,
   '&:hover': {
@@ -37,7 +48,9 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
   '&.Mui-focused': {
     backgroundColor: 'transparent',
     color: '#404040',
-    border: `2px solid ${theme.palette.primary.main}`,
+    border: isFieldError
+      ? `2.2px solid ${theme.palette.error.main}`
+      : `2px solid ${theme.palette.primary.main}`,
   },
 }))
 /* 
@@ -59,12 +72,14 @@ interface IOptions {
 interface ICustomSelect {
   required?: boolean
   options?: IOptions[]
+  withErrorMsg?: boolean
 }
 
 const CustomSelect = ({
   required,
   options,
   id,
+  withErrorMsg = true,
   ...rest
 }: ICustomSelect & SelectProps): JSX.Element => {
   const [field, meta] = useField({ name: id as string })
@@ -79,9 +94,8 @@ const CustomSelect = ({
       <Select
         name={id}
         id={id}
-        placeholder="test"
-        label="test"
-        input={<BootstrapInput placeholder="test" />}
+        input={<BootstrapInput isFieldError={isFieldError} />}
+        label="Test"
         {...rest}
       >
         {options?.map(({ label, value }) => (
@@ -90,7 +104,7 @@ const CustomSelect = ({
           </MenuItem>
         ))}
       </Select>
-      {isFieldError && (
+      {isFieldError && withErrorMsg && (
         <Box
           sx={{
             mt: '12px',

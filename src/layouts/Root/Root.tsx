@@ -55,7 +55,7 @@ interface IPosition {
 const Root = (): JSX.Element => {
   const classes = useStyles()
   const [value, setValue] = useState(0)
-  const { drainase } = useDrainase()
+  const { drainase } = useDrainase(true)
   const [position, setPosition] = useState<IPosition>({
     lat: dataset[0].latitude,
     lng: dataset[0].longitude,

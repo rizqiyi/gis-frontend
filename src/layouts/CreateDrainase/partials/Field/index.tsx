@@ -16,6 +16,7 @@ interface IForm {
   name: string
   placeholder: string
   type?: string
+  required?: boolean
   options?: IOptions[]
 }
 
@@ -57,6 +58,9 @@ const Index: React.FC<IIndex> = ({
                 </Typography>
               </Box>
               <Select
+                label={drainase.placeholder}
+                withErrorMsg={false}
+                required={drainase.required}
                 disabled={isSubmitting}
                 value={values?.[drainase.name as keyof IDrainaseForm] as string}
                 id={drainase.name}
@@ -81,6 +85,8 @@ const Index: React.FC<IIndex> = ({
                 </Typography>
               </Box>
               <FastField
+                withErrorMsg={false}
+                required={drainase.required}
                 disabled={isSubmitting}
                 component={Input}
                 placeholder={drainase.placeholder}

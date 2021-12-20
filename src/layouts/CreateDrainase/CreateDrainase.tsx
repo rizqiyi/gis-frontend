@@ -15,6 +15,7 @@ import DraftIc from '@icons/draft-ic.svg'
 import Dropzone from '@components/Dropzone'
 import { IDrainaseForm } from '@interfaces/drainase'
 import { getAccessToken, getCurrentUser } from '@helpers/jwt-decode'
+import validation from '@validations/drainase'
 import api from '@services/common'
 import Field from './partials/Field'
 import Headers from './partials/headers'
@@ -51,6 +52,7 @@ const CreateDrainase = (): JSX.Element => {
           description: '',
           is_published: true,
         }}
+        validationSchema={validation}
         enableReinitialize
         onSubmit={async (e: IDrainaseForm, { setSubmitting }) => {
           setSubmitting(true)
@@ -143,6 +145,8 @@ const CreateDrainase = (): JSX.Element => {
                         </Typography>
                       </Box>
                       <FastField
+                        withErrorMsg={false}
+                        required
                         component={Input}
                         placeholder="Nama Ruas Jalan"
                         name="street_name"
@@ -241,6 +245,8 @@ const CreateDrainase = (): JSX.Element => {
                         placeholder="Catatan drainase"
                         name="note"
                         id="note"
+                        required
+                        withErrorMsg={false}
                         disabled={isSubmitting}
                         onChange={handleChange}
                         variant="filled"
@@ -268,6 +274,8 @@ const CreateDrainase = (): JSX.Element => {
                         placeholder="Masukkan keterangan"
                         name="description"
                         id="description"
+                        required
+                        withErrorMsg={false}
                         disabled={isSubmitting}
                         onChange={handleChange}
                         variant="filled"

@@ -1,6 +1,14 @@
-import React, { useState } from 'react'
-import { Box, Button, Paper, Tooltip, Typography } from '@mui/material'
+import React, { useMemo, useState } from 'react'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Paper,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import { useDropzone } from 'react-dropzone'
+import imageCompressor from '@helpers/image-compression'
 import truncate from '@helpers/truncate'
 import Dialog from '../Dialog'
 
@@ -20,19 +28,45 @@ const Dropzone: React.FC<IDropzone> = ({
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [dataToDialog, setDataToDialog] = useState<File | null>(null)
   const [key, setKey] = useState<string>('')
+  const [progressOuter, setProgressOuter] = useState<{ [key: number]: number }>(
+    {}
+  )
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
     // Disable click and keydown behavior
     noClick: true,
     noKeyboard: true,
     accept: 'image/*',
-    onDropAccepted: (e) => {
-      setImages((prev) => ({ ...prev, [name as string]: e }))
+    onDropAccepted: async <T extends File>(e: T[]) => {
+      try {
+        const imagesTemp: File[] = []
+
+        e.map(async (data: File, idx) => {
+          const compressedImage = await imageCompressor({
+            idx,
+            data,
+            setProgressOuter,
+            isMultiple: true,
+          })
+
+          imagesTemp.push(compressedImage)
+
+          if (imagesTemp.length === e?.length) {
+            setImages((prev) => ({ ...prev, [name as string]: imagesTemp }))
+          }
+        })
+      } catch (err) {
+        console.error(err)
+      }
     },
   })
 
-  const files =
+  const imagesDone: boolean[] = Object.values(progressOuter).map(
+    (data) => data === 100 && Boolean(Object.keys(progressOuter).length)
+  )
+
+  const files = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    images.map((file: any) => (
+    return images.map((file: any) => (
       <Paper
         elevation={0}
         sx={{
@@ -43,7 +77,7 @@ const Dropzone: React.FC<IDropzone> = ({
           height: '256px',
           borderRadius: '4px',
         }}
-        key={file.path}
+        key={file.size}
       >
         <Box>
           <img
@@ -93,6 +127,7 @@ const Dropzone: React.FC<IDropzone> = ({
         </Box>
       </Paper>
     ))
+  }, [images])
 
   return (
     <Box sx={{ mt: '40px' }}>
@@ -152,9 +187,9 @@ const Dropzone: React.FC<IDropzone> = ({
           JPEG, PNG
         </Typography>
       </Box>
-      {images.length > 0 && (
-        <Box sx={{ display: 'flex', gap: '40px', mt: '24px' }}>{files}</Box>
-      )}
+      <Box sx={{ display: 'flex', gap: '40px', mt: '24px', flexWrap: 'wrap' }}>
+        {imagesDone.includes(false) ? <CircularProgress /> : files}
+      </Box>
       <Dialog
         handleOk={() => {
           const newFiles = [...acceptedFiles]

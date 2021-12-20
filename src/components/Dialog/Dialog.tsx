@@ -81,4 +81,4 @@ const FormDialog: React.FC<IFormDialog> = ({
   )
 }
 
-export default FormDialog
+export default React.memo(FormDialog)

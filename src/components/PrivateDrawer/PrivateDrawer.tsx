@@ -126,18 +126,20 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
               <Typography variant="subtitle1">Drainase</Typography>
             </Box>
           </Box>
-          <Box
-            onClick={() => navigate('/user-management')}
-            sx={{ marginTop: '24px' }}
-            className={`${classes.cardMenu} ${
-              matchPathname('user-management') ? classes.cardMenuActive : ''
-            }`}
-          >
-            <img src={UserIcon} width="20px" height="20px" alt="home" />
-            <Box sx={{ marginLeft: '13px', color: '#ffffff' }}>
-              <Typography variant="subtitle1">Manage User</Typography>
+          {currentUser.role_name === 'Super Admin' && (
+            <Box
+              onClick={() => navigate('/user-management')}
+              sx={{ marginTop: '24px' }}
+              className={`${classes.cardMenu} ${
+                matchPathname('user-management') ? classes.cardMenuActive : ''
+              }`}
+            >
+              <img src={UserIcon} width="20px" height="20px" alt="home" />
+              <Box sx={{ marginLeft: '13px', color: '#ffffff' }}>
+                <Typography variant="subtitle1">Manage User</Typography>
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
         <Box
           className={classes.logoutContainer}
