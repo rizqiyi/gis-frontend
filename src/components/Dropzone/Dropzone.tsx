@@ -55,6 +55,7 @@ const Dropzone: React.FC<IDropzone> = ({
           }
         })
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(err)
       }
     },
