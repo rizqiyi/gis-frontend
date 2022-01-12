@@ -12,7 +12,7 @@ import useDrainase from '@services/hooks/dashboard'
 const Drainase = (): JSX.Element => {
   const navigate = useNavigate()
   const { drainase } = useDrainase()
-  const [page, setPage] = useState<number>(drainase?.current_page || 1)
+  const [page, setPage] = useState<number>(drainase?.current_page || 0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(
     drainase?.per_page || 5
   )
@@ -61,13 +61,6 @@ const Drainase = (): JSX.Element => {
                     fullWidth
                     required
                   />
-                  {/* <Button
-                    sx={{ width: '56px', height: '56px' }}
-                    aria-label="search"
-                    startIcon={<FilterAltOutlinedIcon fontSize="inherit" />}
-                  >
-                    t
-                  </Button> */}
                 </Box>
               </Form>
             )}
