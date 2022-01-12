@@ -1,37 +1,33 @@
-import axios, { AxiosRequestConfig, Canceler } from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
-const { CancelToken } = axios
+// const { CancelToken } = axios
 
-let cancel: Canceler
+// let cancel: Canceler
 
 const api = async (
-  payload: AxiosRequestConfig,
-  isAuth?: boolean,
-  withCancel?: boolean
+  payload: AxiosRequestConfig
+  // withCancel?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> => {
-  if (cancel !== undefined && withCancel) {
-    cancel()
-  }
+  // if (cancel !== undefined && withCancel) {
+  //   cancel()
+  // }
 
   try {
     const response = await axios({
       ...payload,
       timeout: 30000,
-      baseURL:
-        process.env.NODE_ENV === 'development'
-          ? process.env.REACT_APP_API_URI_DEV
-          : process.env.REACT_APP_API_URI_PROD,
-      cancelToken: new CancelToken((c: Canceler) => {
-        cancel = c
-      }),
+      baseURL: process.env.REACT_APP_API_URI_PROD,
+      // cancelToken: new CancelToken((c: Canceler) => {
+      //   cancel = c
+      // }),
     })
 
     if (response && response.data) {
       return response.data
     }
 
-    return Promise.reject(String('request failed'))
+    return await Promise.reject(String('request failed'))
   } catch (error: unknown) {
     return Promise.reject(String(error))
   }

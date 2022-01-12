@@ -24,8 +24,8 @@ interface IRow {
   head: Array<{ [key: string]: string | number }>
   sortData?: { [key: string]: number }
   expandable: boolean
-  // rowsPerPage: number
-  // page: number
+  rowsPerPage: number
+  page: number
 }
 
 function Row({
@@ -33,9 +33,9 @@ function Row({
   head,
   sortData = {},
   expandable,
-}: // rowsPerPage,
-// page,
-IRow) {
+  rowsPerPage,
+  page,
+}: IRow) {
   const [open, setOpen] = React.useState<{ [key: number]: boolean }>({})
   const classes = useStyles()
 
@@ -75,11 +75,11 @@ IRow) {
       )
     }
 
-    if (key === 'created_at') {
+    if (key === 'createdAt') {
       return formatCompleteDate(data[key] as string)
     }
 
-    if (['width', 'sta'].includes(key)) {
+    if (['street_width', 'sta'].includes(key)) {
       return `${data[key]} Meter`
     }
 
@@ -137,7 +137,7 @@ IRow) {
                   <TableCell />
                 )}
                 <TableCell sx={{ fontWeight: 600 }} component="th" scope="row">
-                  {/* {page * rowsPerPage - rowsPerPage + (idx + 1)} */}1
+                  {page * rowsPerPage - rowsPerPage + (idx + 1)}
                 </TableCell>
                 {filteredObj.map((obj) => (
                   <TableCell key={obj.key} sx={{ fontWeight: 600 }}>
@@ -221,7 +221,11 @@ interface ICustomTable {
   firstSpace?: boolean
   lastSpace?: boolean
   sortData?: { [key: string]: number }
-  expandable: boolean
+  expandable?: boolean
+  page: number
+  rowsPerPage: number
+  handleChangePage: (e: unknown, p: number) => void
+  handleChangeRowsPerPage: (p: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -279,10 +283,12 @@ const CustomTable: React.FC<ICustomTable> = ({
   firstSpace = true,
   lastSpace = true,
   sortData,
-  expandable,
+  expandable = false,
+  page,
+  rowsPerPage,
+  handleChangePage,
+  handleChangeRowsPerPage,
 }: ICustomTable): JSX.Element => {
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(1)
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<string>('')
 
@@ -301,18 +307,6 @@ const CustomTable: React.FC<ICustomTable> = ({
     event: React.MouseEvent<unknown>
   ) => {
     handleRequestSort(event, property)
-  }
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-
-    setPage(0)
   }
 
   return (
@@ -363,8 +357,8 @@ const CustomTable: React.FC<ICustomTable> = ({
             <Row
               expandable={expandable}
               head={head}
-              // rowsPerPage={rowsPerPage}
-              // page={page}
+              rowsPerPage={rowsPerPage}
+              page={page + 1}
               rows={stableSort(rows, getComparator(order, orderBy)).slice(
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage
@@ -380,8 +374,10 @@ const CustomTable: React.FC<ICustomTable> = ({
         count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onPageChange={(e: unknown, p: number) => handleChangePage(e, p)}
+        onRowsPerPageChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          handleChangeRowsPerPage(e)
+        }
       />
     </>
   )

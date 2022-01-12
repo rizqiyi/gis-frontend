@@ -1,11 +1,11 @@
 import React from 'react'
-import Table from '@components/Table'
-import dataset from '@constant/dataset'
+// import Table from '@components/Table'
+// import dataset from '@constant/dataset'
 
 const Dashboard = (): JSX.Element => {
   return (
     <>
-      <Table
+      {/* <Table
         head={[
           {
             title: 'Tanggal Dibuat',
@@ -38,7 +38,7 @@ const Dashboard = (): JSX.Element => {
           is_published: 7,
         }}
         rows={dataset}
-      />
+      /> */}
     </>
   )
 }

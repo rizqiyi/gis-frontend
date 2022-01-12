@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Button, Typography } from '@mui/material'
 import Input from '@components/Input'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
@@ -6,9 +6,29 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 // import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined'
 import { useNavigate } from 'react-router-dom'
 import { Form, Formik } from 'formik'
+import Table from '@components/Table'
+import useDrainase from '@services/hooks/dashboard'
 
 const Drainase = (): JSX.Element => {
   const navigate = useNavigate()
+  const { drainase } = useDrainase()
+  const [page, setPage] = useState<number>(drainase?.current_page || 1)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(
+    drainase?.per_page || 5
+  )
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+
+    setPage(0)
+  }
+
   return (
     <Box>
       <Box
@@ -25,7 +45,7 @@ const Drainase = (): JSX.Element => {
             // eslint-disable-next-line no-console
             onSubmit={(e) => console.log(e)}
           >
-            {() => (
+            {({ handleChange }) => (
               <Form>
                 <Box sx={{ display: 'flex' }}>
                   <Input
@@ -34,6 +54,7 @@ const Drainase = (): JSX.Element => {
                       disableUnderline: true,
                       startAdornment: <SearchOutlinedIcon />,
                     }}
+                    onChange={handleChange}
                     name="search"
                     id="search"
                     variant="filled"
@@ -71,6 +92,52 @@ const Drainase = (): JSX.Element => {
           </Button>
         </Box>
       </Box>
+      <Box
+        sx={{
+          border: '1px solid #DAF3FF',
+          margin: '30px 0 ',
+        }}
+      />
+      <Table
+        head={[
+          {
+            title: 'Tanggal Dibuat',
+            selector: 'createdAt',
+            style: {
+              minWidth: '120px',
+            },
+          },
+          { title: 'Kabupaten', selector: 'district' },
+          { title: 'Kecamatan', selector: 'sub_district' },
+          {
+            title: 'Nama Ruas Jalan',
+            selector: 'street_name',
+          },
+          {
+            title: 'Lebar Jalan',
+            selector: 'street_width',
+          },
+          { title: 'STA', selector: 'sta' },
+          { title: 'Status', selector: 'is_published' },
+        ]}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        handleChangePage={(e: unknown, p: number) => handleChangePage(e, p)}
+        handleChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement>) =>
+          handleChangeRowsPerPage(e)
+        }
+        // expandable
+        sortData={{
+          createdAt: 1,
+          district: 2,
+          sub_district: 3,
+          street_name: 4,
+          street_width: 5,
+          sta: 6,
+          is_published: 7,
+        }}
+        rows={drainase?.data || []}
+      />
     </Box>
   )
 }
