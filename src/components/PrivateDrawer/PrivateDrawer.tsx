@@ -252,6 +252,7 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
         </Box>
       </Box>
       <Menu
+        disableScrollLock
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}

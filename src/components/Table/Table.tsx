@@ -15,7 +15,14 @@ import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Grid from '@mui/material/Grid'
 import formatCompleteDate from '@helpers/moment/formatDate'
-import { TablePagination, TableSortLabel, Tooltip } from '@mui/material'
+import {
+  Menu,
+  MenuItem,
+  TablePagination,
+  TableSortLabel,
+  Tooltip,
+} from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 import Drainase from './partials/DetailStreet'
 import useStyles from './Table.styles'
 
@@ -24,6 +31,7 @@ interface IRow {
   head: Array<{ [key: string]: string | number }>
   sortData?: { [key: string]: number }
   expandable: boolean
+  detailUrl: string
   rowsPerPage: number
   page: number
 }
@@ -35,9 +43,27 @@ function Row({
   expandable,
   rowsPerPage,
   page,
+  detailUrl,
 }: IRow) {
+  const navigate = useNavigate()
   const [open, setOpen] = React.useState<{ [key: number]: boolean }>({})
+  const [id, setId] = React.useState<number>(0)
   const classes = useStyles()
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLElement>,
+    params: number
+  ) => {
+    setAnchorEl(event.currentTarget)
+
+    setId(params)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   const matchesKey = head.filter((h) => h.selector).map((d) => d.selector)
 
@@ -150,7 +176,11 @@ function Row({
                 ))}
                 <TableCell>
                   <Box>
-                    <IconButton color="primary" aria-label="menu">
+                    <IconButton
+                      onClick={(e) => handleClick(e, row.id as number)}
+                      color="primary"
+                      aria-label="menu"
+                    >
                       <MoreVertIcon />
                     </IconButton>
                   </Box>
@@ -209,23 +239,34 @@ function Row({
           )
         }
       )}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        onClick={handleClose}
+        sx={{
+          top: -130,
+          left: -70,
+          position: 'absolute',
+        }}
+        disableScrollLock
+        PaperProps={{
+          sx: {
+            boxShadow: '0px 12px 24px rgba(112, 144, 176, 0.24)',
+            mt: 1.5,
+            border: '1px solid #DDDFE5',
+          },
+        }}
+      >
+        <MenuItem onClick={() => navigate(`${detailUrl}/edit/${id}`)}>
+          <Typography color="text">Edit</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => navigate(`${detailUrl}/delete/${id}`)}>
+          <Typography color="text">Hapus</Typography>
+        </MenuItem>
+      </Menu>
     </>
   )
-}
-
-interface ICustomTable {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  rows: Array<{ [key: string]: string | number | any }>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  head: Array<{ [key: string]: string | number | any }>
-  firstSpace?: boolean
-  lastSpace?: boolean
-  sortData?: { [key: string]: number }
-  expandable?: boolean
-  page: number
-  rowsPerPage: number
-  handleChangePage: (e: unknown, p: number) => void
-  handleChangeRowsPerPage: (p: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -277,6 +318,22 @@ function stableSort<T>(
   return stabilizedThis.map((el) => el[0])
 }
 
+interface ICustomTable {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  rows: Array<{ [key: string]: string | number | any }>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  head: Array<{ [key: string]: string | number | any }>
+  firstSpace?: boolean
+  lastSpace?: boolean
+  sortData?: { [key: string]: number }
+  expandable?: boolean
+  detailUrl?: string
+  page: number
+  rowsPerPage: number
+  handleChangePage: (e: unknown, p: number) => void
+  handleChangeRowsPerPage: (p: React.ChangeEvent<HTMLInputElement>) => void
+}
+
 const CustomTable: React.FC<ICustomTable> = ({
   head,
   rows,
@@ -286,6 +343,7 @@ const CustomTable: React.FC<ICustomTable> = ({
   expandable = false,
   page,
   rowsPerPage,
+  detailUrl = '',
   handleChangePage,
   handleChangeRowsPerPage,
 }: ICustomTable): JSX.Element => {
@@ -355,6 +413,7 @@ const CustomTable: React.FC<ICustomTable> = ({
           </TableHead>
           <TableBody>
             <Row
+              detailUrl={detailUrl}
               expandable={expandable}
               head={head}
               rowsPerPage={rowsPerPage}

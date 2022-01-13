@@ -119,7 +119,8 @@ const Drainase = (): JSX.Element => {
         handleChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleChangeRowsPerPage(e)
         }
-        // expandable
+        detailUrl="/drainase"
+        expandable
         sortData={{
           createdAt: 1,
           district: 2,
@@ -129,7 +130,23 @@ const Drainase = (): JSX.Element => {
           sta: 6,
           is_published: 7,
         }}
-        rows={drainase?.data || []}
+        rows={
+          drainase?.data.map((data) => ({
+            ...data,
+            left_drainase: {
+              typical: data.left_typical,
+              drainase_depth: data.left_drainase_depth,
+              drainase_width: data.left_drainase_width,
+              drainase_condition: data.left_drainase_condition,
+            },
+            right_drainase: {
+              typical: data.right_typical,
+              drainase_depth: data.right_drainase_depth,
+              drainase_width: data.right_drainase_width,
+              drainase_condition: data.right_drainase_condition,
+            },
+          })) || []
+        }
       />
     </Box>
   )
