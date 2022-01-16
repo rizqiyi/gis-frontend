@@ -109,7 +109,7 @@ const Drainase = (): JSX.Element => {
         expandable
         sortData={sortScore}
         handleClickDelete={async (e, setLoading) => {
-          setLoading(true)
+          setLoading({ [e]: true })
 
           try {
             await api({
@@ -121,11 +121,11 @@ const Drainase = (): JSX.Element => {
               },
             })
 
-            setLoading(false)
+            setLoading({ [e]: false })
 
             setDeleteStatus({ success: true, error: false })
           } catch (err) {
-            setLoading(false)
+            setLoading({ [e]: false })
 
             setDeleteStatus({ success: false, error: true })
           }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Collapse from '@mui/material/Collapse'
@@ -36,7 +37,9 @@ interface IRow {
   page: number
   handleClickDelete: (
     id: number,
-    setLoadingDelete: React.Dispatch<React.SetStateAction<boolean>>
+    setLoadingDelete: React.Dispatch<
+      React.SetStateAction<{ [key: string]: boolean }>
+    >
   ) => void
 }
 
@@ -52,7 +55,9 @@ function Row({
   const navigate = useNavigate()
   const [open, setOpen] = React.useState<{ [key: number]: boolean }>({})
   const [id, setId] = React.useState<number>(0)
-  const [loadingDelete, setLoadingDelete] = React.useState<boolean>(false)
+  const [loadingDelete, setLoadingDelete] = React.useState<{
+    [key: string]: boolean
+  }>({})
   const classes = useStyles()
   const location = useLocation()
   const pathname: string[] = location.pathname.split('/')
@@ -192,7 +197,7 @@ function Row({
                 ))}
                 <TableCell>
                   <Box>
-                    {loadingDelete ? (
+                    {loadingDelete[row.id] ? (
                       <CircularProgress />
                     ) : (
                       <IconButton
@@ -350,7 +355,9 @@ interface ICustomTable {
   handleChangeRowsPerPage: (p: React.ChangeEvent<HTMLInputElement>) => void
   handleClickDelete?: (
     id: number,
-    setLoadingDelete: React.Dispatch<React.SetStateAction<boolean>>
+    setLoadingDelete: React.Dispatch<
+      React.SetStateAction<{ [key: string]: boolean }>
+    >
   ) => void
 }
 
