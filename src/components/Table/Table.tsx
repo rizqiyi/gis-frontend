@@ -90,15 +90,17 @@ function Row({
             width: '48px',
             height: '38px',
             padding: '0 16px',
-            backgroundColor: '#33C863',
+            backgroundColor: data[key] ? '#33C863' : '#FAFAFA',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#FFFFFF',
+            color: data[key] ? '#FFFFFF' : '#404040',
             borderRadius: '8px',
           }}
         >
-          <Typography variant="subtitle2">Tampil</Typography>
+          <Typography variant="subtitle2">
+            {data[key] ? 'Tampil' : 'Draft'}
+          </Typography>
         </Box>
       )
     }
