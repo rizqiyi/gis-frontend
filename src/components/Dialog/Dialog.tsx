@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -13,7 +14,8 @@ interface IFormDialog {
   handleClose: () => void
   okText: string
   cancelText: string
-  handleOk: () => void
+  handleOk: (e: any) => void
+  dataToDialog?: any
 }
 
 const FormDialog: React.FC<IFormDialog> = ({
@@ -22,6 +24,7 @@ const FormDialog: React.FC<IFormDialog> = ({
   okText,
   cancelText,
   handleOk,
+  dataToDialog = {},
 }: IFormDialog): JSX.Element => {
   const classes = useStyles()
 
@@ -71,7 +74,10 @@ const FormDialog: React.FC<IFormDialog> = ({
             {cancelText}
           </Typography>
         </Button>
-        <Button className={classes.acceptButton} onClick={() => handleOk()}>
+        <Button
+          className={classes.acceptButton}
+          onClick={() => handleOk(dataToDialog)}
+        >
           <Typography variant="body2" fontWeight={600}>
             {okText}
           </Typography>

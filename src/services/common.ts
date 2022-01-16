@@ -16,7 +16,7 @@ const api = async (
   try {
     const response = await axios({
       ...payload,
-      timeout: 30000,
+      // timeout: 30000,
       baseURL: process.env.REACT_APP_API_URI_PROD,
       // cancelToken: new CancelToken((c: Canceler) => {
       //   cancel = c

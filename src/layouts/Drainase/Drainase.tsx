@@ -3,15 +3,22 @@ import { Box, Button, Typography } from '@mui/material'
 import Input from '@components/Input'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
-// import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined'
 import { useNavigate } from 'react-router-dom'
 import { Form, Formik } from 'formik'
 import Table from '@components/Table'
 import useDrainase from '@services/hooks/dashboard'
+import api from '@/services/common'
+import { getAccessToken } from '@/helpers/jwt-decode'
+import CSnackbar from '@/components/Snackbar'
+import { headData, sortScore } from './constant'
 
 const Drainase = (): JSX.Element => {
   const navigate = useNavigate()
-  const { drainase } = useDrainase()
+  const [deleteStatus, setDeleteStatus] = useState<{ [key: string]: boolean }>({
+    error: false,
+    success: false,
+  })
+  const { drainase } = useDrainase(false, [deleteStatus])
   const [page, setPage] = useState<number>(drainase?.current_page || 0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(
     drainase?.per_page || 5
@@ -92,46 +99,39 @@ const Drainase = (): JSX.Element => {
         }}
       />
       <Table
-        head={[
-          {
-            title: 'Tanggal Dibuat',
-            selector: 'createdAt',
-            style: {
-              minWidth: '120px',
-            },
-          },
-          { title: 'Kabupaten', selector: 'district' },
-          { title: 'Kecamatan', selector: 'sub_district' },
-          {
-            title: 'Nama Ruas Jalan',
-            selector: 'street_name',
-          },
-          {
-            title: 'Lebar Jalan',
-            selector: 'street_width',
-          },
-          { title: 'STA', selector: 'sta' },
-          { title: 'Status', selector: 'is_published' },
-        ]}
+        head={headData}
         page={page}
         rowsPerPage={rowsPerPage}
         handleChangePage={(e: unknown, p: number) => handleChangePage(e, p)}
         handleChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleChangeRowsPerPage(e)
         }
-        detailUrl="/drainase"
         expandable
-        sortData={{
-          createdAt: 1,
-          district: 2,
-          sub_district: 3,
-          street_name: 4,
-          street_width: 5,
-          sta: 6,
-          is_published: 7,
+        sortData={sortScore}
+        handleClickDelete={async (e, setLoading) => {
+          setLoading(true)
+
+          try {
+            await api({
+              method: 'delete',
+              url: `/drainase/delete/${e}`,
+              headers: {
+                'Content-Type': 'application/json',
+                'x-auth-token': getAccessToken(),
+              },
+            })
+
+            setLoading(false)
+
+            setDeleteStatus({ success: true, error: false })
+          } catch (err) {
+            setLoading(false)
+
+            setDeleteStatus({ success: false, error: true })
+          }
         }}
         rows={
-          drainase?.data.map((data) => ({
+          drainase?.data?.map((data) => ({
             ...data,
             left_drainase: {
               typical: data.left_typical,
@@ -147,6 +147,30 @@ const Drainase = (): JSX.Element => {
             },
           })) || []
         }
+      />
+      <CSnackbar
+        open={deleteStatus.success}
+        status="success"
+        onClose={() =>
+          setDeleteStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message="Berhasil menghapus drainase"
+      />
+      <CSnackbar
+        open={deleteStatus.error}
+        status="error"
+        onClose={() =>
+          setDeleteStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message="Gagal menghapus drainase"
       />
     </Box>
   )

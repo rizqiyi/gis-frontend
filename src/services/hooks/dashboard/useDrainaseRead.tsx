@@ -1,23 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, Dispatch } from 'react'
-import { IDrainase } from '@interfaces/drainase'
 import api from '@services/common'
 
-interface IUseDrainase {
-  drainase: IDrainase | null
+interface IUseDrainaseRead {
+  drainase: { [key: string]: any }
   loading: boolean
   message: unknown
   setLoading: Dispatch<React.SetStateAction<boolean>>
   setMessage: Dispatch<React.SetStateAction<{ [key: string]: string }>>
-  setDrainase: Dispatch<React.SetStateAction<IDrainase | null>>
+  setDrainase: Dispatch<React.SetStateAction<{ [key: string]: any }>>
 }
 
-const useDrainase = (
+const useDrainaseRead = (
   is_published: string | boolean = '',
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  id: string,
   deps: any[] = []
-): IUseDrainase => {
+): IUseDrainaseRead => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [drainase, setDrainase] = useState<IDrainase | null>(null)
+  const [drainase, setDrainase] = useState({})
   const [message, setMessage] = useState<unknown>({})
 
   useEffect(() => {
@@ -27,14 +27,14 @@ const useDrainase = (
       try {
         const response = await api({
           method: 'get',
-          url: '/drainase',
+          url: `/drainase/${id}`,
           ...(is_published ? { params: { is_published } } : {}),
           headers: { 'Content-Type': 'application/json' },
         })
 
         const { data } = response
 
-        setDrainase(data as IDrainase)
+        setDrainase(data)
 
         setLoading(false)
 
@@ -42,7 +42,7 @@ const useDrainase = (
       } catch (err: unknown) {
         setLoading(false)
 
-        setDrainase(null)
+        setDrainase({})
 
         setMessage(err)
       }
@@ -54,4 +54,4 @@ const useDrainase = (
   return { drainase, loading, message, setLoading, setMessage, setDrainase }
 }
 
-export default useDrainase
+export default useDrainaseRead

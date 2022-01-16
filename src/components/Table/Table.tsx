@@ -16,13 +16,14 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Grid from '@mui/material/Grid'
 import formatCompleteDate from '@helpers/moment/formatDate'
 import {
+  CircularProgress,
   Menu,
   MenuItem,
   TablePagination,
   TableSortLabel,
   Tooltip,
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Drainase from './partials/DetailStreet'
 import useStyles from './Table.styles'
 
@@ -31,9 +32,12 @@ interface IRow {
   head: Array<{ [key: string]: string | number }>
   sortData?: { [key: string]: number }
   expandable: boolean
-  detailUrl: string
   rowsPerPage: number
   page: number
+  handleClickDelete: (
+    id: number,
+    setLoadingDelete: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void
 }
 
 function Row({
@@ -43,12 +47,15 @@ function Row({
   expandable,
   rowsPerPage,
   page,
-  detailUrl,
+  handleClickDelete,
 }: IRow) {
   const navigate = useNavigate()
   const [open, setOpen] = React.useState<{ [key: number]: boolean }>({})
   const [id, setId] = React.useState<number>(0)
+  const [loadingDelete, setLoadingDelete] = React.useState<boolean>(false)
   const classes = useStyles()
+  const location = useLocation()
+  const pathname: string[] = location.pathname.split('/')
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -114,7 +121,7 @@ function Row({
 
   return (
     <>
-      {rows.map(
+      {rows?.map(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (row: { [key: string]: string | number | any }, idx: number) => {
           const asArray = Object.entries(row)
@@ -162,11 +169,20 @@ function Row({
                 ) : (
                   <TableCell />
                 )}
-                <TableCell sx={{ fontWeight: 600 }} component="th" scope="row">
+                <TableCell
+                  onClick={() => navigate(`/${pathname[1]}/detail/${row.id}`)}
+                  sx={{ fontWeight: 600, cursor: 'pointer' }}
+                  component="th"
+                  scope="row"
+                >
                   {page * rowsPerPage - rowsPerPage + (idx + 1)}
                 </TableCell>
                 {filteredObj.map((obj) => (
-                  <TableCell key={obj.key} sx={{ fontWeight: 600 }}>
+                  <TableCell
+                    onClick={() => navigate(`/${pathname[1]}/detail/${row.id}`)}
+                    key={obj.key}
+                    sx={{ fontWeight: 600, cursor: 'pointer' }}
+                  >
                     {
                       displayByFormat(obj.key as string, obj) as
                         | string
@@ -176,13 +192,17 @@ function Row({
                 ))}
                 <TableCell>
                   <Box>
-                    <IconButton
-                      onClick={(e) => handleClick(e, row.id as number)}
-                      color="primary"
-                      aria-label="menu"
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
+                    {loadingDelete ? (
+                      <CircularProgress />
+                    ) : (
+                      <IconButton
+                        onClick={(e) => handleClick(e, row.id as number)}
+                        color="primary"
+                        aria-label="menu"
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    )}
                   </Box>
                 </TableCell>
               </TableRow>
@@ -244,12 +264,9 @@ function Row({
         open={Boolean(anchorEl)}
         onClose={handleClose}
         onClick={handleClose}
-        sx={{
-          top: -130,
-          left: -70,
-          position: 'absolute',
-        }}
         disableScrollLock
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         PaperProps={{
           sx: {
             boxShadow: '0px 12px 24px rgba(112, 144, 176, 0.24)',
@@ -258,10 +275,10 @@ function Row({
           },
         }}
       >
-        <MenuItem onClick={() => navigate(`${detailUrl}/edit/${id}`)}>
+        <MenuItem onClick={() => navigate(`/${pathname[1]}/edit/${id}`)}>
           <Typography color="text">Edit</Typography>
         </MenuItem>
-        <MenuItem onClick={() => navigate(`${detailUrl}/delete/${id}`)}>
+        <MenuItem onClick={() => handleClickDelete(id, setLoadingDelete)}>
           <Typography color="text">Hapus</Typography>
         </MenuItem>
       </Menu>
@@ -303,9 +320,9 @@ function stableSort<T>(
   array: readonly T[],
   comparator: (a: T, b: T) => number
 ) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
+  const stabilizedThis = array?.map((el, index) => [el, index] as [T, number])
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0])
 
     if (order !== 0) {
@@ -315,7 +332,7 @@ function stableSort<T>(
     return a[1] - b[1]
   })
 
-  return stabilizedThis.map((el) => el[0])
+  return stabilizedThis?.map((el) => el[0])
 }
 
 interface ICustomTable {
@@ -327,11 +344,14 @@ interface ICustomTable {
   lastSpace?: boolean
   sortData?: { [key: string]: number }
   expandable?: boolean
-  detailUrl?: string
   page: number
   rowsPerPage: number
   handleChangePage: (e: unknown, p: number) => void
   handleChangeRowsPerPage: (p: React.ChangeEvent<HTMLInputElement>) => void
+  handleClickDelete?: (
+    id: number,
+    setLoadingDelete: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void
 }
 
 const CustomTable: React.FC<ICustomTable> = ({
@@ -343,9 +363,9 @@ const CustomTable: React.FC<ICustomTable> = ({
   expandable = false,
   page,
   rowsPerPage,
-  detailUrl = '',
   handleChangePage,
   handleChangeRowsPerPage,
+  handleClickDelete = () => {},
 }: ICustomTable): JSX.Element => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<string>('')
@@ -413,15 +433,15 @@ const CustomTable: React.FC<ICustomTable> = ({
           </TableHead>
           <TableBody>
             <Row
-              detailUrl={detailUrl}
               expandable={expandable}
               head={head}
               rowsPerPage={rowsPerPage}
               page={page + 1}
-              rows={stableSort(rows, getComparator(order, orderBy)).slice(
+              rows={stableSort(rows, getComparator(order, orderBy))?.slice(
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage
               )}
+              handleClickDelete={handleClickDelete}
               sortData={sortData}
             />
           </TableBody>

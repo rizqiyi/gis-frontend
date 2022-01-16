@@ -135,7 +135,7 @@ const Root = (): JSX.Element => {
                   </Tabs>
                   <TabPanel value={value} index={0}>
                     <Slider className={classes.slider} {...sliderConfig}>
-                      {data.images.map(
+                      {data.left_images_drainase.map(
                         ({ image_path, image_name }: IDrainaseImages) => (
                           <Box key={image_name}>
                             <img
@@ -160,7 +160,7 @@ const Root = (): JSX.Element => {
                   </TabPanel>
                   <TabPanel value={value} index={1}>
                     <Slider className={classes.slider} {...sliderConfig}>
-                      {data.images.map(
+                      {data.right_images_drainase.map(
                         ({ image_path, image_name }: IDrainaseImages) => (
                           <Box key={image_name}>
                             <img

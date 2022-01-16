@@ -12,11 +12,14 @@ import DrainaseIc from '@icons/drainase-ic-blue.svg'
 import PublishIc from '@icons/publish-ic.svg'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import DraftIc from '@icons/draft-ic.svg'
-import Dropzone from '@components/Dropzone'
 import { IDrainaseForm } from '@interfaces/drainase'
 import { getAccessToken, getCurrentUser } from '@helpers/jwt-decode'
+import { useParams } from 'react-router-dom'
 import validation from '@validations/drainase'
 import Breadcrumbs from '@components/Breadcrumbs'
+import useDrainaseRead from '@/services/hooks/dashboard/useDrainaseRead'
+import ServersideDropzone from '@/components/Dropzone/partials/Serverside'
+import CSnackbar from '@/components/Snackbar'
 import api from '@services/common'
 import Field from './partials/Field'
 import Headers from './partials/headers'
@@ -28,67 +31,59 @@ const CreateDrainase = (): JSX.Element => {
     left_drainase: [],
     right_drainase: [],
   })
+  const [loadingDelete, setLoadingDelete] = useState<boolean>(false)
+  const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false)
+  const [updateStatus, setUpdateStatus] = useState<{ [key: string]: boolean }>({
+    error: false,
+    success: false,
+  })
+
+  const { id }: { [key: string]: string | undefined } = useParams()
+
+  const { drainase, loading } = useDrainaseRead(false, id as string, [
+    loadingDelete as boolean,
+    loadingUpdate as boolean,
+  ])
 
   return (
     <Box>
-      <Breadcrumbs additionalActionText="Drainase Baru" />
+      <Breadcrumbs
+        loading={loading}
+        additionalDetailText={drainase.street_name}
+      />
       <Formik
         initialValues={{
-          street_name: '',
-          district: '',
-          sub_district: '',
-          street_width: '',
-          sta: '',
-          latitude: '',
-          longitude: '',
-          left_typical: '',
-          left_drainase_depth: '',
-          left_drainase_width: '',
-          left_drainase_condition: '',
-          right_typical: '',
-          right_drainase_depth: '',
-          right_drainase_width: '',
-          right_drainase_condition: '',
-          note: '',
+          street_name: drainase.street_name || '',
+          district: drainase.district || '',
+          sub_district: drainase.sub_district || '',
+          street_width: drainase.street_width || '',
+          sta: drainase.sta || '',
+          latitude: drainase.latitude || '',
+          longitude: drainase.longitude || '',
+          left_typical: drainase.left_typical || '',
+          left_drainase_depth: drainase.left_drainase_depth || '',
+          left_drainase_width: drainase.left_drainase_width || '',
+          left_drainase_condition: drainase.left_drainase_condition || '',
+          right_typical: drainase.right_typical || '',
+          right_drainase_depth: drainase.right_drainase_depth || '',
+          right_drainase_width: drainase.right_drainase_width || '',
+          right_drainase_condition: drainase.right_drainase_condition || '',
+          note: drainase.note || '',
           user_id: getCurrentUser().id,
-          description: '',
-          is_published: true,
+          description: drainase.description || '',
+          is_published: drainase.is_published,
         }}
         validationSchema={validation}
         enableReinitialize
         onSubmit={async (e: IDrainaseForm, { setSubmitting }) => {
           setSubmitting(true)
-
-          const typical: { [key: number]: string } = {
-            1: 'Trapesium',
-            2: 'Bentuk U',
-            3: 'Bronjong',
-            4: 'Kotak/Tertutup',
-          }
-
-          const condition: { [key: number]: string } = {
-            5: 'Baik',
-            6: 'Rusak Ringan',
-            7: 'Rusak Ringan',
-            8: 'Rusak Berat',
-          }
+          setLoadingUpdate(true)
 
           const switchValues = (
             keys: string,
             values: IDrainaseForm
-          ): string | Blob => {
-            if (keys === 'left_drainase_condition')
-              return condition[+values.left_drainase_condition]
-
-            if (keys === 'right_drainase_condition')
-              return condition[+values.right_drainase_condition]
-
-            if (keys === 'right_typical') return typical[+values.right_typical]
-
-            if (keys === 'left_typical') return typical[+values.left_typical]
-
-            return values[keys as keyof IDrainaseForm] as string | Blob
-          }
+          ): string | Blob =>
+            values[keys as keyof IDrainaseForm] as string | Blob
 
           const form = new FormData()
 
@@ -104,8 +99,8 @@ const CreateDrainase = (): JSX.Element => {
 
           try {
             await api({
-              method: 'post',
-              url: '/drainase/create',
+              method: 'put',
+              url: `/drainase/update/${id}`,
               data: form,
               headers: {
                 'Content-Type': 'multipart/form-data',
@@ -114,11 +109,21 @@ const CreateDrainase = (): JSX.Element => {
             })
 
             setSubmitting(false)
+            setLoadingUpdate(false)
+            setUpdateStatus({
+              error: false,
+              success: true,
+            })
           } catch (err) {
             // eslint-disable-next-line no-console
             console.error(err)
 
             setSubmitting(false)
+            setLoadingUpdate(false)
+            setUpdateStatus({
+              error: true,
+              success: false,
+            })
           }
         }}
       >
@@ -153,6 +158,7 @@ const CreateDrainase = (): JSX.Element => {
                         placeholder="Nama Ruas Jalan"
                         name="street_name"
                         id="street_name"
+                        value={values.street_name}
                         disabled={isSubmitting}
                         onChange={handleChange}
                         variant="filled"
@@ -161,7 +167,9 @@ const CreateDrainase = (): JSX.Element => {
                     </Box>
                   </Grid>
                   <Field
+                    setFieldValue={setFieldValue}
                     data={drainaseForm}
+                    values={values}
                     handleChange={handleChange}
                     isSubmitting={isSubmitting}
                   />
@@ -181,13 +189,18 @@ const CreateDrainase = (): JSX.Element => {
               >
                 <Grid container spacing={4}>
                   <Field
+                    setFieldValue={setFieldValue}
                     data={leftDrainase}
                     handleChange={handleChange}
                     isSubmitting={isSubmitting}
                     values={values}
                   />
                 </Grid>
-                <Dropzone
+                <ServersideDropzone
+                  loadNewData={loading}
+                  setLoadingDelete={setLoadingDelete}
+                  loadingDelete={loadingDelete}
+                  imagesFromServer={drainase.left_images_drainase}
                   isSubmitting={isSubmitting}
                   name="left_drainase"
                   setImages={setImages}
@@ -208,13 +221,18 @@ const CreateDrainase = (): JSX.Element => {
               >
                 <Grid container spacing={4}>
                   <Field
+                    setFieldValue={setFieldValue}
                     data={rightDrainase}
                     handleChange={handleChange}
                     isSubmitting={isSubmitting}
                     values={values}
                   />
                 </Grid>
-                <Dropzone
+                <ServersideDropzone
+                  loadNewData={loading}
+                  setLoadingDelete={setLoadingDelete}
+                  loadingDelete={loadingDelete}
+                  imagesFromServer={drainase.right_images_drainase}
                   isSubmitting={isSubmitting}
                   name="right_drainase"
                   setImages={setImages}
@@ -251,6 +269,7 @@ const CreateDrainase = (): JSX.Element => {
                         withErrorMsg={false}
                         disabled={isSubmitting}
                         onChange={handleChange}
+                        value={values.note}
                         variant="filled"
                         rows={2}
                         multiline
@@ -280,6 +299,7 @@ const CreateDrainase = (): JSX.Element => {
                         withErrorMsg={false}
                         disabled={isSubmitting}
                         onChange={handleChange}
+                        value={values.description}
                         variant="filled"
                         rows={2}
                         multiline
@@ -395,6 +415,30 @@ const CreateDrainase = (): JSX.Element => {
           </Form>
         )}
       </Formik>
+      <CSnackbar
+        open={updateStatus.success}
+        status="success"
+        onClose={() =>
+          setUpdateStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message="Berhasil memperbarui drainase"
+      />
+      <CSnackbar
+        open={updateStatus.error}
+        status="error"
+        onClose={() =>
+          setUpdateStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message="Gagal memperbarui drainase"
+      />
     </Box>
   )
 }

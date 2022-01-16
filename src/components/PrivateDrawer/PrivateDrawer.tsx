@@ -52,6 +52,10 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
   const matchPathname = (pathname: string): boolean =>
     location.pathname.split('/')[1] === pathname
 
+  const isNotDynamicPage = !['detail', 'edit', 'delete', 'create'].includes(
+    location.pathname.split('/')[2]
+  )
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Drawer
@@ -247,7 +251,7 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
         }}
       >
         <Box component="main" sx={{ margin: '56px 72px' }}>
-          <TitlePage />
+          {isNotDynamicPage && <TitlePage />}
           {children}
         </Box>
       </Box>
