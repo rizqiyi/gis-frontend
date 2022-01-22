@@ -179,7 +179,7 @@ const ServersideDropzone: React.FC<IDropzone> = ({
         </Box>
       </Paper>
     ))
-  }, [imagesFromServer, images, loadingDelete])
+  }, [imagesFromServer, imagesDone, loadingDelete])
 
   return (
     <Box sx={{ mt: '40px' }}>

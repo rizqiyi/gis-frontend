@@ -10,6 +10,10 @@ import useDrainase from '@services/hooks/dashboard'
 import api from '@/services/common'
 import { getAccessToken } from '@/helpers/jwt-decode'
 import CSnackbar from '@/components/Snackbar'
+import FilterIc from '@icons/filter-ic.svg'
+// import AdapterDateFns from '@mui/lab/AdapterDateFns'
+// import LocalizationProvider from '@mui/lab/LocalizationProvider'
+// import DatePicker from '@mui/lab/DatePicker'
 import { headData, sortScore } from './constant'
 
 const Drainase = (): JSX.Element => {
@@ -18,6 +22,7 @@ const Drainase = (): JSX.Element => {
     error: false,
     success: false,
   })
+  // const [value, setValue] = React.useState<Date | null>(null)
   const { drainase } = useDrainase(false, [deleteStatus])
   const [page, setPage] = useState<number>(drainase?.current_page || 0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(
@@ -68,6 +73,23 @@ const Drainase = (): JSX.Element => {
                     fullWidth
                     required
                   />
+                  <Button
+                    sx={{
+                      minWidth: '56px',
+                      borderRadius: '12px',
+                      maxHeight: '56px',
+                      padding: 0,
+                      marginLeft: '18px',
+                      boxShadow: '0px 12px 24px rgba(31, 169, 231, 0.12)',
+                      backgroundColor: (theme) => theme.palette.primary.main,
+                      '&:hover': {
+                        backgroundColor: (theme) =>
+                          theme.palette.secondary.main,
+                      },
+                    }}
+                  >
+                    <img src={FilterIc} alt="filter-ic" />
+                  </Button>
                 </Box>
               </Form>
             )}
@@ -78,6 +100,7 @@ const Drainase = (): JSX.Element => {
             disableElevation
             sx={{
               color: '#FFFFFF',
+              boxShadow: '0px 12px 24px rgba(31, 169, 231, 0.12)',
               minHeight: '52px',
               borderRadius: '12px',
               width: '219px',
@@ -98,6 +121,18 @@ const Drainase = (): JSX.Element => {
           margin: '30px 0 ',
         }}
       />
+      {/* <Box sx={{ margin: '40px 0' }}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DatePicker
+            label="Basic example"
+            value={value}
+            onChange={(newValue: Date | null) => {
+              setValue(newValue)
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
+      </Box> */}
       <Table
         head={headData}
         page={page}

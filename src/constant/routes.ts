@@ -44,6 +44,16 @@ export default [
     exact: true,
   },
   {
+    path: '/drainase/detail/:id',
+    private: true,
+    component: lazy(async () => {
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT))
+
+      return import('@pages/DetailDrainase')
+    }),
+    exact: true,
+  },
+  {
     path: '/drainase/edit/:id',
     private: true,
     component: lazy(async () => {

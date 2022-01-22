@@ -23,7 +23,7 @@ import CSnackbar from '@/components/Snackbar'
 import api from '@services/common'
 import Field from './partials/Field'
 import Headers from './partials/headers'
-import useStyles from './CreateDrainase.styles'
+import useStyles from './EditDrainase.styles'
 
 const CreateDrainase = (): JSX.Element => {
   const classes = useStyles()
@@ -113,6 +113,10 @@ const CreateDrainase = (): JSX.Element => {
             setUpdateStatus({
               error: false,
               success: true,
+            })
+            setImages({
+              left_drainase: [],
+              right_drainase: [],
             })
           } catch (err) {
             // eslint-disable-next-line no-console

@@ -31,6 +31,7 @@ const index: React.FC<IBreadcrumbs> = ({
   const actionText: { [key: string]: string } = {
     create: 'Buat',
     edit: 'Edit',
+    detail: 'Detail',
   }
 
   return (
@@ -53,7 +54,17 @@ const index: React.FC<IBreadcrumbs> = ({
             onClick={() => navigate(`/${pathname[1]}`)}
             underline="none"
           >
-            {title[pathname[1]] as string}
+            <Typography
+              sx={{ color: '#1FA9E7' }}
+              key="2"
+              className={
+                additionalDetailText ? classes.menuText : classes.activeText
+              }
+              variant="body1"
+              fontWeight={500}
+            >
+              {title[pathname[1]] as string}
+            </Typography>
           </Link>
           {pathname[2] && (
             <Typography
