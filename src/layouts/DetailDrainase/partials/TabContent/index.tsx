@@ -33,17 +33,8 @@ const TabContent: React.FC<ITabContent> = ({
           <Slider
             className={classes.slider}
             {...sliderConfig}
-            variableWidth
             infinite
-            slidesToShow={
-              (
-                (name === 'right'
-                  ? data?.right_images_drainase
-                  : data?.left_images_drainase) || []
-              ).length === 1
-                ? 1
-                : 2
-            }
+            slidesToShow={1}
             slidesToScroll={1}
           >
             {(
@@ -58,6 +49,8 @@ const TabContent: React.FC<ITabContent> = ({
                   key={image_name}
                 >
                   <img
+                    width="400px"
+                    style={{ objectFit: 'cover' }}
                     height="250px"
                     src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
                     alt={image_name}
