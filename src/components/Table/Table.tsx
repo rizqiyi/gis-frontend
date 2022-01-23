@@ -215,7 +215,11 @@ function Row({
                 </TableCell>
                 {filteredObj.map((obj) => (
                   <TableCell
-                    onClick={() => navigate(`/${pathname[1]}/detail/${row.id}`)}
+                    onClick={() => {
+                      if (pathname[1] === 'user-management') return
+
+                      navigate(`/${pathname[1]}/detail/${row.id}`)
+                    }}
                     key={obj.key}
                     sx={{ fontWeight: 600, cursor: 'pointer' }}
                   >

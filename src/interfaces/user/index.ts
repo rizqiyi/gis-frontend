@@ -17,23 +17,25 @@ export interface ILogin {
   rememberMe: boolean
 }
 
+export interface IUserRead {
+  username: string
+  email: string
+  manage: string
+  fullname: string
+  avatar: string
+  createdAt: string
+  updatedAt: string
+  id: number
+  role_name: string
+}
+
 export interface IUserAPI {
   previous_page: null | number
   current_page: number
   next_page: null | number
   total: number
   per_page: number
-  data: {
-    username: string
-    email: string
-    manage: string
-    fullname: string
-    avatar: string
-    createdAt: string
-    updatedAt: string
-    id: number
-    role_name: string
-  }[]
+  data: IUserRead[]
   offset: number
   limit: number
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, ListItemButton, Typography } from '@mui/material'
 import Water from '@icons/maki_water.svg'
 import WaterActive from '@icons/maki_water_active.svg'
-import useDrainase from '@services/hooks/dashboard'
+import { useDrainase } from '@services/hooks/dashboard'
 import { IDrainaseData } from '@interfaces/drainase'
 import useStyles from './CardListDrainase.styles'
 

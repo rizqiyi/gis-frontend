@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import useDrainaseRead from '@/services/hooks/dashboard/useDrainaseRead'
+import { useDrainaseRead } from '@/services/hooks/dashboard'
 import { Box, Grid, Paper, Tab, Tabs, Typography } from '@mui/material'
 import Breadcrumbs from '@components/Breadcrumbs'
 import { useParams } from 'react-router-dom'

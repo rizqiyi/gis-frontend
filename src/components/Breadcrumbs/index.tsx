@@ -58,7 +58,9 @@ const index: React.FC<IBreadcrumbs> = ({
               sx={{ color: '#1FA9E7' }}
               key="2"
               className={
-                additionalDetailText ? classes.menuText : classes.activeText
+                additionalDetailText || pathname[2]
+                  ? classes.menuText
+                  : classes.activeText
               }
               variant="body1"
               fontWeight={500}

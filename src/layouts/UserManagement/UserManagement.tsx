@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import useUsers from '@/services/hooks/users/useUsers'
+import { useUsers } from '@/services/hooks/users'
 import api from '@/services/common'
 import { getAccessToken, getCurrentUser } from '@/helpers/jwt-decode'
 import Table from '@/components/Table'
@@ -83,7 +83,7 @@ const UserManagement = (): JSX.Element => {
               width: '200px',
             }}
             variant="contained"
-            onClick={() => navigate('/drainase/create')}
+            onClick={() => navigate('/user-management/create')}
             startIcon={<AddCircleOutlineIcon />}
           >
             <Typography sx={{ ml: '10px' }} variant="subtitle2">

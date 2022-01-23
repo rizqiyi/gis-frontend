@@ -94,6 +94,16 @@ export default [
     exact: true,
   },
   {
+    path: '/user-management/create',
+    private: true,
+    component: lazy(async () => {
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT))
+
+      return import('@pages/CreateUserManagement')
+    }),
+    exact: true,
+  },
+  {
     path: '/user-management',
     private: true,
     component: lazy(async () => {

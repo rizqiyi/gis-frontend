@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react'
-import { useUsersRead } from '@/services/hooks/users'
-import { useParams } from 'react-router-dom'
 import { Box, Button, Paper, Typography } from '@mui/material'
 import Breadcrumbs from '@components/Breadcrumbs'
 import { Form, Formik } from 'formik'
@@ -14,9 +12,7 @@ import DefaultProfile from '@illust/profile-default.svg'
 import VisiblePasswordIcon from './partials/VisiblePasswordIcon'
 import fields from './constant'
 
-const EditUserManagement = (): JSX.Element => {
-  const { id }: { [key: string]: string | undefined } = useParams()
-  const { users, loading } = useUsersRead(id as string)
+const CreateUserManagement = (): JSX.Element => {
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false)
 
   const switchField = (p: any) => {
@@ -82,15 +78,15 @@ const EditUserManagement = (): JSX.Element => {
 
   return (
     <Box>
-      <Breadcrumbs loading={loading} additionalDetailText={users?.fullname} />
+      <Breadcrumbs additionalActionText="User Baru" />
       <Paper elevation={0} sx={{ p: '48px' }}>
         <Formik
           enableReinitialize
           initialValues={{
-            fullname: users?.fullname || '',
-            email: users?.email || '',
-            manage: users?.manage || '',
-            role_name: users?.role_name || '',
+            fullname: '',
+            email: '',
+            manage: '',
+            role_name: '',
           }}
           // eslint-disable-next-line no-console
           onSubmit={() => console.log('fired')}
@@ -257,4 +253,4 @@ const EditUserManagement = (): JSX.Element => {
   )
 }
 
-export default EditUserManagement
+export default CreateUserManagement
