@@ -17,6 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Grid from '@mui/material/Grid'
 import formatCompleteDate from '@helpers/moment/formatDate'
 import {
+  Avatar,
   CircularProgress,
   Menu,
   MenuItem,
@@ -25,14 +26,17 @@ import {
   Tooltip,
 } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router-dom'
+// import DefaultProfile from '@illust/profile-default.svg'
 import Drainase from './partials/DetailStreet'
 import useStyles from './Table.styles'
+import RenderEmpty from './partials/RenderEmpty/RenderEmpty'
 
 interface IRow {
   rows: Array<{ [key: string]: string | number }>
   head: Array<{ [key: string]: string | number }>
   sortData?: { [key: string]: number }
   expandable: boolean
+  withAvatar: boolean
   rowsPerPage: number
   page: number
   handleClickDelete: (
@@ -51,6 +55,7 @@ function Row({
   rowsPerPage,
   page,
   handleClickDelete,
+  withAvatar,
 }: IRow) {
   const navigate = useNavigate()
   const [open, setOpen] = React.useState<{ [key: number]: boolean }>({})
@@ -81,7 +86,9 @@ function Row({
 
   const displayByFormat = (
     key: string,
-    data: { [key: string]: string | unknown }
+    data: { [key: string]: string | unknown },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    record: { [key: string]: any }
   ): React.ReactNode | string => {
     if (key === 'is_published') {
       return (
@@ -121,6 +128,28 @@ function Row({
 
     if (['street_width', 'sta'].includes(key)) {
       return `${data[key]} Meter`
+    }
+
+    if (withAvatar && key === 'fullname') {
+      return (
+        <Box display="flex" alignItems="center">
+          <Avatar
+            alt="Profile"
+            // not working
+            // imgProps={{
+            //   onError: (e: any) => (e.target.src = DefaultProfile),
+            // }}
+            src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${record?.avatar}`}
+          />
+          <Typography
+            sx={{ marginLeft: '16px' }}
+            variant="subtitle2"
+            className={classes.textTruncate}
+          >
+            {data[key] as string}
+          </Typography>
+        </Box>
+      )
     }
 
     return data[key] as string
@@ -191,7 +220,7 @@ function Row({
                     sx={{ fontWeight: 600, cursor: 'pointer' }}
                   >
                     {
-                      displayByFormat(obj.key as string, obj) as
+                      displayByFormat(obj.key as string, obj, row) as
                         | string
                         | React.ReactNode
                     }
@@ -353,6 +382,8 @@ interface ICustomTable {
   expandable?: boolean
   page: number
   rowsPerPage: number
+  empty: boolean
+  withAvatar?: boolean
   handleChangePage: (e: unknown, p: number) => void
   handleChangeRowsPerPage: (p: React.ChangeEvent<HTMLInputElement>) => void
   handleClickDelete?: (
@@ -375,6 +406,8 @@ const CustomTable: React.FC<ICustomTable> = ({
   handleChangePage,
   handleChangeRowsPerPage,
   handleClickDelete = () => {},
+  empty,
+  withAvatar = false,
 }: ICustomTable): JSX.Element => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<string>('')
@@ -395,6 +428,8 @@ const CustomTable: React.FC<ICustomTable> = ({
   ) => {
     handleRequestSort(event, property)
   }
+
+  if (empty) return <RenderEmpty />
 
   return (
     <>
@@ -444,6 +479,7 @@ const CustomTable: React.FC<ICustomTable> = ({
             <Row
               expandable={expandable}
               head={head}
+              withAvatar={withAvatar}
               rowsPerPage={rowsPerPage}
               page={page + 1}
               rows={stableSort(rows, getComparator(order, orderBy))?.slice(

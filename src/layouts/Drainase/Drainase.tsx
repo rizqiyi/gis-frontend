@@ -117,7 +117,7 @@ const Drainase = (): JSX.Element => {
       </Box>
       <Box
         sx={{
-          border: '1px solid #DAF3FF',
+          borderBottom: '1px solid #DAF3FF',
           margin: '30px 0 ',
         }}
       />
@@ -134,6 +134,7 @@ const Drainase = (): JSX.Element => {
         </LocalizationProvider>
       </Box> */}
       <Table
+        empty={drainase?.data?.length === 0}
         head={headData}
         page={page}
         rowsPerPage={rowsPerPage}
