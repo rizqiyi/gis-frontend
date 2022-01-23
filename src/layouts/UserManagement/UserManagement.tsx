@@ -35,8 +35,6 @@ const UserManagement = (): JSX.Element => {
     setPage(0)
   }
 
-  console.log(users)
-
   return (
     <>
       <Box
