@@ -85,7 +85,7 @@ const DetailData: React.FC<IDetailData> = ({
             </Box>
             <Box>
               <Typography fontWeight={600} variant="subtitle2">
-                {drainase?.street_width}
+                {drainase?.street_width} Meter
               </Typography>
             </Box>
           </Box>
@@ -104,7 +104,7 @@ const DetailData: React.FC<IDetailData> = ({
             </Box>
             <Box>
               <Typography fontWeight={600} variant="subtitle2">
-                {drainase?.sta}
+                {drainase?.sta} Meter
               </Typography>
             </Box>
           </Box>

@@ -192,6 +192,8 @@ const Dropzone: React.FC<IDropzone> = ({
         {imagesDone.includes(false) ? <CircularProgress /> : files}
       </Box>
       <Dialog
+        title="Anda yakin ingin menghapus Gambar ?"
+        desc="Data yang telah dihapus tidak dapat kembali"
         handleOk={() => {
           const newFiles = [...acceptedFiles]
 

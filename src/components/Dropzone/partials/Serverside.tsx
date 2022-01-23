@@ -298,6 +298,8 @@ const ServersideDropzone: React.FC<IDropzone> = ({
         okText="Hapus"
         cancelText="Cancel"
         handleClose={() => setOpenDialog(false)}
+        title="Anda yakin ingin menghapus Gambar ?"
+        desc="Data yang telah dihapus tidak dapat kembali"
       />
       <CSnackbar
         open={openSnackbarSuccess}

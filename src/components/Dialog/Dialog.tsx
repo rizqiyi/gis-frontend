@@ -11,11 +11,20 @@ import useStyles from './Dialog.styles'
 interface IFormDialog {
   open: boolean
   //   setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  handleClose: () => void
+  handleClose: (e?: any, reason?: string) => void
   okText: string
   cancelText: string
   handleOk: (e: any) => void
+  handleBackdrop?: (e: any) => void
+  handleSuccess?: (e: any) => void
   dataToDialog?: any
+  title: string
+  desc: string
+  titleSuccess?: string
+  descSuccess?: string
+  disabled?: boolean
+  successBtnText?: string
+  onSuccessAction?: boolean
 }
 
 const FormDialog: React.FC<IFormDialog> = ({
@@ -25,6 +34,15 @@ const FormDialog: React.FC<IFormDialog> = ({
   cancelText,
   handleOk,
   dataToDialog = {},
+  title,
+  desc,
+  handleBackdrop = () => {},
+  handleSuccess = () => {},
+  disabled = false,
+  onSuccessAction = false,
+  titleSuccess = '',
+  descSuccess = '',
+  successBtnText = '',
 }: IFormDialog): JSX.Element => {
   const classes = useStyles()
 
@@ -36,9 +54,11 @@ const FormDialog: React.FC<IFormDialog> = ({
       PaperProps={{
         elevation: 0,
         sx: {
+          width: onSuccessAction ? '500px' : 'inherit',
           boxShadow: '0px 12px 32px rgba(112, 144, 176, 0.08)',
         },
       }}
+      onBackdropClick={handleBackdrop}
       open={open}
       onClose={handleClose}
     >
@@ -53,12 +73,12 @@ const FormDialog: React.FC<IFormDialog> = ({
         <img src={Trash} alt="trash" />
         <Box sx={{ mt: '10px', textAlign: 'center' }}>
           <Typography variant="subtitle1" fontWeight={600}>
-            Anda yakin ingin menghapus Gambar ?
+            {onSuccessAction ? titleSuccess : title}
           </Typography>
         </Box>
         <Box sx={{ mt: '10px', color: '#9E9E9E', mb: '10px' }}>
           <Typography variant="caption">
-            Data yang telah dihapus tidak dapat kembali
+            {onSuccessAction ? descSuccess : desc}
           </Typography>
         </Box>
       </DialogContent>
@@ -67,21 +87,44 @@ const FormDialog: React.FC<IFormDialog> = ({
           p: '30px 40px 30px 40px',
           gap: '20px',
           borderTop: '1px solid #DDDFE5',
+          ...(onSuccessAction
+            ? { display: 'flex', justifyContent: 'center' }
+            : {}),
         }}
       >
-        <Button className={classes.cancelButton} onClick={handleClose}>
-          <Typography variant="body2" fontWeight={600}>
-            {cancelText}
-          </Typography>
-        </Button>
-        <Button
-          className={classes.acceptButton}
-          onClick={() => handleOk(dataToDialog)}
-        >
-          <Typography variant="body2" fontWeight={600}>
-            {okText}
-          </Typography>
-        </Button>
+        {onSuccessAction ? (
+          <Button
+            disableElevation
+            variant="contained"
+            className={classes.successButton}
+            onClick={handleSuccess}
+          >
+            <Typography variant="body2" fontWeight={600}>
+              {successBtnText}
+            </Typography>
+          </Button>
+        ) : (
+          <>
+            <Button
+              disabled={disabled}
+              className={classes.cancelButton}
+              onClick={() => handleClose()}
+            >
+              <Typography variant="body2" fontWeight={600}>
+                {cancelText}
+              </Typography>
+            </Button>
+            <Button
+              disabled={disabled}
+              className={classes.acceptButton}
+              onClick={() => handleOk(dataToDialog)}
+            >
+              <Typography variant="body2" fontWeight={600}>
+                {okText}
+              </Typography>
+            </Button>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   )
