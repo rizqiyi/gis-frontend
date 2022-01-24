@@ -32,6 +32,8 @@ const index: React.FC<IBreadcrumbs> = ({
     create: 'Buat',
     edit: 'Edit',
     detail: 'Detail',
+    profile: 'Ubah Profile',
+    password: 'Ubah Password',
   }
 
   return (

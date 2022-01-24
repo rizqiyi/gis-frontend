@@ -10,4 +10,10 @@ const validation = yup.object().shape({
   passwordVerify: yup.string().required('Ulangi password wajib diisi'),
 })
 
+export const passwordValidation = yup.object().shape({
+  password: yup.string().required('Password lama wajib diisi'),
+  newPassword: yup.string().required('Password baru wajib diisi'),
+  verifyNewPassword: yup.string().required('Konfirmasi password wajib diisi'),
+})
+
 export default validation
