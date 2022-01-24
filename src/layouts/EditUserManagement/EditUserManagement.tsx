@@ -109,6 +109,7 @@ const EditUserManagement = (): JSX.Element => {
         <Formik
           enableReinitialize
           initialValues={{
+            username: users?.username || '',
             fullname: users?.fullname || '',
             email: users?.email || '',
             manage: users?.manage || '',

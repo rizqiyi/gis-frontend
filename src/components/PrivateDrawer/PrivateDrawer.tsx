@@ -4,7 +4,6 @@ import {
   Box,
   Typography,
   Paper,
-  Avatar,
   IconButton,
   Tooltip,
   Menu,
@@ -18,6 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import UserIcon from '@icons/user-ic.svg'
 import ProfileSettingIcon from '@icons/settings-profile-ic.svg'
 import LogoutIcon from '@icons/logout-ic.svg'
+import DefaultProfile from '@illust/profile-default.svg'
 import truncate from '@helpers/truncate'
 import { getCurrentUser } from '@helpers/jwt-decode'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -167,10 +167,16 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
               >
                 <Box sx={{ display: 'flex' }}>
                   <Box>
-                    <Avatar
-                      alt="Remy Sharp"
+                    <img
+                      style={{ borderRadius: '50%' }}
+                      width="48px"
+                      height="48px"
+                      onError={({ currentTarget }) => {
+                        // eslint-disable-next-line no-return-assign, no-param-reassign
+                        return (currentTarget.src = DefaultProfile)
+                      }}
                       src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${currentUser.avatar}`}
-                      sx={{ width: 48, height: 48 }}
+                      alt="avatar"
                     />
                   </Box>
                   <Box sx={{ ml: '12px', color: '#FFFFFF' }}>

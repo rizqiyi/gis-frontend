@@ -1,5 +1,11 @@
 const fields = [
   {
+    name: 'username',
+    placeholder: 'Masukkan nama pengguna',
+    label: 'Nama Pengguna',
+    type: 'input',
+  },
+  {
     name: 'fullname',
     placeholder: 'Masukkan nama',
     label: 'Nama',
