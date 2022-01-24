@@ -168,7 +168,7 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
                 <Box sx={{ display: 'flex' }}>
                   <Box>
                     <img
-                      style={{ borderRadius: '50%' }}
+                      style={{ borderRadius: '50%', objectFit: 'cover' }}
                       width="48px"
                       height="48px"
                       onError={({ currentTarget }) => {

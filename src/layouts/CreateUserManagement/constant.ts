@@ -53,6 +53,7 @@ const fields = [
 
 export interface IUserForm {
   fullname: string
+  username: string
   email: string
   manage: string
   role_name: string

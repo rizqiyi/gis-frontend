@@ -73,6 +73,8 @@ const Input = ({
   ...rest
 }: TextFieldProps & { withErrorMsg?: boolean }): JSX.Element => {
   const [field, meta] = useField({ name: id as string })
+  console.log(field)
+  console.log(meta)
   const isFieldError =
     required &&
     Boolean(meta.touched) &&

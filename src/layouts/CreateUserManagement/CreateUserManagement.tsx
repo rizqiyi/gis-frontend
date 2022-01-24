@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { Box, Button, Paper, Typography } from '@mui/material'
 import Breadcrumbs from '@components/Breadcrumbs'
-import { Form, Formik } from 'formik'
+import { FastField, Form, Formik } from 'formik'
 import Input from '@/components/Input'
 import { styled } from '@mui/material/styles'
 import Select from '@/components/Select'
@@ -10,6 +10,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import DefaultProfile from '@illust/profile-default.svg'
 import { getAccessToken } from '@/helpers/jwt-decode'
 import CSnackbar from '@/components/Snackbar'
+import validation from '@/validations/users'
 import axios from 'axios'
 import VisiblePasswordIcon from './partials/VisiblePasswordIcon'
 import fields, { IUserForm } from './constant'
@@ -31,7 +32,8 @@ const CreateUserManagement = (): JSX.Element => {
     switch (p.type) {
       case 'input':
         return (
-          <Input
+          <FastField
+            component={Input}
             required
             disabled={p.isSubmitting}
             placeholder={p.placeholder}
@@ -46,7 +48,9 @@ const CreateUserManagement = (): JSX.Element => {
 
       case 'input-password':
         return (
-          <Input
+          <FastField
+            required
+            component={Input}
             type={visiblePassword ? 'text' : 'password'}
             InputProps={{
               disableUnderline: true,
@@ -69,7 +73,8 @@ const CreateUserManagement = (): JSX.Element => {
 
       case 'select':
         return (
-          <Select
+          <FastField
+            component={Select}
             required
             disabled={p.isSubmitting}
             placeholder={p.placeholder}
@@ -96,6 +101,7 @@ const CreateUserManagement = (): JSX.Element => {
           enableReinitialize
           initialValues={{
             fullname: '',
+            username: '',
             email: '',
             manage: '',
             role_name: '',
@@ -103,6 +109,7 @@ const CreateUserManagement = (): JSX.Element => {
             passwordVerify: '',
             avatar: '',
           }}
+          validationSchema={validation}
           // eslint-disable-next-line no-console
           onSubmit={async (v, { setSubmitting, resetForm }) => {
             const form = new FormData()
@@ -218,7 +225,7 @@ const CreateUserManagement = (): JSX.Element => {
                   <img
                     width="170px"
                     height="170px"
-                    style={{ borderRadius: '50%' }}
+                    style={{ borderRadius: '50%', objectFit: 'cover' }}
                     src={file ? URL.createObjectURL(file[0]) : DefaultProfile}
                     alt="default"
                   />

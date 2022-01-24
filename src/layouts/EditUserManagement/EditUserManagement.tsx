@@ -4,7 +4,7 @@ import { useUsersRead } from '@/services/hooks/users'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Box, Button, Paper, Typography, styled, Skeleton } from '@mui/material'
 import Breadcrumbs from '@components/Breadcrumbs'
-import { Form, Formik } from 'formik'
+import { FastField, Form, Formik } from 'formik'
 import Input from '@/components/Input'
 import Select from '@/components/Select'
 import InfoIcon from '@icons/info-ic.svg'
@@ -45,7 +45,8 @@ const EditUserManagement = (): JSX.Element => {
     switch (p.type) {
       case 'input':
         return (
-          <Input
+          <FastField
+            component={Input}
             required
             disabled={p.isSubmitting}
             placeholder={p.placeholder}
@@ -60,7 +61,8 @@ const EditUserManagement = (): JSX.Element => {
 
       case 'input-password':
         return (
-          <Input
+          <FastField
+            component={Input}
             type={visiblePassword ? 'text' : 'password'}
             InputProps={{
               disableUnderline: true,
@@ -83,7 +85,8 @@ const EditUserManagement = (): JSX.Element => {
 
       case 'select':
         return (
-          <Select
+          <FastField
+            component={Select}
             required
             disabled={p.isSubmitting}
             placeholder={p.placeholder}
@@ -254,7 +257,7 @@ const EditUserManagement = (): JSX.Element => {
                   ) : (
                     <img
                       width="170px"
-                      style={{ borderRadius: '50%' }}
+                      style={{ borderRadius: '50%', objectFit: 'cover' }}
                       height="170px"
                       onError={({ currentTarget }) => {
                         // eslint-disable-next-line no-return-assign, no-param-reassign

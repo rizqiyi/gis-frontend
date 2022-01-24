@@ -133,7 +133,7 @@ function Row({
       return (
         <Box display="flex" alignItems="center">
           <img
-            style={{ borderRadius: '50%' }}
+            style={{ borderRadius: '50%', objectFit: 'cover' }}
             width="40px"
             height="40px"
             onError={({ currentTarget }) => {
