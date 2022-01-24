@@ -4,16 +4,28 @@ import { Box, Button, Paper, Typography } from '@mui/material'
 import Breadcrumbs from '@components/Breadcrumbs'
 import { Form, Formik } from 'formik'
 import Input from '@/components/Input'
+import { styled } from '@mui/material/styles'
 import Select from '@/components/Select'
-import InfoIcon from '@icons/info-ic.svg'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import DefaultProfile from '@illust/profile-default.svg'
+import { getAccessToken } from '@/helpers/jwt-decode'
+import CSnackbar from '@/components/Snackbar'
+import axios from 'axios'
 import VisiblePasswordIcon from './partials/VisiblePasswordIcon'
-import fields from './constant'
+import fields, { IUserForm } from './constant'
+
+const InputFile = styled('input')({
+  display: 'none',
+})
 
 const CreateUserManagement = (): JSX.Element => {
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false)
+  const [file, setFile] = useState<FileList | null>(null)
+  const [updateStatus, setUpdateStatus] = useState<{ [key: string]: boolean }>({
+    error: false,
+    success: false,
+  })
+  const [responseMsg, setResponseMsg] = useState<string>('')
 
   const switchField = (p: any) => {
     switch (p.type) {
@@ -87,11 +99,55 @@ const CreateUserManagement = (): JSX.Element => {
             email: '',
             manage: '',
             role_name: '',
+            password: '',
+            passwordVerify: '',
+            avatar: '',
           }}
           // eslint-disable-next-line no-console
-          onSubmit={() => console.log('fired')}
+          onSubmit={async (v, { setSubmitting, resetForm }) => {
+            const form = new FormData()
+
+            Object.keys(v).map((data: string) =>
+              form.append(data, v[data as keyof IUserForm] as string | Blob)
+            )
+
+            if (v.avatar === '') form.delete('avatar')
+
+            try {
+              const res = await axios.post(
+                `${process.env.REACT_APP_API_URI_PROD}/users/register`,
+                form,
+                {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'x-auth-token': getAccessToken(),
+                  },
+                }
+              )
+
+              setResponseMsg(res.data.message)
+
+              setUpdateStatus({
+                error: false,
+                success: true,
+              })
+
+              resetForm({})
+
+              setSubmitting(false)
+            } catch (err: any) {
+              setResponseMsg(err.response.data.message)
+
+              setUpdateStatus({
+                error: true,
+                success: false,
+              })
+
+              setSubmitting(false)
+            }
+          }}
         >
-          {({ isSubmitting, handleChange, values }) => (
+          {({ isSubmitting, handleChange, values, setFieldValue }) => (
             <Form>
               <Box
                 display="flex"
@@ -105,8 +161,7 @@ const CreateUserManagement = (): JSX.Element => {
                       key={field.name}
                       sx={{
                         display: 'flex',
-                        alignItems:
-                          field.name === 'password' ? 'start' : 'center',
+                        alignItems: 'center',
                         width: '100%',
                         marginTop: idx > 0 ? '40px' : 0,
                       }}
@@ -119,11 +174,9 @@ const CreateUserManagement = (): JSX.Element => {
                       >
                         <Typography fontWeight={600} variant="subtitle2">
                           {field.label}
-                          {field.name !== 'password' && (
-                            <span style={{ color: 'red', marginLeft: '5px' }}>
-                              *
-                            </span>
-                          )}
+                          <span style={{ color: 'red', marginLeft: '5px' }}>
+                            *
+                          </span>
                         </Typography>
                       </Box>
                       {field.name === 'password' ? (
@@ -134,17 +187,6 @@ const CreateUserManagement = (): JSX.Element => {
                               handleChange,
                               ...field,
                             } as any)}
-                          </Box>
-                          <Box marginTop="16px" color="#9E9E9E" display="flex">
-                            <img src={InfoIcon} alt="info" />
-                            <Typography
-                              sx={{ marginLeft: '15px' }}
-                              fontWeight={600}
-                              variant="caption"
-                            >
-                              Kosongi password baru jika tidak ingin mengganti
-                              password
-                            </Typography>
                           </Box>
                         </Box>
                       ) : (
@@ -176,7 +218,8 @@ const CreateUserManagement = (): JSX.Element => {
                   <img
                     width="170px"
                     height="170px"
-                    src={DefaultProfile}
+                    style={{ borderRadius: '50%' }}
+                    src={file ? URL.createObjectURL(file[0]) : DefaultProfile}
                     alt="default"
                   />
                   <Typography
@@ -188,24 +231,41 @@ const CreateUserManagement = (): JSX.Element => {
                     Pastikan Gambar Memiliki Ratio 1:1 dan format foto JPG,JPEG
                     dan PNG
                   </Typography>
-                  <Button
-                    startIcon={<SaveOutlinedIcon />}
-                    color="primary"
-                    variant="contained"
-                    disableElevation
-                    sx={{
-                      width: '100%',
-                      mt: '28px',
-                      color: 'white',
-                      minHeight: '50px',
-                      padding: '0 24px',
-                      borderRadius: '12px',
-                    }}
-                  >
-                    <Typography sx={{ ml: '10px' }} variant="subtitle2">
-                      Upload Foto
-                    </Typography>
-                  </Button>
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                  <label htmlFor="contained-button-file">
+                    <InputFile
+                      sx={{ display: 'none' }}
+                      accept="image/*"
+                      onChange={(e) => {
+                        setFile(e.target.files)
+
+                        setFieldValue('avatar', e.target.files?.[0] as Blob)
+                      }}
+                      id="contained-button-file"
+                      name="avatar"
+                      type="file"
+                    />
+                    <Button
+                      startIcon={<SaveOutlinedIcon />}
+                      color="primary"
+                      variant="contained"
+                      disableElevation
+                      component="span"
+                      disabled={isSubmitting}
+                      sx={{
+                        width: '100%',
+                        mt: '28px',
+                        color: 'white',
+                        minHeight: '50px',
+                        padding: '0 24px',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      <Typography sx={{ ml: '10px' }} variant="subtitle2">
+                        Upload Foto
+                      </Typography>
+                    </Button>
+                  </label>
                 </Box>
               </Box>
               <Box borderBottom="1px solid #DDDFE5" margin="40px 0" />
@@ -227,28 +287,35 @@ const CreateUserManagement = (): JSX.Element => {
                     Simpan Drainase
                   </Typography>
                 </Button>
-                <Button
-                  startIcon={<DeleteOutlinedIcon />}
-                  color="error"
-                  variant="contained"
-                  disableElevation
-                  sx={{
-                    color: 'white',
-                    minHeight: '50px',
-                    padding: '0 24px',
-                    borderRadius: '12px',
-                    marginLeft: '32px',
-                  }}
-                >
-                  <Typography sx={{ ml: '10px' }} variant="subtitle2">
-                    Hapus User
-                  </Typography>
-                </Button>
               </Box>
             </Form>
           )}
         </Formik>
       </Paper>
+      <CSnackbar
+        open={updateStatus.success}
+        status="success"
+        onClose={() =>
+          setUpdateStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message={responseMsg}
+      />
+      <CSnackbar
+        open={updateStatus.error}
+        status="error"
+        onClose={() =>
+          setUpdateStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message={responseMsg}
+      />
     </Box>
   )
 }

@@ -23,13 +23,9 @@ const api = async (
       // }),
     })
 
-    if (response && response.data) {
-      return response.data
-    }
-
-    return await Promise.reject(String('request failed'))
+    return response?.data
   } catch (error: unknown) {
-    return Promise.reject(String(error))
+    return error
   }
 }
 

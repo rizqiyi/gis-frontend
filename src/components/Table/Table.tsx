@@ -17,7 +17,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Grid from '@mui/material/Grid'
 import formatCompleteDate from '@helpers/moment/formatDate'
 import {
-  Avatar,
   CircularProgress,
   Menu,
   MenuItem,
@@ -26,7 +25,7 @@ import {
   Tooltip,
 } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router-dom'
-// import DefaultProfile from '@illust/profile-default.svg'
+import DefaultProfile from '@illust/profile-default.svg'
 import Drainase from './partials/DetailStreet'
 import useStyles from './Table.styles'
 import RenderEmpty from './partials/RenderEmpty/RenderEmpty'
@@ -133,13 +132,16 @@ function Row({
     if (withAvatar && key === 'fullname') {
       return (
         <Box display="flex" alignItems="center">
-          <Avatar
-            alt="Profile"
-            // not working
-            // imgProps={{
-            //   onError: (e: any) => (e.target.src = DefaultProfile),
-            // }}
+          <img
+            style={{ borderRadius: '50%' }}
+            width="40px"
+            height="40px"
+            onError={({ currentTarget }) => {
+              // eslint-disable-next-line no-return-assign, no-param-reassign
+              return (currentTarget.src = DefaultProfile)
+            }}
             src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${record?.avatar}`}
+            alt="profile"
           />
           <Typography
             sx={{ marginLeft: '16px' }}

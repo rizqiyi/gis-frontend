@@ -39,4 +39,13 @@ const fields = [
   },
 ]
 
+export interface IUserForm {
+  fullname: string
+  email: string
+  manage: string
+  role_name: string
+  password: string
+  avatar: Blob | string
+}
+
 export default fields

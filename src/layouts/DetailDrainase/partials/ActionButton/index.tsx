@@ -84,9 +84,9 @@ const ActionButton: React.FC<IActionButton> = ({
         disabled={isLoading}
         handleClose={(_, reason: string | undefined) => {
           if (
-            isLoading ||
-            deleteStatus.success ||
-            (reason && reason === 'backdropClick')
+            (isLoading || deleteStatus.success) &&
+            reason &&
+            reason === 'backdropClick'
           )
             return
 

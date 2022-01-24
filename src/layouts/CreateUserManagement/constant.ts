@@ -6,6 +6,12 @@ const fields = [
     type: 'input',
   },
   {
+    name: 'username',
+    placeholder: 'Masukkan nama pengguna',
+    label: 'Nama pengguna',
+    type: 'input',
+  },
+  {
     name: 'email',
     placeholder: 'Masukkan email',
     label: 'Email',
@@ -14,7 +20,13 @@ const fields = [
   {
     name: 'password',
     placeholder: 'Masukkan password',
-    label: 'Password Baru',
+    label: 'Password',
+    type: 'input-password',
+  },
+  {
+    name: 'passwordVerify',
+    placeholder: 'Ulangi password',
+    label: 'Ulangi password',
     type: 'input-password',
   },
   {
@@ -38,5 +50,15 @@ const fields = [
     ],
   },
 ]
+
+export interface IUserForm {
+  fullname: string
+  email: string
+  manage: string
+  role_name: string
+  password: string
+  passwordVerify: string
+  avatar: Blob | string
+}
 
 export default fields
