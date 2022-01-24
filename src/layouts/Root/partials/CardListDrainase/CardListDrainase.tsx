@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { Box, ListItemButton, Typography } from '@mui/material'
+import {
+  ToggleButton,
+  Box,
+  ListItemButton,
+  ToggleButtonGroup,
+  Typography,
+} from '@mui/material'
 import Water from '@icons/maki_water.svg'
 import WaterActive from '@icons/maki_water_active.svg'
 import { useDrainase } from '@services/hooks/dashboard'
@@ -22,6 +28,15 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
   const [active, setActive] = useState(Object)
   const { drainase } = useDrainase(true)
 
+  const [alignment, setAlignment] = useState('A')
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string
+  ) => {
+    setAlignment(newAlignment)
+  }
+
   return (
     <Box>
       <Box
@@ -30,9 +45,29 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
           paddingRight: '30px',
         }}
       >
-        <Typography fontWeight={600} className={classes.title}>
-          Daftar Drainase
-        </Typography>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box>
+            <Typography fontWeight={600} className={classes.title}>
+              Daftar Drainase
+            </Typography>
+          </Box>
+          <Box>
+            <ToggleButtonGroup
+              size="small"
+              color="primary"
+              exclusive
+              onChange={handleChange}
+              value={alignment}
+            >
+              <ToggleButton value="A" sx={{ borderRadius: '12px' }}>
+                Jalur A
+              </ToggleButton>
+              <ToggleButton value="B" sx={{ borderRadius: '12px' }}>
+                Jalur B
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+        </Box>
       </Box>
       <Box
         marginRight="10px"

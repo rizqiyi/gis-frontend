@@ -7,7 +7,13 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import logo from '@images/logo.png'
+import HomeIcon from '@icons/home-blue-ic.svg'
 import { useNavigate } from 'react-router-dom'
+import { getCurrentUser } from '@/helpers/jwt-decode'
+import DefaultProfile from '@illust/profile-default.svg'
+import { Menu, MenuItem, Tooltip } from '@mui/material'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import LogoutIcon from '@icons/logout-ic.svg'
 import CardInfoDrawer from '../CardInfoDrawer'
 import CardListDrainase from '../CardListDrainase'
 import useStyles from './ClippedDrawer.styles'
@@ -31,6 +37,18 @@ const ClippedDrawer: React.FC<IClippedDrawer> = ({
 }: IClippedDrawer): JSX.Element => {
   const classes = useStyles()
   const navigate = useNavigate()
+  const user = getCurrentUser()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+
+  const open = Boolean(anchorEl)
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -63,12 +81,51 @@ const ClippedDrawer: React.FC<IClippedDrawer> = ({
             </Typography>
           </Box>
           <Box>
-            <Button
-              onClick={() => navigate('/login')}
-              className={classes.loginButton}
-            >
-              Login
-            </Button>
+            {user ? (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ cursor: 'pointer' }}
+                onClick={(e) => handleClick(e)}
+              >
+                <Box display="flex" alignItems="center" marginRight="17px">
+                  <img
+                    style={{
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      marginRight: '16px',
+                    }}
+                    width="48px"
+                    height="48px"
+                    onError={({ currentTarget }) => {
+                      // eslint-disable-next-line no-return-assign, no-param-reassign
+                      return (currentTarget.src = DefaultProfile)
+                    }}
+                    src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${user.avatar}`}
+                    alt="avatar"
+                  />
+                  <Box sx={{ lineHeight: 0 }}>
+                    <Tooltip title={user.fullname}>
+                      <Typography variant="subtitle1" fontWeight={600}>
+                        {`${user.fullname}`.split(' ')[0]}
+                      </Typography>
+                    </Tooltip>
+                    <Typography variant="caption" sx={{ color: '#9E9E9E' }}>
+                      {user.email}
+                    </Typography>
+                  </Box>
+                </Box>
+                <KeyboardArrowDownIcon />
+              </Box>
+            ) : (
+              <Button
+                onClick={() => navigate('/login')}
+                className={classes.loginButton}
+              >
+                Login
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
@@ -104,6 +161,43 @@ const ClippedDrawer: React.FC<IClippedDrawer> = ({
         <Toolbar sx={{ marginTop: '9px' }} />
         {children}
       </Box>
+      <Menu
+        disableScrollLock
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        PaperProps={{
+          sx: {
+            boxShadow: '0px 12px 24px rgba(112, 144, 176, 0.24)',
+            mt: 1.5,
+            border: '1px solid #DDDFE5',
+          },
+        }}
+      >
+        <MenuItem onClick={() => navigate('/dashboard')}>
+          <img src={HomeIcon} alt="profile setting" />
+          <Typography color="secondary" sx={{ ml: '12px' }}>
+            Pergi ke dashboard
+          </Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            localStorage.removeItem('tokenAccess')
+
+            localStorage.removeItem('userAccess')
+
+            navigate('/')
+          }}
+        >
+          <img src={LogoutIcon} alt="logout" />
+          <Typography color="error" sx={{ ml: '12px' }}>
+            Logout
+          </Typography>
+        </MenuItem>
+      </Menu>
     </Box>
   )
 }
