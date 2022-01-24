@@ -114,6 +114,26 @@ export default [
     exact: true,
   },
   {
+    path: '/settings/password',
+    private: true,
+    component: lazy(async () => {
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT))
+
+      return import('@pages/SettingsPassword')
+    }),
+    exact: true,
+  },
+  {
+    path: '/settings/profile',
+    private: true,
+    component: lazy(async () => {
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT))
+
+      return import('@pages/SettingsProfile')
+    }),
+    exact: true,
+  },
+  {
     path: '/settings',
     private: true,
     component: lazy(async () => {
