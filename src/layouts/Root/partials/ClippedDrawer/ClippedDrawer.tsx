@@ -27,6 +27,8 @@ interface IPosition {
 
 interface IClippedDrawer {
   setPosition: React.Dispatch<React.SetStateAction<IPosition>>
+  setPath: React.Dispatch<React.SetStateAction<string>>
+  path: string
   children: React.ReactNode
 }
 
@@ -34,6 +36,8 @@ interface IClippedDrawer {
 const ClippedDrawer: React.FC<IClippedDrawer> = ({
   children,
   setPosition,
+  setPath,
+  path,
 }: IClippedDrawer): JSX.Element => {
   const classes = useStyles()
   const navigate = useNavigate()
@@ -155,7 +159,11 @@ const ClippedDrawer: React.FC<IClippedDrawer> = ({
         >
           <CardInfoDrawer />
         </Box>
-        <CardListDrainase setPosition={setPosition} />
+        <CardListDrainase
+          path={path}
+          setPath={setPath}
+          setPosition={setPosition}
+        />
       </Drawer>
       <Box component="main" sx={{ width: '100%' }}>
         <Toolbar sx={{ marginTop: '9px' }} />
@@ -188,11 +196,9 @@ const ClippedDrawer: React.FC<IClippedDrawer> = ({
             localStorage.removeItem('tokenAccess')
 
             localStorage.removeItem('userAccess')
-
-            navigate('/')
           }}
         >
-          <img src={LogoutIcon} alt="logout" />
+          <img src={LogoutIcon} alt="logout" style={{ marginLeft: '3px' }} />
           <Typography color="error" sx={{ ml: '12px' }}>
             Logout
           </Typography>

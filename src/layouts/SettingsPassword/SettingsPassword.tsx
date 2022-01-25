@@ -18,8 +18,8 @@ const SettingsPassword = (): JSX.Element => {
     error: false,
     success: false,
   })
-  const [visiblePassword, setVisiblePassword] = useState<boolean>(false)
   const [responseMsg, setResponseMsg] = useState<string>('')
+  const [visiblePassword, setVisiblePassword] = useState<boolean>(false)
 
   return (
     <Box>
@@ -42,7 +42,7 @@ const SettingsPassword = (): JSX.Element => {
           onSubmit={async (v, { setSubmitting, resetForm }) => {
             try {
               const res = await axios.put(
-                `${process.env.REACT_APP_API_URI_PROD}/users/update/me`,
+                `${process.env.REACT_APP_API_URI_PROD}/users/update/me/pwd`,
                 v,
                 {
                   headers: {
@@ -77,54 +77,62 @@ const SettingsPassword = (): JSX.Element => {
           {({ isSubmitting, handleChange }) => (
             <Form>
               <Box padding="48px">
-                {fields.map((field, idx: number) => (
-                  <Box
-                    key={field.name}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'start',
-                      width: '100%',
-                      marginTop: idx > 0 ? '40px' : 0,
-                    }}
-                  >
+                {fields.map((field, idx: number) => {
+                  const isPasswordIncorrect: boolean =
+                    field.name === 'password' &&
+                    responseMsg === 'Password lama salah'
+
+                  return (
                     <Box
+                      key={field.name}
                       sx={{
-                        width: '15%',
-                        maxWidth: '105px',
+                        display: 'flex',
+                        alignItems: 'start',
+                        width: '100%',
+                        marginTop: idx > 0 ? '40px' : 0,
                       }}
                     >
-                      <Typography fontWeight={600} variant="subtitle2">
-                        {field.label}
-                        <span style={{ color: 'red', marginLeft: '5px' }}>
-                          *
-                        </span>
-                      </Typography>
-                    </Box>
-                    <Box sx={{ width: '85%' }}>
-                      <FastField
-                        component={Input}
-                        required
-                        type={visiblePassword ? 'text' : 'password'}
-                        InputProps={{
-                          disableUnderline: true,
-                          endAdornment: (
-                            <VisiblePasswordIcon
-                              visiblePassword={visiblePassword}
-                              setVisiblePassword={setVisiblePassword}
-                            />
-                          ),
+                      <Box
+                        sx={{
+                          width: '15%',
+                          maxWidth: '105px',
                         }}
-                        disabled={isSubmitting}
-                        placeholder={field.placeholder}
-                        name={field.name}
-                        id={field.name}
-                        onChange={handleChange}
-                        variant="filled"
-                        fullWidth
-                      />
+                      >
+                        <Typography fontWeight={600} variant="subtitle2">
+                          {field.label}
+                          <span style={{ color: 'red', marginLeft: '5px' }}>
+                            *
+                          </span>
+                        </Typography>
+                      </Box>
+                      <Box sx={{ width: '85%' }}>
+                        <FastField
+                          component={Input}
+                          required
+                          isErrorOccured={isPasswordIncorrect}
+                          customMsg="Password lama salah"
+                          type={visiblePassword ? 'text' : 'password'}
+                          InputProps={{
+                            disableUnderline: true,
+                            endAdornment: (
+                              <VisiblePasswordIcon
+                                visiblePassword={visiblePassword}
+                                setVisiblePassword={setVisiblePassword}
+                              />
+                            ),
+                          }}
+                          disabled={isSubmitting}
+                          placeholder={field.placeholder}
+                          name={field.name}
+                          id={field.name}
+                          onChange={handleChange}
+                          variant="filled"
+                          fullWidth
+                        />
+                      </Box>
                     </Box>
-                  </Box>
-                ))}
+                  )
+                })}
               </Box>
               <Box borderBottom="1px solid #DDDFE5" marginBottom="24px" />
               <Box padding="0 48px 24px 48px">
@@ -173,7 +181,7 @@ const SettingsPassword = (): JSX.Element => {
           })
         }
         autoHideDuration={3000}
-        message={responseMsg}
+        message="Gagal mengubah password"
       />
     </Box>
   )

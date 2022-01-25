@@ -19,22 +19,24 @@ interface IPosition {
 
 interface ICardListDrainase {
   setPosition: React.Dispatch<React.SetStateAction<IPosition>>
+  setPath: React.Dispatch<React.SetStateAction<string>>
+  path: string
 }
 
 const CardListDrainase: React.FC<ICardListDrainase> = ({
   setPosition,
+  setPath,
+  path,
 }: ICardListDrainase): JSX.Element => {
   const classes = useStyles()
   const [active, setActive] = useState(Object)
-  const { drainase } = useDrainase(true)
-
-  const [alignment, setAlignment] = useState('A')
+  const { drainase } = useDrainase(true, [path], { street_path: path })
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: string
   ) => {
-    setAlignment(newAlignment)
+    setPath(newAlignment)
   }
 
   return (
@@ -57,7 +59,7 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
               color="primary"
               exclusive
               onChange={handleChange}
-              value={alignment}
+              value={path}
             >
               <ToggleButton value="A" sx={{ borderRadius: '12px' }}>
                 Jalur A

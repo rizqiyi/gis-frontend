@@ -11,14 +11,29 @@ interface IUseDrainase {
   setDrainase: Dispatch<React.SetStateAction<IDrainase | null>>
 }
 
+type Query = {
+  street_path?: string | boolean
+}
+
 const useDrainase = (
   is_published: string | boolean = '',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deps: any[] = []
+  deps: any[] = [],
+  q?: Query
 ): IUseDrainase => {
   const [loading, setLoading] = useState<boolean>(false)
   const [drainase, setDrainase] = useState<IDrainase | null>(null)
   const [message, setMessage] = useState<unknown>({})
+
+  const getParams = (pubs: string | boolean, query?: Query) => {
+    const p = { params: {} }
+
+    if (is_published) Object.assign(p.params, { is_published: pubs })
+
+    if (query) Object.assign(p.params, { ...query })
+
+    return p
+  }
 
   useEffect(() => {
     const fetchDrainase = async () => {
@@ -28,7 +43,7 @@ const useDrainase = (
         const response = await api({
           method: 'get',
           url: '/drainase',
-          ...(is_published ? { params: { is_published } } : {}),
+          ...getParams(is_published, q),
           headers: { 'Content-Type': 'application/json' },
         })
 

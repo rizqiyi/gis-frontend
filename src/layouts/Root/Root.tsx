@@ -54,8 +54,9 @@ interface IPosition {
 
 const Root = (): JSX.Element => {
   const classes = useStyles()
-  const [value, setValue] = useState(0)
-  const { drainase } = useDrainase(true)
+  const [value, setValue] = useState<number>(0)
+  const [path, setPath] = useState<string>('A')
+  const { drainase } = useDrainase(true, [path], { street_path: path })
   const [position, setPosition] = useState<IPosition>({
     lat: dataset[0].latitude,
     lng: dataset[0].longitude,
@@ -69,7 +70,7 @@ const Root = (): JSX.Element => {
 
   return (
     <Box>
-      <ClippedDrawer setPosition={setPosition}>
+      <ClippedDrawer path={path} setPath={setPath} setPosition={setPosition}>
         <Box>
           <MapContainer center={[position.lat, position.lng]} zoom={30}>
             <MapConsumer>
