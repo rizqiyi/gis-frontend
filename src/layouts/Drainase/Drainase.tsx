@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Fade, Typography } from '@mui/material'
 import Input from '@components/Input'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
@@ -11,9 +11,11 @@ import api from '@/services/common'
 import { getAccessToken } from '@/helpers/jwt-decode'
 import CSnackbar from '@/components/Snackbar'
 import FilterIc from '@icons/filter-ic.svg'
-// import AdapterDateFns from '@mui/lab/AdapterDateFns'
-// import LocalizationProvider from '@mui/lab/LocalizationProvider'
-// import DatePicker from '@mui/lab/DatePicker'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DatePicker from '@mui/lab/DatePicker'
+import Select from '@/components/Select'
+import moment from 'moment'
 import { headData, sortScore } from './constant'
 
 const Drainase = (): JSX.Element => {
@@ -22,8 +24,17 @@ const Drainase = (): JSX.Element => {
     error: false,
     success: false,
   })
-  // const [value, setValue] = React.useState<Date | null>(null)
-  const { drainase } = useDrainase(false, [deleteStatus])
+  const [formAppear, setFormAppear] = useState<boolean>(false)
+  const [domain, setDomain] = useState<{ [key: string]: string | boolean }>({
+    start_date: '',
+    end_date: '',
+    is_published: '',
+  })
+  const { drainase } = useDrainase(
+    false,
+    [deleteStatus, domain.start_date, domain.end_date, domain.is_published],
+    domain
+  )
   const [page, setPage] = useState<number>(drainase?.current_page || 0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(
     drainase?.per_page || 5
@@ -74,6 +85,7 @@ const Drainase = (): JSX.Element => {
                     required
                   />
                   <Button
+                    onClick={() => setFormAppear(!formAppear)}
                     sx={{
                       minWidth: '56px',
                       borderRadius: '12px',
@@ -121,18 +133,119 @@ const Drainase = (): JSX.Element => {
           margin: '30px 0 ',
         }}
       />
-      {/* <Box sx={{ margin: '40px 0' }}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Basic example"
-            value={value}
-            onChange={(newValue: Date | null) => {
-              setValue(newValue)
-            }}
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </LocalizationProvider>
-      </Box> */}
+      <Formik
+        initialValues={{ startDate: '', endDate: '', is_published: '2' }}
+        onSubmit={(e) => {
+          console.log(e)
+          const v = {
+            start_date: moment(e.startDate).format('YYYY-MM-DD'),
+            end_date: moment(e.endDate).format('YYYY-MM-DD'),
+            is_published: e.is_published === '2' ? '' : Boolean(e.is_published),
+          }
+
+          setDomain(v)
+        }}
+      >
+        {({ setFieldValue, values, handleChange }) => (
+          <Form>
+            <Fade in={formAppear}>
+              <Box
+                sx={{
+                  margin: '40px 0',
+                  display: formAppear ? 'block' : 'none',
+                  transition: 'display 1s ease-in-out',
+                }}
+              >
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Box display="flex" gap="40px" alignItems="flex-end">
+                    <Box>
+                      <Typography variant="subtitle2">Tanggal Awal</Typography>
+                      <DatePicker
+                        value={values.startDate}
+                        onChange={(newValue: Date | null) =>
+                          setFieldValue('startDate', newValue)
+                        }
+                        renderInput={(params) => (
+                          <Input
+                            sx={{ mt: '10px' }}
+                            InputProps={{
+                              disableUnderline: true,
+                            }}
+                            variant="filled"
+                            id="startDate"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography variant="subtitle2">Tanggal Akhir</Typography>
+                      <DatePicker
+                        value={values.endDate}
+                        onChange={(newValue: Date | null) =>
+                          setFieldValue('endDate', newValue)
+                        }
+                        renderInput={(params) => (
+                          <Input
+                            sx={{ mt: '10px' }}
+                            InputProps={{
+                              disableUnderline: true,
+                            }}
+                            variant="filled"
+                            id="endDate"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography variant="subtitle2">Status</Typography>
+                      <Select
+                        sx={{ mt: '10px', width: '260px' }}
+                        id="is_published"
+                        value={values.is_published}
+                        name="is_published"
+                        onChange={handleChange}
+                        options={[
+                          {
+                            label: 'Pilih status',
+                            value: 2,
+                          },
+                          {
+                            label: 'Tampil',
+                            value: 1,
+                          },
+                          {
+                            label: 'Draft',
+                            value: 0,
+                          },
+                        ]}
+                      />
+                    </Box>
+                    <Box>
+                      <Button
+                        disableElevation
+                        sx={{
+                          color: '#FFFFFF',
+                          boxShadow: '0px 12px 24px rgba(31, 169, 231, 0.12)',
+                          minHeight: '52px',
+                          borderRadius: '12px',
+                          width: '109px',
+                          mb: '1px',
+                        }}
+                        variant="contained"
+                        type="submit"
+                      >
+                        <Typography variant="subtitle1">Filter</Typography>
+                      </Button>
+                    </Box>
+                  </Box>
+                </LocalizationProvider>
+              </Box>
+            </Fade>
+          </Form>
+        )}
+      </Formik>
       <Table
         empty={drainase?.data?.length === 0}
         head={headData}

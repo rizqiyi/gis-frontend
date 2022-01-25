@@ -13,6 +13,9 @@ interface IUseDrainase {
 
 type Query = {
   street_path?: string | boolean
+  endDate?: string
+  startDate?: string
+  is_published?: boolean
 }
 
 const useDrainase = (

@@ -22,6 +22,15 @@ const CustomInput = styled(
   )
 )(({ theme, isFieldError }) => ({
   '& .MuiFilledInput-root': {
+    '&:before': {
+      borderBottom: 'none',
+    },
+    '&:after': {
+      borderBottom: 'none',
+    },
+    '&:focused': {
+      border: 'none',
+    },
     '.MuiFilledInput-input': {
       padding: '14px',
     },
@@ -38,6 +47,9 @@ const CustomInput = styled(
       'border',
       'color',
     ]),
+    '&after': {
+      borderBottom: 'none',
+    },
     color: theme.palette.text.disabled,
     '&:hover': {
       backgroundColor: 'transparent',
