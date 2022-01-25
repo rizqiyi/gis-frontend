@@ -136,7 +136,6 @@ const Drainase = (): JSX.Element => {
       <Formik
         initialValues={{ startDate: '', endDate: '', is_published: '2' }}
         onSubmit={(e) => {
-          console.log(e)
           const v = {
             start_date: moment(e.startDate).format('YYYY-MM-DD'),
             end_date: moment(e.endDate).format('YYYY-MM-DD'),
