@@ -38,6 +38,7 @@ interface IRow {
   expandable: boolean
   withAvatar: boolean
   rowsPerPage: number
+  uniq: string
   page: number
   handleClickDelete: (
     id: number,
@@ -56,6 +57,7 @@ function Row({
   page,
   handleClickDelete,
   withAvatar,
+  uniq,
 }: IRow) {
   const navigate = useNavigate()
   const [open, setOpen] = React.useState<{ [key: number]: boolean }>({})
@@ -124,6 +126,10 @@ function Row({
 
     if (key === 'createdAt') {
       return formatCompleteDate(data[key] as string)
+    }
+
+    if (key === 'manage') {
+      return `Jalur ${data[key]}`
     }
 
     if (['street_width', 'sta'].includes(key)) {
@@ -209,7 +215,11 @@ function Row({
                   <TableCell />
                 )}
                 <TableCell
-                  onClick={() => navigate(`/${pathname[1]}/detail/${row.id}`)}
+                  onClick={() => {
+                    if (uniq || pathname[1] === 'user-management') return
+
+                    navigate(`/${uniq || pathname[1]}/detail/${row.id}`)
+                  }}
                   sx={{ fontWeight: 600, cursor: 'pointer' }}
                   component="th"
                   scope="row"
@@ -219,9 +229,9 @@ function Row({
                 {filteredObj.map((obj) => (
                   <TableCell
                     onClick={() => {
-                      if (pathname[1] === 'user-management') return
+                      if (uniq || pathname[1] === 'user-management') return
 
-                      navigate(`/${pathname[1]}/detail/${row.id}`)
+                      navigate(`/${uniq || pathname[1]}/detail/${row.id}`)
                     }}
                     key={obj.key}
                     sx={{ fontWeight: 600, cursor: 'pointer' }}
@@ -318,7 +328,9 @@ function Row({
           },
         }}
       >
-        <MenuItem onClick={() => navigate(`/${pathname[1]}/edit/${id}`)}>
+        <MenuItem
+          onClick={() => navigate(`/${uniq || pathname[1]}/edit/${id}`)}
+        >
           <Typography color="text">Edit</Typography>
         </MenuItem>
         <MenuItem onClick={() => handleClickDelete(id, setLoadingDelete)}>
@@ -390,6 +402,7 @@ interface ICustomTable {
   page: number
   rowsPerPage: number
   empty: boolean
+  uniq?: string
   withAvatar?: boolean
   loading?: boolean
   handleChangePage: (e: unknown, p: number) => void
@@ -410,6 +423,7 @@ const CustomTable: React.FC<ICustomTable> = ({
   sortData,
   expandable = false,
   loading = false,
+  uniq = '',
   page,
   rowsPerPage,
   handleChangePage,
@@ -440,7 +454,7 @@ const CustomTable: React.FC<ICustomTable> = ({
 
   if (loading) return <RenderLoading />
 
-  if (empty) return <RenderEmpty />
+  if (empty) return <RenderEmpty uniq={uniq} />
 
   return (
     <>
@@ -488,6 +502,7 @@ const CustomTable: React.FC<ICustomTable> = ({
           </TableHead>
           <TableBody>
             <Row
+              uniq={uniq}
               expandable={expandable}
               head={head}
               withAvatar={withAvatar}

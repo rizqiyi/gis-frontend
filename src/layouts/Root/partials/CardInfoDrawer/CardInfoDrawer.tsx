@@ -1,10 +1,14 @@
 import React from 'react'
-import { Paper, Box, Typography } from '@mui/material'
+import { Paper, Box, Typography, Skeleton } from '@mui/material'
 import WaterSplashIllustration from '@illust/WaterSplash.svg'
+import useDrainaseDashboard from '@/services/hooks/dashboard/useDrainaseDashboard'
 import useStyles from './CardInfoDrawer.styles'
 
 const CardInfoDrawer = (): JSX.Element => {
   const classes = useStyles()
+  const { drainase: data, loading } = useDrainaseDashboard()
+
+  if (loading) return <Skeleton variant="rectangular" height="200px" />
 
   return (
     <Paper
@@ -24,7 +28,7 @@ const CardInfoDrawer = (): JSX.Element => {
             className={classes.textCount}
             variant="h3"
           >
-            1119
+            {data?.total}
           </Typography>
         </Box>
         <Box>
@@ -58,7 +62,7 @@ const CardInfoDrawer = (): JSX.Element => {
                 className={classes.textSum}
                 variant="h6"
               >
-                756
+                {data?.total * 2 || 0}
               </Typography>
             </Paper>
           </Box>
@@ -87,7 +91,7 @@ const CardInfoDrawer = (): JSX.Element => {
                 className={classes.textSum}
                 variant="h6"
               >
-                756
+                {data?.total * 2 || 0}
               </Typography>
             </Paper>
           </Box>

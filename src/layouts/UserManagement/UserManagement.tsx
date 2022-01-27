@@ -18,11 +18,16 @@ const UserManagement = (): JSX.Element => {
     success: false,
   })
   const navigate = useNavigate()
-  const { users, loading } = useUsers([deleteStatus])
+  const [search, setSearch] = useState<string>('')
 
-  const [page, setPage] = useState<number>(users?.current_page || 0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(users?.per_page || 5)
+  const { users, loading } = useUsers(
+    [deleteStatus, search],
+    { q: search },
+    true
+  )
 
+  const [page, setPage] = useState<number>(0)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
   }
@@ -51,7 +56,7 @@ const UserManagement = (): JSX.Element => {
             // eslint-disable-next-line no-console
             onSubmit={(e) => console.log(e)}
           >
-            {({ handleChange }) => (
+            {() => (
               <Form>
                 <Box sx={{ display: 'flex' }}>
                   <Input
@@ -60,7 +65,7 @@ const UserManagement = (): JSX.Element => {
                       disableUnderline: true,
                       startAdornment: <SearchOutlinedIcon />,
                     }}
-                    onChange={handleChange}
+                    onChange={(e) => setSearch(e.target.value)}
                     name="search"
                     id="search"
                     variant="filled"

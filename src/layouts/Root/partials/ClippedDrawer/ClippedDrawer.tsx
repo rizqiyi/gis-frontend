@@ -21,8 +21,8 @@ import useStyles from './ClippedDrawer.styles'
 const drawerWidth = 420
 
 interface IPosition {
-  lat: number
-  lng: number
+  lat: number | string
+  lng: number | string
 }
 
 interface IClippedDrawer {

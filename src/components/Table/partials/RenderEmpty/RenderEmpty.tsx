@@ -4,7 +4,13 @@ import { useLocation } from 'react-router-dom'
 import DrainaseEmpty from '@illust/drainase-empty.svg'
 import UserEmpty from '@illust/user-empty.svg'
 
-const RenderEmpty = (): JSX.Element => {
+interface IRenderEmpty {
+  uniq: string
+}
+
+const RenderEmpty: React.FC<IRenderEmpty> = ({
+  uniq,
+}: IRenderEmpty): JSX.Element => {
   const location = useLocation()
 
   const pathname = location.pathname.split('/')
@@ -30,7 +36,7 @@ const RenderEmpty = (): JSX.Element => {
       }}
     >
       <img
-        src={image[pathname[1]]}
+        src={image[uniq || pathname[1]]}
         width="240px"
         height="240px"
         alt="drainase-empty"
@@ -41,7 +47,7 @@ const RenderEmpty = (): JSX.Element => {
         </Typography>
       </Box>
       <Box sx={{ marginTop: '10px', color: '#9E9E9E' }}>
-        <Typography variant="body2">{subtitle[pathname[1]]}</Typography>
+        <Typography variant="body2">{subtitle[uniq || pathname[1]]}</Typography>
       </Box>
     </Box>
   )

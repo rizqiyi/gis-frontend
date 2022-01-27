@@ -13,7 +13,16 @@ interface IUseUsers {
   setUsers: Dispatch<React.SetStateAction<IUserAPI | null>>
 }
 
-const useUsers = (deps: any[] = []): IUseUsers => {
+type Query = {
+  q?: string
+  order_by?: 'desc' | 'asc'
+}
+
+const useUsers = (
+  deps: any[] = [],
+  query?: Query,
+  withCancelToken = false
+): IUseUsers => {
   const [loading, setLoading] = useState<boolean>(false)
   const [users, setUsers] = useState<IUserAPI | null>(null)
   const [message, setMessage] = useState<unknown>({})
@@ -23,14 +32,18 @@ const useUsers = (deps: any[] = []): IUseUsers => {
       setLoading(true)
 
       try {
-        const response = await api({
-          method: 'get',
-          url: '/users',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-auth-token': getAccessToken(),
+        const response = await api(
+          {
+            method: 'get',
+            url: '/users',
+            ...(query ? { params: { ...query } } : {}),
+            headers: {
+              'Content-Type': 'application/json',
+              'x-auth-token': getAccessToken(),
+            },
           },
-        })
+          withCancelToken
+        )
 
         const { data } = response
 

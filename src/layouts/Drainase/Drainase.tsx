@@ -29,16 +29,22 @@ const Drainase = (): JSX.Element => {
     start_date: '',
     end_date: '',
     is_published: '',
+    q: '',
   })
   const { drainase, loading } = useDrainase(
     false,
-    [deleteStatus, domain.start_date, domain.end_date, domain.is_published],
-    Object.values(domain).some((d) => !!d) ? domain : {}
+    [
+      deleteStatus,
+      domain.start_date,
+      domain.end_date,
+      domain.is_published,
+      domain.q,
+    ],
+    Object.values(domain).some((d) => !!d) ? domain : {},
+    true
   )
-  const [page, setPage] = useState<number>(drainase?.current_page || 0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(
-    drainase?.per_page || 5
-  )
+  const [page, setPage] = useState<number>(0)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -68,7 +74,7 @@ const Drainase = (): JSX.Element => {
             // eslint-disable-next-line no-console
             onSubmit={(e) => console.log(e)}
           >
-            {({ handleChange }) => (
+            {() => (
               <Form>
                 <Box sx={{ display: 'flex' }}>
                   <Input
@@ -77,7 +83,9 @@ const Drainase = (): JSX.Element => {
                       disableUnderline: true,
                       startAdornment: <SearchOutlinedIcon />,
                     }}
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      setDomain((p) => ({ ...p, q: e.target.value }))
+                    }
                     name="search"
                     id="search"
                     variant="filled"

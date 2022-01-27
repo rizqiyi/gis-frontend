@@ -15,14 +15,17 @@ type Query = {
   street_path?: string | boolean
   end_date?: string
   start_date?: string
+  q?: string
   is_published?: boolean
+  order_by?: 'desc' | 'asc'
 }
 
 const useDrainase = (
   is_published: string | boolean = '',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   deps: any[] = [],
-  q?: Query
+  q?: Query,
+  withCancel = false
 ): IUseDrainase => {
   const [loading, setLoading] = useState<boolean>(false)
   const [drainase, setDrainase] = useState<IDrainase | null>(null)
@@ -43,12 +46,15 @@ const useDrainase = (
       setLoading(true)
 
       try {
-        const response = await api({
-          method: 'get',
-          url: '/drainase',
-          ...getParams(is_published, q),
-          headers: { 'Content-Type': 'application/json' },
-        })
+        const response = await api(
+          {
+            method: 'get',
+            url: '/drainase',
+            ...getParams(is_published, q),
+            headers: { 'Content-Type': 'application/json' },
+          },
+          withCancel
+        )
 
         const { data } = response
 
