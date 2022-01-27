@@ -22,7 +22,7 @@ const UserManagement = (): JSX.Element => {
 
   const { users, loading } = useUsers(
     [deleteStatus, search],
-    { q: search },
+    search ? { q: search } : {},
     true
   )
 
