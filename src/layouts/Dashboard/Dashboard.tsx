@@ -16,12 +16,24 @@ import Title from './partials/Title/title'
 import Headers from './partials/Headers/headers'
 
 const Dashboard = (): JSX.Element => {
-  const { drainase, loading } = useDrainase(false, [], { order_by: 'desc' })
-  const [deleteStatus, setDeleteStatus] = useState<{ [key: string]: boolean }>({
+  const [deleteStatusDrainase, setDeleteStatusDrainase] = useState<{
+    [key: string]: boolean
+  }>({
     error: false,
     success: false,
   })
-  const { users, loading: loadingUser } = useUsers([], { order_by: 'desc' })
+  const [deleteStatusUsers, setDeleteStatusUsers] = useState<{
+    [key: string]: boolean
+  }>({
+    error: false,
+    success: false,
+  })
+  const { drainase, loading } = useDrainase(false, [deleteStatusDrainase], {
+    order_by: 'desc',
+  })
+  const { users, loading: loadingUser } = useUsers([deleteStatusUsers], {
+    order_by: 'desc',
+  })
   const [responseMsg, setResponseMsg] = useState<string>('')
   const [rowsPerPage, setRowsPerPage] = useState<number>(5)
   const [page, setPage] = useState<number>(0)
@@ -88,13 +100,13 @@ const Dashboard = (): JSX.Element => {
 
             setResponseMsg('Berhasil menghapus drainase')
 
-            setDeleteStatus({ success: true, error: false })
+            setDeleteStatusDrainase({ success: true, error: false })
           } catch (err) {
             setLoading({ [e]: false })
 
             setResponseMsg('Gagal menghapus drainase')
 
-            setDeleteStatus({ success: false, error: true })
+            setDeleteStatusDrainase({ success: false, error: true })
           }
         }}
         rows={
@@ -152,13 +164,13 @@ const Dashboard = (): JSX.Element => {
 
             setResponseMsg('Berhasil menghapus user')
 
-            setDeleteStatus({ success: true, error: false })
+            setDeleteStatusUsers({ success: true, error: false })
           } catch (err) {
             setLoading({ [e]: false })
 
             setResponseMsg('Gagal menghapus user')
 
-            setDeleteStatus({ success: false, error: true })
+            setDeleteStatusUsers({ success: false, error: true })
           }
         }}
         rows={(users?.data || []).filter(
@@ -166,26 +178,36 @@ const Dashboard = (): JSX.Element => {
         )}
       />
       <CSnackbar
-        open={deleteStatus.success}
+        open={deleteStatusDrainase.success || deleteStatusUsers.success}
         status="success"
-        onClose={() =>
-          setDeleteStatus({
+        onClose={() => {
+          setDeleteStatusDrainase({
             success: false,
             error: false,
           })
-        }
+
+          setDeleteStatusUsers({
+            success: false,
+            error: false,
+          })
+        }}
         autoHideDuration={3000}
         message={responseMsg}
       />
       <CSnackbar
-        open={deleteStatus.error}
+        open={deleteStatusDrainase.error || deleteStatusUsers.error}
         status="error"
-        onClose={() =>
-          setDeleteStatus({
+        onClose={() => {
+          setDeleteStatusDrainase({
             success: false,
             error: false,
           })
-        }
+
+          setDeleteStatusUsers({
+            success: false,
+            error: false,
+          })
+        }}
         autoHideDuration={3000}
         message={responseMsg}
       />
