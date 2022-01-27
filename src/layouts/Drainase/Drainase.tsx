@@ -30,10 +30,10 @@ const Drainase = (): JSX.Element => {
     end_date: '',
     is_published: '',
   })
-  const { drainase } = useDrainase(
+  const { drainase, loading } = useDrainase(
     false,
     [deleteStatus, domain.start_date, domain.end_date, domain.is_published],
-    domain
+    Object.values(domain).some((d) => !!d) ? domain : {}
   )
   const [page, setPage] = useState<number>(drainase?.current_page || 0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(
@@ -136,11 +136,16 @@ const Drainase = (): JSX.Element => {
       <Formik
         initialValues={{ startDate: '', endDate: '', is_published: '2' }}
         onSubmit={(e) => {
-          const v = {
-            start_date: moment(e.startDate).format('YYYY-MM-DD'),
-            end_date: moment(e.endDate).format('YYYY-MM-DD'),
-            is_published: e.is_published === '2' ? '' : Boolean(e.is_published),
-          }
+          const v = {}
+
+          if (e.startDate && e.endDate)
+            Object.assign(v, {
+              start_date: moment(e.startDate).format('YYYY-MM-DD'),
+              end_date: moment(e.endDate).format('YYYY-MM-DD'),
+            })
+
+          if (![2, '2'].includes(e.is_published))
+            Object.assign(v, { is_published: Boolean(e.is_published) })
 
           setDomain(v)
         }}
@@ -254,6 +259,7 @@ const Drainase = (): JSX.Element => {
         handleChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleChangeRowsPerPage(e)
         }
+        loading={loading}
         expandable
         sortData={sortScore}
         handleClickDelete={async (e, setLoading) => {

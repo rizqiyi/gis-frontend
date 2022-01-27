@@ -13,8 +13,8 @@ interface IUseDrainase {
 
 type Query = {
   street_path?: string | boolean
-  endDate?: string
-  startDate?: string
+  end_date?: string
+  start_date?: string
   is_published?: boolean
 }
 

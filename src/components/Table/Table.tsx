@@ -29,6 +29,7 @@ import DefaultProfile from '@illust/profile-default.svg'
 import Drainase from './partials/DetailStreet'
 import useStyles from './Table.styles'
 import RenderEmpty from './partials/RenderEmpty/RenderEmpty'
+import RenderLoading from './partials/RenderLoading/RenderLoading'
 
 interface IRow {
   rows: Array<{ [key: string]: string | number }>
@@ -390,6 +391,7 @@ interface ICustomTable {
   rowsPerPage: number
   empty: boolean
   withAvatar?: boolean
+  loading?: boolean
   handleChangePage: (e: unknown, p: number) => void
   handleChangeRowsPerPage: (p: React.ChangeEvent<HTMLInputElement>) => void
   handleClickDelete?: (
@@ -407,6 +409,7 @@ const CustomTable: React.FC<ICustomTable> = ({
   lastSpace = true,
   sortData,
   expandable = false,
+  loading = false,
   page,
   rowsPerPage,
   handleChangePage,
@@ -434,6 +437,8 @@ const CustomTable: React.FC<ICustomTable> = ({
   ) => {
     handleRequestSort(event, property)
   }
+
+  if (loading) return <RenderLoading />
 
   if (empty) return <RenderEmpty />
 

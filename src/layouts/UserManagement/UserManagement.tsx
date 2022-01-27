@@ -18,7 +18,7 @@ const UserManagement = (): JSX.Element => {
     success: false,
   })
   const navigate = useNavigate()
-  const { users } = useUsers([deleteStatus])
+  const { users, loading } = useUsers([deleteStatus])
 
   const [page, setPage] = useState<number>(users?.current_page || 0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(users?.per_page || 5)
@@ -111,6 +111,7 @@ const UserManagement = (): JSX.Element => {
         handleChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleChangeRowsPerPage(e)
         }
+        loading={loading}
         sortData={sortScore}
         handleClickDelete={async (e, setLoading) => {
           setLoading({ [e]: true })
