@@ -16,6 +16,7 @@ import CustomMarker from './partials/CustomMarker'
 import CustomPopup from './partials/CustomPopup'
 import StreetInfo from './partials/StreetInfo'
 import DetailStreet from './partials/DetailStreet'
+import SeachDialog from './partials/SearchDialog'
 
 interface TabPanelProps {
   children: React.ReactNode
@@ -56,11 +57,12 @@ interface IPosition {
 const Root = (): JSX.Element => {
   const classes = useStyles()
   const [value, setValue] = useState<number>(0)
+  const [openSearchModal, setOpenSearchModal] = useState<boolean>(false)
   const [path, setPath] = useState<string>('A')
   const { drainase, loading } = useDrainase(true, [path], { street_path: path })
   const [position, setPosition] = useState<IPosition>({
-    lat: drainase?.data?.[0].latitude || dataset[0].latitude,
-    lng: drainase?.data?.[0].longitude || dataset[0].longitude,
+    lat: drainase?.data?.[0]?.latitude || dataset[0].latitude,
+    lng: drainase?.data?.[0]?.longitude || dataset[0].longitude,
   })
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -74,7 +76,7 @@ const Root = (): JSX.Element => {
       <ClippedDrawer path={path} setPath={setPath} setPosition={setPosition}>
         <Box>
           <MapContainer center={[position.lat, position.lng]} zoom={30}>
-            <Box position="relative" left="38px" top="38px" zIndex={10000}>
+            <Box position="relative" left="38px" top="38px" zIndex={999}>
               <Box position="absolute">
                 <Box
                   sx={{
@@ -96,6 +98,7 @@ const Root = (): JSX.Element => {
                     },
                     transition: 'background-color 0.3s ease-in-out',
                   }}
+                  onClick={() => setOpenSearchModal(true)}
                 >
                   <img src={SearchIcon} alt="search" />
                 </Box>
@@ -229,6 +232,11 @@ const Root = (): JSX.Element => {
           </MapContainer>
         </Box>
       </ClippedDrawer>
+      <SeachDialog
+        setPosition={setPosition}
+        open={openSearchModal}
+        handleClose={() => setOpenSearchModal(false)}
+      />
     </Box>
   )
 }

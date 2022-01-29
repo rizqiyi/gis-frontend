@@ -17,6 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import UserIcon from '@icons/user-ic.svg'
 import ProfileSettingIcon from '@icons/settings-profile-ic.svg'
 import LogoutIcon from '@icons/logout-ic.svg'
+import MapsIcon from '@icons/maps-ic.svg'
 import DefaultProfile from '@illust/profile-default.svg'
 import truncate from '@helpers/truncate'
 import { getCurrentUser } from '@helpers/jwt-decode'
@@ -289,6 +290,12 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
           <img src={ProfileSettingIcon} alt="profile setting" />
           <Typography color="secondary" sx={{ ml: '12px' }}>
             Atur Profile Pengguna
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={() => navigate('/')}>
+          <img src={MapsIcon} alt="profile setting" />
+          <Typography color="secondary" sx={{ ml: '12px' }}>
+            Halaman Maps
           </Typography>
         </MenuItem>
         <MenuItem

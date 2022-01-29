@@ -17,13 +17,19 @@ import { IDrainaseForm } from '@interfaces/drainase'
 import { getAccessToken, getCurrentUser } from '@helpers/jwt-decode'
 import validation from '@validations/drainase'
 import Breadcrumbs from '@components/Breadcrumbs'
-import api from '@services/common'
+import CSnackbar from '@/components/Snackbar'
+import axios from 'axios'
 import Field from './partials/Field'
 import Headers from './partials/headers'
 import useStyles from './CreateDrainase.styles'
 
 const CreateDrainase = (): JSX.Element => {
   const classes = useStyles()
+  const [createStatus, setCreateStatus] = useState<{ [key: string]: boolean }>({
+    error: false,
+    success: false,
+  })
+  const [responseMsg, setResponseMsg] = useState<string>('')
   const [images, setImages] = useState<{ [key: string]: File[] }>({
     left_drainase: [],
     right_drainase: [],
@@ -103,20 +109,32 @@ const CreateDrainase = (): JSX.Element => {
           )
 
           try {
-            await api({
-              method: 'post',
-              url: '/drainase/create',
-              data: form,
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'x-auth-token': getAccessToken(),
-              },
+            const res = await axios.post(
+              `${process.env.REACT_APP_API_URI_PROD}/drainase/create`,
+              form,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                  'x-auth-token': getAccessToken(),
+                },
+              }
+            )
+
+            setResponseMsg(res.data.message)
+
+            setCreateStatus({
+              error: false,
+              success: true,
             })
 
             setSubmitting(false)
           } catch (err) {
-            // eslint-disable-next-line no-console
-            console.error(err)
+            setResponseMsg(err.response.data.message)
+
+            setCreateStatus({
+              error: true,
+              success: false,
+            })
 
             setSubmitting(false)
           }
@@ -395,6 +413,30 @@ const CreateDrainase = (): JSX.Element => {
           </Form>
         )}
       </Formik>
+      <CSnackbar
+        open={createStatus.success}
+        status="success"
+        onClose={() =>
+          setCreateStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message={responseMsg}
+      />
+      <CSnackbar
+        open={createStatus.error}
+        status="error"
+        onClose={() =>
+          setCreateStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message={responseMsg}
+      />
     </Box>
   )
 }

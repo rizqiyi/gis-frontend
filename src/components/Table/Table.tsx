@@ -216,7 +216,7 @@ function Row({
                 )}
                 <TableCell
                   onClick={() => {
-                    if (uniq || pathname[1] === 'user-management') return
+                    if ([uniq, pathname[1]].includes('user-management')) return
 
                     navigate(`/${uniq || pathname[1]}/detail/${row.id}`)
                   }}
@@ -229,7 +229,8 @@ function Row({
                 {filteredObj.map((obj) => (
                   <TableCell
                     onClick={() => {
-                      if (uniq || pathname[1] === 'user-management') return
+                      if ([uniq, pathname[1]].includes('user-management'))
+                        return
 
                       navigate(`/${uniq || pathname[1]}/detail/${row.id}`)
                     }}
