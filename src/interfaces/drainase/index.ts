@@ -32,7 +32,8 @@ export interface IDrainaseData {
   user_id: number
   createdAt: string
   updatedAt: string
-  images: IDrainaseImages[]
+  left_images_drainase: IDrainaseImages[]
+  right_images_drainase: IDrainaseImages[]
 }
 
 export interface IDrainase {
@@ -42,6 +43,17 @@ export interface IDrainase {
   total: number
   per_page: number
   data: IDrainaseData[]
+  offset: number
+  limit: number
+}
+
+export interface IDrainaseRead {
+  previous_page: null | number
+  current_page: number
+  next_page: null | number
+  total: number
+  per_page: number
+  data: IDrainaseData
   offset: number
   limit: number
 }

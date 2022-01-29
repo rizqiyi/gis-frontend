@@ -22,6 +22,15 @@ const CustomInput = styled(
   )
 )(({ theme, isFieldError }) => ({
   '& .MuiFilledInput-root': {
+    '&:before': {
+      borderBottom: 'none',
+    },
+    '&:after': {
+      borderBottom: 'none',
+    },
+    '&:focused': {
+      border: 'none',
+    },
     '.MuiFilledInput-input': {
       padding: '14px',
     },
@@ -38,6 +47,9 @@ const CustomInput = styled(
       'border',
       'color',
     ]),
+    '&after': {
+      borderBottom: 'none',
+    },
     color: theme.palette.text.disabled,
     '&:hover': {
       backgroundColor: 'transparent',
@@ -70,8 +82,14 @@ const Input = ({
   required,
   id,
   withErrorMsg = true,
+  isErrorOccured = false,
+  customMsg = '',
   ...rest
-}: TextFieldProps & { withErrorMsg?: boolean }): JSX.Element => {
+}: TextFieldProps & {
+  withErrorMsg?: boolean
+  isErrorOccured?: boolean
+  customMsg?: string
+}): JSX.Element => {
   const [field, meta] = useField({ name: id as string })
   const isFieldError =
     required &&
@@ -84,11 +102,11 @@ const Input = ({
       <CustomInput
         name={id}
         id={id}
-        isFieldError={isFieldError}
+        isFieldError={isErrorOccured || isFieldError}
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...rest}
       />
-      {isFieldError && withErrorMsg && (
+      {isErrorOccured ? (
         <Box
           sx={{
             mt: '12px',
@@ -98,9 +116,25 @@ const Input = ({
         >
           <img src={DangerIcon} alt="danger" />
           <Typography sx={{ ml: '15px' }} variant="caption" fontWeight={600}>
-            {meta.error}
+            {customMsg}
           </Typography>
         </Box>
+      ) : (
+        isFieldError &&
+        withErrorMsg && (
+          <Box
+            sx={{
+              mt: '12px',
+              display: 'flex',
+              color: (theme: Theme) => theme.palette.error.main,
+            }}
+          >
+            <img src={DangerIcon} alt="danger" />
+            <Typography sx={{ ml: '15px' }} variant="caption" fontWeight={600}>
+              {meta.error}
+            </Typography>
+          </Box>
+        )
       )}
     </>
   )

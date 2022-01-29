@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Collapse from '@mui/material/Collapse'
@@ -15,17 +16,36 @@ import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Grid from '@mui/material/Grid'
 import formatCompleteDate from '@helpers/moment/formatDate'
-import { TablePagination, TableSortLabel, Tooltip } from '@mui/material'
+import {
+  CircularProgress,
+  Menu,
+  MenuItem,
+  TablePagination,
+  TableSortLabel,
+  Tooltip,
+} from '@mui/material'
+import { useLocation, useNavigate } from 'react-router-dom'
+import DefaultProfile from '@illust/profile-default.svg'
 import Drainase from './partials/DetailStreet'
 import useStyles from './Table.styles'
+import RenderEmpty from './partials/RenderEmpty/RenderEmpty'
+import RenderLoading from './partials/RenderLoading/RenderLoading'
 
 interface IRow {
   rows: Array<{ [key: string]: string | number }>
   head: Array<{ [key: string]: string | number }>
   sortData?: { [key: string]: number }
   expandable: boolean
-  // rowsPerPage: number
-  // page: number
+  withAvatar: boolean
+  rowsPerPage: number
+  uniq: string
+  page: number
+  handleClickDelete: (
+    id: number,
+    setLoadingDelete: React.Dispatch<
+      React.SetStateAction<{ [key: string]: boolean }>
+    >
+  ) => void
 }
 
 function Row({
@@ -33,17 +53,44 @@ function Row({
   head,
   sortData = {},
   expandable,
-}: // rowsPerPage,
-// page,
-IRow) {
+  rowsPerPage,
+  page,
+  handleClickDelete,
+  withAvatar,
+  uniq,
+}: IRow) {
+  const navigate = useNavigate()
   const [open, setOpen] = React.useState<{ [key: number]: boolean }>({})
+  const [id, setId] = React.useState<number>(0)
+  const [loadingDelete, setLoadingDelete] = React.useState<{
+    [key: string]: boolean
+  }>({})
   const classes = useStyles()
+  const location = useLocation()
+  const pathname: string[] = location.pathname.split('/')
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLElement>,
+    params: number
+  ) => {
+    setAnchorEl(event.currentTarget)
+
+    setId(params)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   const matchesKey = head.filter((h) => h.selector).map((d) => d.selector)
 
   const displayByFormat = (
     key: string,
-    data: { [key: string]: string | unknown }
+    data: { [key: string]: string | unknown },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    record: { [key: string]: any }
   ): React.ReactNode | string => {
     if (key === 'is_published') {
       return (
@@ -52,15 +99,17 @@ IRow) {
             width: '48px',
             height: '38px',
             padding: '0 16px',
-            backgroundColor: '#33C863',
+            backgroundColor: data[key] ? '#33C863' : '#FAFAFA',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#FFFFFF',
+            color: data[key] ? '#FFFFFF' : '#404040',
             borderRadius: '8px',
           }}
         >
-          <Typography variant="subtitle2">Tampil</Typography>
+          <Typography variant="subtitle2">
+            {data[key] ? 'Tampil' : 'Draft'}
+          </Typography>
         </Box>
       )
     }
@@ -75,12 +124,41 @@ IRow) {
       )
     }
 
-    if (key === 'created_at') {
+    if (key === 'createdAt') {
       return formatCompleteDate(data[key] as string)
     }
 
-    if (['width', 'sta'].includes(key)) {
+    if (key === 'manage') {
+      return `Jalur ${data[key]}`
+    }
+
+    if (['street_width', 'sta'].includes(key)) {
       return `${data[key]} Meter`
+    }
+
+    if (withAvatar && key === 'fullname') {
+      return (
+        <Box display="flex" alignItems="center">
+          <img
+            style={{ borderRadius: '50%', objectFit: 'cover' }}
+            width="40px"
+            height="40px"
+            onError={({ currentTarget }) => {
+              // eslint-disable-next-line no-return-assign, no-param-reassign
+              return (currentTarget.src = DefaultProfile)
+            }}
+            src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${record?.avatar}`}
+            alt="profile"
+          />
+          <Typography
+            sx={{ marginLeft: '16px' }}
+            variant="subtitle2"
+            className={classes.textTruncate}
+          >
+            {data[key] as string}
+          </Typography>
+        </Box>
+      )
     }
 
     return data[key] as string
@@ -88,7 +166,7 @@ IRow) {
 
   return (
     <>
-      {rows.map(
+      {rows?.map(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (row: { [key: string]: string | number | any }, idx: number) => {
           const asArray = Object.entries(row)
@@ -136,13 +214,31 @@ IRow) {
                 ) : (
                   <TableCell />
                 )}
-                <TableCell sx={{ fontWeight: 600 }} component="th" scope="row">
-                  {/* {page * rowsPerPage - rowsPerPage + (idx + 1)} */}1
+                <TableCell
+                  onClick={() => {
+                    if ([uniq, pathname[1]].includes('user-management')) return
+
+                    navigate(`/${uniq || pathname[1]}/detail/${row.id}`)
+                  }}
+                  sx={{ fontWeight: 600, cursor: 'pointer' }}
+                  component="th"
+                  scope="row"
+                >
+                  {page * rowsPerPage - rowsPerPage + (idx + 1)}
                 </TableCell>
                 {filteredObj.map((obj) => (
-                  <TableCell key={obj.key} sx={{ fontWeight: 600 }}>
+                  <TableCell
+                    onClick={() => {
+                      if ([uniq, pathname[1]].includes('user-management'))
+                        return
+
+                      navigate(`/${uniq || pathname[1]}/detail/${row.id}`)
+                    }}
+                    key={obj.key}
+                    sx={{ fontWeight: 600, cursor: 'pointer' }}
+                  >
                     {
-                      displayByFormat(obj.key as string, obj) as
+                      displayByFormat(obj.key as string, obj, row) as
                         | string
                         | React.ReactNode
                     }
@@ -150,9 +246,17 @@ IRow) {
                 ))}
                 <TableCell>
                   <Box>
-                    <IconButton color="primary" aria-label="menu">
-                      <MoreVertIcon />
-                    </IconButton>
+                    {loadingDelete[row.id] ? (
+                      <CircularProgress />
+                    ) : (
+                      <IconButton
+                        onClick={(e) => handleClick(e, row.id as number)}
+                        color="primary"
+                        aria-label="menu"
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    )}
                   </Box>
                 </TableCell>
               </TableRow>
@@ -209,19 +313,33 @@ IRow) {
           )
         }
       )}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        onClick={handleClose}
+        disableScrollLock
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            boxShadow: '0px 12px 24px rgba(112, 144, 176, 0.24)',
+            mt: 1.5,
+            border: '1px solid #DDDFE5',
+          },
+        }}
+      >
+        <MenuItem
+          onClick={() => navigate(`/${uniq || pathname[1]}/edit/${id}`)}
+        >
+          <Typography color="text">Edit</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => handleClickDelete(id, setLoadingDelete)}>
+          <Typography color="text">Hapus</Typography>
+        </MenuItem>
+      </Menu>
     </>
   )
-}
-
-interface ICustomTable {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  rows: Array<{ [key: string]: string | number | any }>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  head: Array<{ [key: string]: string | number | any }>
-  firstSpace?: boolean
-  lastSpace?: boolean
-  sortData?: { [key: string]: number }
-  expandable: boolean
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -258,9 +376,9 @@ function stableSort<T>(
   array: readonly T[],
   comparator: (a: T, b: T) => number
 ) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
+  const stabilizedThis = array?.map((el, index) => [el, index] as [T, number])
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0])
 
     if (order !== 0) {
@@ -270,7 +388,32 @@ function stableSort<T>(
     return a[1] - b[1]
   })
 
-  return stabilizedThis.map((el) => el[0])
+  return stabilizedThis?.map((el) => el[0])
+}
+
+interface ICustomTable {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  rows: Array<{ [key: string]: string | number | any }>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  head: Array<{ [key: string]: string | number | any }>
+  firstSpace?: boolean
+  lastSpace?: boolean
+  sortData?: { [key: string]: number }
+  expandable?: boolean
+  page: number
+  rowsPerPage: number
+  empty: boolean
+  uniq?: string
+  withAvatar?: boolean
+  loading?: boolean
+  handleChangePage: (e: unknown, p: number) => void
+  handleChangeRowsPerPage: (p: React.ChangeEvent<HTMLInputElement>) => void
+  handleClickDelete?: (
+    id: number,
+    setLoadingDelete: React.Dispatch<
+      React.SetStateAction<{ [key: string]: boolean }>
+    >
+  ) => void
 }
 
 const CustomTable: React.FC<ICustomTable> = ({
@@ -279,10 +422,17 @@ const CustomTable: React.FC<ICustomTable> = ({
   firstSpace = true,
   lastSpace = true,
   sortData,
-  expandable,
+  expandable = false,
+  loading = false,
+  uniq = '',
+  page,
+  rowsPerPage,
+  handleChangePage,
+  handleChangeRowsPerPage,
+  handleClickDelete = () => {},
+  empty,
+  withAvatar = false,
 }: ICustomTable): JSX.Element => {
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(1)
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<string>('')
 
@@ -303,17 +453,9 @@ const CustomTable: React.FC<ICustomTable> = ({
     handleRequestSort(event, property)
   }
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-  }
+  if (loading) return <RenderLoading />
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-
-    setPage(0)
-  }
+  if (empty) return <RenderEmpty uniq={uniq} />
 
   return (
     <>
@@ -361,14 +503,17 @@ const CustomTable: React.FC<ICustomTable> = ({
           </TableHead>
           <TableBody>
             <Row
+              uniq={uniq}
               expandable={expandable}
               head={head}
-              // rowsPerPage={rowsPerPage}
-              // page={page}
-              rows={stableSort(rows, getComparator(order, orderBy)).slice(
+              withAvatar={withAvatar}
+              rowsPerPage={rowsPerPage}
+              page={page + 1}
+              rows={stableSort(rows, getComparator(order, orderBy))?.slice(
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage
               )}
+              handleClickDelete={handleClickDelete}
               sortData={sortData}
             />
           </TableBody>
@@ -380,8 +525,10 @@ const CustomTable: React.FC<ICustomTable> = ({
         count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onPageChange={(e: unknown, p: number) => handleChangePage(e, p)}
+        onRowsPerPageChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          handleChangeRowsPerPage(e)
+        }
       />
     </>
   )

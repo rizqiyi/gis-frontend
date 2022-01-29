@@ -11,22 +11,50 @@ interface IUseDrainase {
   setDrainase: Dispatch<React.SetStateAction<IDrainase | null>>
 }
 
-const useDrainase = (is_published: string | boolean = ''): IUseDrainase => {
+type Query = {
+  street_path?: string | boolean
+  end_date?: string
+  start_date?: string
+  q?: string
+  is_published?: boolean
+  order_by?: 'desc' | 'asc'
+}
+
+const useDrainase = (
+  is_published: string | boolean = '',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deps: any[] = [],
+  q?: Query,
+  withCancel = false
+): IUseDrainase => {
   const [loading, setLoading] = useState<boolean>(false)
   const [drainase, setDrainase] = useState<IDrainase | null>(null)
   const [message, setMessage] = useState<unknown>({})
+
+  const getParams = (pubs: string | boolean, query?: Query) => {
+    const p = { params: {} }
+
+    if (is_published) Object.assign(p.params, { is_published: pubs })
+
+    if (query) Object.assign(p.params, { ...query })
+
+    return p
+  }
 
   useEffect(() => {
     const fetchDrainase = async () => {
       setLoading(true)
 
       try {
-        const response = await api({
-          method: 'get',
-          url: '/drainase',
-          ...(is_published ? { params: { is_published } } : {}),
-          headers: { 'Content-Type': 'application/json' },
-        })
+        const response = await api(
+          {
+            method: 'get',
+            url: '/drainase',
+            ...getParams(is_published, q),
+            headers: { 'Content-Type': 'application/json' },
+          },
+          withCancel
+        )
 
         const { data } = response
 
@@ -45,7 +73,7 @@ const useDrainase = (is_published: string | boolean = ''): IUseDrainase => {
     }
 
     fetchDrainase()
-  }, [])
+  }, [...deps])
 
   return { drainase, loading, message, setLoading, setMessage, setDrainase }
 }

@@ -4,7 +4,6 @@ import {
   Box,
   Typography,
   Paper,
-  Avatar,
   IconButton,
   Tooltip,
   Menu,
@@ -18,6 +17,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import UserIcon from '@icons/user-ic.svg'
 import ProfileSettingIcon from '@icons/settings-profile-ic.svg'
 import LogoutIcon from '@icons/logout-ic.svg'
+import MapsIcon from '@icons/maps-ic.svg'
+import DefaultProfile from '@illust/profile-default.svg'
 import truncate from '@helpers/truncate'
 import { getCurrentUser } from '@helpers/jwt-decode'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -51,6 +52,15 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
 
   const matchPathname = (pathname: string): boolean =>
     location.pathname.split('/')[1] === pathname
+
+  const isNotDynamicPage = ![
+    'detail',
+    'edit',
+    'delete',
+    'create',
+    'profile',
+    'password',
+  ].includes(location.pathname.split('/')[2])
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -163,10 +173,16 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
               >
                 <Box sx={{ display: 'flex' }}>
                   <Box>
-                    <Avatar
-                      alt="Remy Sharp"
+                    <img
+                      style={{ borderRadius: '50%', objectFit: 'cover' }}
+                      width="48px"
+                      height="48px"
+                      onError={({ currentTarget }) => {
+                        // eslint-disable-next-line no-return-assign, no-param-reassign
+                        return (currentTarget.src = DefaultProfile)
+                      }}
                       src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${currentUser.avatar}`}
-                      sx={{ width: 48, height: 48 }}
+                      alt="avatar"
                     />
                   </Box>
                   <Box sx={{ ml: '12px', color: '#FFFFFF' }}>
@@ -247,11 +263,12 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
         }}
       >
         <Box component="main" sx={{ margin: '56px 72px' }}>
-          <TitlePage />
+          {isNotDynamicPage && <TitlePage />}
           {children}
         </Box>
       </Box>
       <Menu
+        disableScrollLock
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -273,6 +290,12 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
           <img src={ProfileSettingIcon} alt="profile setting" />
           <Typography color="secondary" sx={{ ml: '12px' }}>
             Atur Profile Pengguna
+          </Typography>
+        </MenuItem>
+        <MenuItem onClick={() => navigate('/')}>
+          <img src={MapsIcon} alt="profile setting" />
+          <Typography color="secondary" sx={{ ml: '12px' }}>
+            Halaman Maps
           </Typography>
         </MenuItem>
         <MenuItem

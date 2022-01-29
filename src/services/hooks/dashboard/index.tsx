@@ -1,3 +1,4 @@
 import useDrainase from './useDrainase'
+import useDrainaseRead from './useDrainaseRead'
 
-export default useDrainase
+export { useDrainase, useDrainaseRead }

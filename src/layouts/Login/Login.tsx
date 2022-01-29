@@ -15,9 +15,10 @@ import Input from '@components/Input'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import validationLogin from '@validations/auth'
 import MapsIllustration from '@illust/Maps.svg'
-import api from '@services/common'
 import { ILogin } from '@interfaces/user'
 import { AES, enc } from 'crypto-js'
+import CSnackbar from '@/components/Snackbar'
+import axios from 'axios'
 import VisiblePasswordIcon from './partials/VisibleIcon'
 import useStyles from './Login.styles'
 
@@ -26,6 +27,10 @@ const Login = (): JSX.Element => {
   const navigate = useNavigate()
   const [visiblePassword, setVisiblePassword] = useState<boolean>(false)
   const [authData, setAuthData] = useState<ILogin | null>(null)
+  const [loginStatus, setLoginStatus] = useState<{ [key: string]: boolean }>({
+    error: false,
+    success: false,
+  })
 
   useEffect(() => {
     if (localStorage.getItem('gis-auth'))
@@ -45,17 +50,23 @@ const Login = (): JSX.Element => {
     setSubmitting(true)
 
     try {
-      const response = await api({
-        method: 'post',
-        url: '/users/login',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: { username: values.username, password: values.password },
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URI_PROD}/users/login`,
+        { username: values.username, password: values.password },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      setLoginStatus({
+        error: false,
+        success: true,
       })
 
-      localStorage.setItem('tokenAccess', response.token)
-      localStorage.setItem('userAccess', JSON.stringify(response.data))
+      localStorage.setItem('tokenAccess', response.data?.token)
+      localStorage.setItem('userAccess', JSON.stringify(response.data?.data))
 
       navigate('/dashboard')
 
@@ -71,6 +82,11 @@ const Login = (): JSX.Element => {
           ).toString()
         )
     } catch (err) {
+      setLoginStatus({
+        error: true,
+        success: false,
+      })
+
       setSubmitting(false)
     }
   }
@@ -201,6 +217,18 @@ const Login = (): JSX.Element => {
           </Box>
         </Grid>
       </Grid>
+      <CSnackbar
+        open={loginStatus.error}
+        status="error"
+        onClose={() =>
+          setLoginStatus({
+            success: false,
+            error: false,
+          })
+        }
+        autoHideDuration={3000}
+        message="Gagal login"
+      />
     </Box>
   )
 }
