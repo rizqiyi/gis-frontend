@@ -128,7 +128,8 @@ const CreateDrainase = (): JSX.Element => {
             })
 
             setSubmitting(false)
-          } catch (err) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (err: any) {
             setResponseMsg(err.response.data.message)
 
             setCreateStatus({
