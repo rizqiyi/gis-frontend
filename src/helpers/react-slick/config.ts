@@ -8,6 +8,7 @@ const config = {
   slidesToShow: 1,
   adaptiveHeight: true,
   draggable: true,
+  infinite: true,
   // infinite: true,
   // useTransform: false,
   // easing: 'linear',
