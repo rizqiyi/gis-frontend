@@ -182,6 +182,8 @@ const Root = (): JSX.Element => {
                           ({ image_path, image_name }: IDrainaseImages) => (
                             <Box key={image_name}>
                               <img
+                                width="392px"
+                                style={{ objectFit: 'cover' }}
                                 height="250px"
                                 src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
                                 alt={image_name}
@@ -207,6 +209,8 @@ const Root = (): JSX.Element => {
                           ({ image_path, image_name }: IDrainaseImages) => (
                             <Box key={image_name}>
                               <img
+                                width="392px"
+                                style={{ objectFit: 'cover' }}
                                 height="250px"
                                 src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
                                 alt={image_name}
