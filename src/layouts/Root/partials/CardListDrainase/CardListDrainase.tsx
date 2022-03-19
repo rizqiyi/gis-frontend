@@ -76,7 +76,6 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log('fired')
           setPage((p) => p + 1)
         }
       })
@@ -85,8 +84,6 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
     },
     [hasMore]
   )
-
-  console.log(page)
 
   return (
     <Box>
