@@ -108,6 +108,7 @@ const UserManagement = (): JSX.Element => {
           users?.data?.filter((data) => data?.id !== +getCurrentUser().id)
             .length === 0
         }
+        total={users?.data?.length}
         withAvatar
         head={headData}
         page={page}

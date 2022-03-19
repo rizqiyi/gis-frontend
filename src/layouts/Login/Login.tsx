@@ -14,7 +14,7 @@ import { Form, Formik } from 'formik'
 import Input from '@components/Input'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import validationLogin from '@validations/auth'
-import MapsIllustration from '@illust/Maps.svg'
+import Logo from '@images/new-logo.png'
 import { ILogin } from '@interfaces/user'
 import { AES, enc } from 'crypto-js'
 import CSnackbar from '@/components/Snackbar'
@@ -96,7 +96,7 @@ const Login = (): JSX.Element => {
       <Grid container justifyContent="center" alignItems="center">
         <Grid item xs={12} sm={12} md={12} lg={5}>
           <Box className={classes.LeftContentWrapper}>
-            <img className={classes.maps} alt="maps" src={MapsIllustration} />
+            <img className={classes.maps} alt="logo" src={Logo} />
           </Box>
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={7}>
@@ -104,8 +104,10 @@ const Login = (): JSX.Element => {
             <Box width="auto">
               <Box maxWidth={464}>
                 <Typography fontWeight={600} variant="h4">
-                  Selamat Datang Di Sistem Geografi{' '}
-                  <span className={classes.separateText}>Bojonegoro</span>
+                  Selamat Datang di Sistem Informasi Geografis Saluran Drainase{' '}
+                  <span className={classes.separateText}>
+                    Kabupaten Bojonegoro
+                  </span>
                 </Typography>
               </Box>
               <Box marginTop="24px" className={classes.disabledText}>

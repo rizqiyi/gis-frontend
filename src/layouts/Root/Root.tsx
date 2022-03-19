@@ -59,7 +59,10 @@ const Root = (): JSX.Element => {
   const [value, setValue] = useState<number>(0)
   const [openSearchModal, setOpenSearchModal] = useState<boolean>(false)
   const [path, setPath] = useState<string>('A')
-  const { drainase, loading } = useDrainase(true, [path], { street_path: path })
+  const { drainase, loading } = useDrainase(true, [path], {
+    street_path: path,
+    perPage: 99999,
+  })
   const [position, setPosition] = useState<IPosition>({
     lat: drainase?.data?.[0]?.latitude || dataset[0].latitude,
     lng: drainase?.data?.[0]?.longitude || dataset[0].longitude,

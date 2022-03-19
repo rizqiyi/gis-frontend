@@ -70,6 +70,7 @@ const CreateDrainase = (): JSX.Element => {
             2: 'Bentuk U',
             3: 'Bronjong',
             4: 'Kotak/Tertutup',
+            5: 'Tidak Ada',
           }
 
           const condition: { [key: number]: string } = {
@@ -77,6 +78,7 @@ const CreateDrainase = (): JSX.Element => {
             6: 'Rusak Ringan',
             7: 'Rusak Ringan',
             8: 'Rusak Berat',
+            9: 'Tidak Ada',
           }
 
           const switchValues = (
