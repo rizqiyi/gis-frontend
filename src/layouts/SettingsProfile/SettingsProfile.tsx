@@ -129,7 +129,13 @@ const SettingsProfile = (): JSX.Element => {
             }
           }}
         >
-          {({ setFieldValue, isSubmitting, handleChange, values }) => (
+          {({
+            setFieldValue,
+            isSubmitting,
+            handleChange,
+            values,
+            handleSubmit,
+          }) => (
             <Form>
               <Box padding="48px">
                 <Box
@@ -249,6 +255,7 @@ const SettingsProfile = (): JSX.Element => {
                   startIcon={<SaveOutlinedIcon />}
                   color="success"
                   variant="contained"
+                  onClick={() => handleSubmit()}
                   disableElevation
                   type="submit"
                   disabled={isSubmitting}

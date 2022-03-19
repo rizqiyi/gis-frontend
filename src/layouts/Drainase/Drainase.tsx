@@ -30,7 +30,12 @@ const Drainase = (): JSX.Element => {
     end_date: '',
     is_published: '',
     q: '',
+    sta: '',
   })
+
+  const [page, setPage] = useState<number>(0)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
+
   const { drainase, loading } = useDrainase(
     false,
     [
@@ -39,24 +44,23 @@ const Drainase = (): JSX.Element => {
       domain.end_date,
       domain.is_published,
       domain.q,
+      domain.sta,
+      page,
+      rowsPerPage,
     ],
-    Object.values(domain).some((d) => !!d) ? domain : {},
+    Object.values(domain).some((d) => !!d)
+      ? { ...domain, page: page || 1, perPage: rowsPerPage }
+      : { page: page || 1, perPage: rowsPerPage },
     true
   )
-  const [page, setPage] = useState<number>(0)
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-  }
+  console.log(page)
+
+  const handleChangePage = (event: unknown, newPage: number) => setPage(newPage)
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-
-    setPage(0)
-  }
+  ) => setRowsPerPage(+event.target.value)
 
   return (
     <Box>
@@ -142,7 +146,12 @@ const Drainase = (): JSX.Element => {
         }}
       />
       <Formik
-        initialValues={{ startDate: '', endDate: '', is_published: '2' }}
+        initialValues={{
+          startDate: '',
+          endDate: '',
+          is_published: '2',
+          sta: '',
+        }}
         onSubmit={(e) => {
           const v = {}
 
@@ -155,7 +164,9 @@ const Drainase = (): JSX.Element => {
           if (![2, '2'].includes(e.is_published))
             Object.assign(v, { is_published: Boolean(e.is_published) })
 
-          setDomain(v)
+          setPage(0)
+          setRowsPerPage(5)
+          setDomain({ ...v, sta: e.sta })
         }}
       >
         {({ setFieldValue, values, handleChange }) => (
@@ -235,6 +246,19 @@ const Drainase = (): JSX.Element => {
                       />
                     </Box>
                     <Box>
+                      <Typography variant="subtitle2">STA</Typography>
+                      <Input
+                        sx={{ mt: '10px' }}
+                        InputProps={{
+                          disableUnderline: true,
+                          type: 'number',
+                        }}
+                        onChange={handleChange}
+                        variant="filled"
+                        id="sta"
+                      />
+                    </Box>
+                    <Box>
                       <Button
                         disableElevation
                         sx={{
@@ -269,6 +293,7 @@ const Drainase = (): JSX.Element => {
         }
         loading={loading}
         expandable
+        total={drainase?.total}
         sortData={sortScore}
         handleClickDelete={async (e, setLoading) => {
           setLoading({ [e]: true })
@@ -292,23 +317,22 @@ const Drainase = (): JSX.Element => {
             setDeleteStatus({ success: false, error: true })
           }
         }}
-        rows={
-          drainase?.data?.map((data) => ({
-            ...data,
-            left_drainase: {
-              typical: data.left_typical,
-              drainase_depth: data.left_drainase_depth,
-              drainase_width: data.left_drainase_width,
-              drainase_condition: data.left_drainase_condition,
-            },
-            right_drainase: {
-              typical: data.right_typical,
-              drainase_depth: data.right_drainase_depth,
-              drainase_width: data.right_drainase_width,
-              drainase_condition: data.right_drainase_condition,
-            },
-          })) || []
-        }
+        uniq="drainase"
+        rows={drainase?.data?.map((data) => ({
+          ...data,
+          left_drainase: {
+            typical: data.left_typical,
+            drainase_depth: data.left_drainase_depth,
+            drainase_width: data.left_drainase_width,
+            drainase_condition: data.left_drainase_condition,
+          },
+          right_drainase: {
+            typical: data.right_typical,
+            drainase_depth: data.right_drainase_depth,
+            drainase_width: data.right_drainase_width,
+            drainase_condition: data.right_drainase_condition,
+          },
+        }))}
       />
       <CSnackbar
         open={deleteStatus.success}

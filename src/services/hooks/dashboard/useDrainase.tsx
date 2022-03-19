@@ -18,6 +18,8 @@ type Query = {
   q?: string
   is_published?: boolean
   order_by?: 'desc' | 'asc'
+  page?: number
+  perPage?: number
 }
 
 const useDrainase = (
@@ -25,7 +27,8 @@ const useDrainase = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   deps: any[] = [],
   q?: Query,
-  withCancel = false
+  withCancel = false,
+  isLazyLoad = false
 ): IUseDrainase => {
   const [loading, setLoading] = useState<boolean>(false)
   const [drainase, setDrainase] = useState<IDrainase | null>(null)
@@ -58,7 +61,19 @@ const useDrainase = (
 
         const { data } = response
 
-        setDrainase(data as IDrainase)
+        if (isLazyLoad) {
+          setDrainase((prev) => {
+            if (prev !== null)
+              return {
+                ...data,
+                data: [...prev.data, ...data?.data],
+              }
+
+            return data as IDrainase
+          })
+        } else {
+          setDrainase(data as IDrainase)
+        }
 
         setLoading(false)
 

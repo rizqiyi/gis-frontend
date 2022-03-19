@@ -62,7 +62,7 @@ const CardInfoDrawer = (): JSX.Element => {
                 className={classes.textSum}
                 variant="h6"
               >
-                {data?.total * 2 || 0}
+                {data?.total || 0}
               </Typography>
             </Paper>
           </Box>
@@ -91,7 +91,7 @@ const CardInfoDrawer = (): JSX.Element => {
                 className={classes.textSum}
                 variant="h6"
               >
-                {data?.total * 2 || 0}
+                {data?.total || 0}
               </Typography>
             </Paper>
           </Box>

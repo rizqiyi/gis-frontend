@@ -52,6 +52,7 @@ const Index: React.FC<IIndex> = ({
     'Bentuk U': '2',
     Bronjong: '3',
     'Kotak/Tertutup': '4',
+    'Tidak Ada': '5',
   }
 
   const condition: { [key: string]: string } = {
@@ -59,6 +60,7 @@ const Index: React.FC<IIndex> = ({
     'Rusak Ringan': '6',
     'Rusak Sedang': '7',
     'Rusak Berat': '8',
+    'Tidak Ada': '9',
   }
 
   const typicalNum: { [key: number]: string } = {
@@ -66,6 +68,7 @@ const Index: React.FC<IIndex> = ({
     2: 'Bentuk U',
     3: 'Bronjong',
     4: 'Kotak/Tertutup',
+    5: 'Tidak Ada',
   }
 
   const conditionNum: { [key: number]: string } = {
@@ -73,6 +76,7 @@ const Index: React.FC<IIndex> = ({
     6: 'Rusak Ringan',
     7: 'Rusak Ringan',
     8: 'Rusak Berat',
+    9: 'Tidak Ada',
   }
 
   return (

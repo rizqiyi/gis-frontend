@@ -81,7 +81,7 @@ const ClippedDrawer: React.FC<IClippedDrawer> = ({
           <Box display="flex" alignItems="center">
             <img src={logo} width="50px" height="50px" alt="bojonegoro" />
             <Typography className={classes.title} fontWeight={700} variant="h6">
-              WebGIS Drainase Bojonegoro
+              WebGIS Drainase Kabupaten Bojonegoro
             </Typography>
           </Box>
           <Box>

@@ -107,8 +107,8 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
             <Typography variant="subtitle1" fontWeight={600}>
               WebGIS Drainase
             </Typography>
-            <Typography variant="h6" fontWeight={600}>
-              Bojonegoro
+            <Typography variant="subtitle2" fontWeight={600}>
+              Kabupaten Bojonegoro
             </Typography>
           </Box>
         </Box>

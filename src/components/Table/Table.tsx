@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/indent */
 import * as React from 'react'
 import Box from '@mui/material/Box'
@@ -32,14 +33,14 @@ import RenderEmpty from './partials/RenderEmpty/RenderEmpty'
 import RenderLoading from './partials/RenderLoading/RenderLoading'
 
 interface IRow {
-  rows: Array<{ [key: string]: string | number }>
+  rows?: Array<{ [key: string]: string | number }>
   head: Array<{ [key: string]: string | number }>
   sortData?: { [key: string]: number }
   expandable: boolean
   withAvatar: boolean
   rowsPerPage: number
   uniq: string
-  page: number
+  page?: number
   handleClickDelete: (
     id: number,
     setLoadingDelete: React.Dispatch<
@@ -54,7 +55,7 @@ function Row({
   sortData = {},
   expandable,
   rowsPerPage,
-  page,
+  page = 0,
   handleClickDelete,
   withAvatar,
   uniq,
@@ -393,7 +394,7 @@ function stableSort<T>(
 
 interface ICustomTable {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  rows: Array<{ [key: string]: string | number | any }>
+  rows: Array<{ [key: string]: string | number | any }> | any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   head: Array<{ [key: string]: string | number | any }>
   firstSpace?: boolean
@@ -403,6 +404,7 @@ interface ICustomTable {
   page: number
   rowsPerPage: number
   empty: boolean
+  total?: number
   uniq?: string
   withAvatar?: boolean
   loading?: boolean
@@ -432,6 +434,7 @@ const CustomTable: React.FC<ICustomTable> = ({
   handleClickDelete = () => {},
   empty,
   withAvatar = false,
+  total = 0,
 }: ICustomTable): JSX.Element => {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<string>('')
@@ -456,6 +459,24 @@ const CustomTable: React.FC<ICustomTable> = ({
   if (loading) return <RenderLoading />
 
   if (empty) return <RenderEmpty uniq={uniq} />
+
+  const getProps = (): {
+    [key: string]: number | Array<{ [key: string]: string | number }>
+  } => {
+    if (uniq === 'drainase')
+      return {
+        page: page === 0 ? 1 : page + 1,
+        rows: stableSort(rows || [], getComparator(order, orderBy)),
+      }
+
+    return {
+      page: page || 1,
+      rows: stableSort(rows || [], getComparator(order, orderBy))?.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      ),
+    }
+  }
 
   return (
     <>
@@ -503,16 +524,12 @@ const CustomTable: React.FC<ICustomTable> = ({
           </TableHead>
           <TableBody>
             <Row
+              {...getProps()}
               uniq={uniq}
               expandable={expandable}
               head={head}
               withAvatar={withAvatar}
               rowsPerPage={rowsPerPage}
-              page={page + 1}
-              rows={stableSort(rows, getComparator(order, orderBy))?.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )}
               handleClickDelete={handleClickDelete}
               sortData={sortData}
             />
@@ -520,12 +537,17 @@ const CustomTable: React.FC<ICustomTable> = ({
         </Table>
       </TableContainer>
       <TablePagination
+        page={page}
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={rows.length}
+        count={total}
         rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={(e: unknown, p: number) => handleChangePage(e, p)}
+        onPageChange={(e: any, p: number): void => {
+          if (e.target.dataset?.testid === 'KeyboardArrowLeftIcon')
+            return handleChangePage(e, page === 0 ? 0 : page - 1)
+
+          return handleChangePage(e, p)
+        }}
         onRowsPerPageChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleChangeRowsPerPage(e)
         }

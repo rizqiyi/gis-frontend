@@ -48,6 +48,7 @@ export const leftDrainase = [
       { label: 'Bentuk U', value: 2 },
       { label: 'Bronjong', value: 3 },
       { label: 'Kotak/Tertutup', value: 4 },
+      { label: 'Tidak Ada', value: 5 },
     ],
     required: true,
   },
@@ -76,6 +77,7 @@ export const leftDrainase = [
       { label: 'Rusak Ringan', value: 6 },
       { label: 'Rusak Sedang', value: 7 },
       { label: 'Rusak Berat', value: 8 },
+      { label: 'Tidak Ada', value: 9 },
     ],
   },
 ]
@@ -92,6 +94,7 @@ export const rightDrainase = [
       { label: 'Bentuk U', value: 2 },
       { label: 'Bronjong', value: 3 },
       { label: 'Kotak/Tertutup', value: 4 },
+      { label: 'Tidak Ada', value: 5 },
     ],
   },
   {
@@ -119,6 +122,7 @@ export const rightDrainase = [
       { label: 'Rusak Ringan', value: 6 },
       { label: 'Rusak Sedang', value: 7 },
       { label: 'Rusak Berat', value: 8 },
+      { label: 'Tidak Ada', value: 9 },
     ],
   },
 ]

@@ -28,27 +28,28 @@ const Dashboard = (): JSX.Element => {
     error: false,
     success: false,
   })
-  const { drainase, loading } = useDrainase(false, [deleteStatusDrainase], {
-    order_by: 'desc',
-  })
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
+  const [page, setPage] = useState<number>(0)
+
+  const handleChangePage = (event: unknown, newPage: number) => setPage(newPage)
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => setRowsPerPage(+event.target.value)
+
+  const { drainase, loading } = useDrainase(
+    false,
+    [deleteStatusDrainase, page, rowsPerPage],
+    {
+      order_by: 'desc',
+      page: page || 1,
+      perPage: rowsPerPage,
+    }
+  )
   const { users, loading: loadingUser } = useUsers([deleteStatusUsers], {
     order_by: 'desc',
   })
   const [responseMsg, setResponseMsg] = useState<string>('')
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5)
-  const [page, setPage] = useState<number>(0)
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-
-    setPage(0)
-  }
 
   const [rowsPerPageUsers, setRowsPerPageUsers] = useState<number>(5)
   const [pageUsers, setPageUsers] = useState<number>(0)
@@ -80,6 +81,7 @@ const Dashboard = (): JSX.Element => {
         handleChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleChangeRowsPerPage(e)
         }
+        total={drainase?.total}
         loading={loading}
         expandable
         sortData={sortScoreDrainase}
@@ -135,6 +137,7 @@ const Dashboard = (): JSX.Element => {
           users?.data?.filter((data) => data?.id !== +getCurrentUser().id)
             .length === 0
         }
+        total={users?.data?.length}
         withAvatar
         head={headDataUsers}
         page={pageUsers}

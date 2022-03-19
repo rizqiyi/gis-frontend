@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import {
   ToggleButton,
   Box,
@@ -32,14 +32,61 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
 }: ICardListDrainase): JSX.Element => {
   const classes = useStyles()
   const [active, setActive] = useState(Object)
-  const { drainase, loading } = useDrainase(true, [path], { street_path: path })
+  const [page, setPage] = useState(1)
+  const { drainase, loading, setDrainase } = useDrainase(
+    true,
+    [path, page],
+    {
+      street_path: path,
+      page,
+    },
+    false,
+    true
+  )
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: string
   ) => {
+    if (path !== newAlignment) {
+      setPage(1)
+
+      setDrainase({
+        current_page: 1,
+        data: [],
+        limit: 5,
+        next_page: null,
+        offset: 0,
+        per_page: 5,
+        previous_page: null,
+        total: 0,
+      })
+    }
+
     setPath(newAlignment)
   }
+
+  const observer = useRef<IntersectionObserver | null>()
+
+  const hasMore = drainase?.next_page !== null
+
+  const lastElementRef = useCallback(
+    (node) => {
+      if (observer.current) observer.current.disconnect()
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          console.log('fired')
+          setPage((p) => p + 1)
+        }
+      })
+
+      if (node) observer.current.observe(node)
+    },
+    [hasMore]
+  )
+
+  console.log(page)
 
   return (
     <Box>
@@ -83,11 +130,11 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
         marginRight="10px"
         marginTop="27px"
         height="41.5vh"
-        padding={loading ? '0 20px 0 30px' : 'inherit'}
+        padding={loading && page === 1 ? '0 20px 0 30px' : 'inherit'}
         overflow="auto"
         className={classes.scrollStyle}
       >
-        {loading
+        {loading && page === 1
           ? Array(5)
               .fill('')
               .map((_, idx: number) => (
@@ -119,6 +166,9 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
                     marginTop: idx === 0 ? 0 : '24px',
                     marginBottom: idx === 9 ? '24px' : 0,
                   }}
+                  ref={
+                    drainase.data?.length === idx + 1 ? lastElementRef : null
+                  }
                   selected={active[idx]}
                   onClick={() => {
                     setActive({ [idx]: !active[idx] })
@@ -164,6 +214,28 @@ const CardListDrainase: React.FC<ICardListDrainase> = ({
                 </ListItemButton>
               )
             )}
+        {loading &&
+          page > 1 &&
+          Array(5)
+            .fill('')
+            .map((_, idx: number) => (
+              <Box
+                // eslint-disable-next-line react/no-array-index-key
+                key={idx}
+                marginTop={idx === 0 ? '24px' : 0}
+                marginRight="10px"
+                padding="0 20px 0 30px"
+              >
+                <Skeleton
+                  variant="rectangular"
+                  height="70px"
+                  sx={{
+                    marginTop: idx === 0 ? 0 : '24px',
+                    marginBottom: idx === 9 ? '24px' : 0,
+                  }}
+                />
+              </Box>
+            ))}
       </Box>
     </Box>
   )

@@ -4,13 +4,13 @@ import { makeStyles } from '@mui/styles'
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   maps: {
     width: '100%',
-    height: '320px',
+    height: 'auto',
     [theme.breakpoints.down('sm')]: {
-      height: '520px',
+      height: 'auto',
     },
   },
   LeftContentWrapper: {
-    background: theme.palette.background.default,
+    background: '#fff',
     height: '100vh',
     display: 'flex',
     justifyContent: 'center',

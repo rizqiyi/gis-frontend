@@ -89,7 +89,7 @@ const Headers = (): JSX.Element => {
                   variant="h3"
                   fontWeight={700}
                 >
-                  {data?.total * 2 || 0}
+                  {data?.total || 0}
                 </Typography>
                 <Typography
                   sx={{ color: '#9E9E9E' }}
@@ -127,7 +127,7 @@ const Headers = (): JSX.Element => {
                   variant="h3"
                   fontWeight={700}
                 >
-                  {data?.total * 2 || 0}
+                  {data?.total || 0}
                 </Typography>
                 <Typography
                   sx={{ color: '#9E9E9E' }}
