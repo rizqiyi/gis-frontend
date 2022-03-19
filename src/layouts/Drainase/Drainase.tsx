@@ -54,8 +54,6 @@ const Drainase = (): JSX.Element => {
     true
   )
 
-  console.log(page)
-
   const handleChangePage = (event: unknown, newPage: number) => setPage(newPage)
 
   const handleChangeRowsPerPage = (
