@@ -49,8 +49,8 @@ const Drainase = (): JSX.Element => {
       rowsPerPage,
     ],
     Object.values(domain).some((d) => !!d)
-      ? { ...domain, page: page || 1, perPage: rowsPerPage }
-      : { page: page || 1, perPage: rowsPerPage },
+      ? { ...domain, page: page === 0 ? 1 : page + 1, perPage: rowsPerPage }
+      : { page: page === 0 ? 1 : page + 1, perPage: rowsPerPage },
     true
   )
 
