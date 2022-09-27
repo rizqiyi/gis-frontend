@@ -70,9 +70,6 @@ const Root = (): JSX.Element => {
     lng: drainase?.data?.[0]?.longitude || dataset[0].longitude,
   })
 
-  console.log(zipUrl)
-  console.log(SearchIcon)
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     event.preventDefault()
 
