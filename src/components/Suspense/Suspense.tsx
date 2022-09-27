@@ -27,7 +27,7 @@ const Suspense = (): JSX.Element => {
             marginLeft="24px"
           >
             <Typography variant="h5" fontWeight={600}>
-              WebGIS Drainase
+              WebGIS Prasarana Jalan
             </Typography>
             <Typography variant="h4" fontWeight={600}>
               Bojonegoro

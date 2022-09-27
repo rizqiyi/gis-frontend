@@ -17,6 +17,8 @@ import CustomPopup from './partials/CustomPopup'
 import StreetInfo from './partials/StreetInfo'
 import DetailStreet from './partials/DetailStreet'
 import SeachDialog from './partials/SearchDialog'
+// import Shapefile from './Shapefile'
+import zipUrl from '../../shp/street.zip'
 
 interface TabPanelProps {
   children: React.ReactNode
@@ -67,6 +69,9 @@ const Root = (): JSX.Element => {
     lat: drainase?.data?.[0]?.latitude || dataset[0].latitude,
     lng: drainase?.data?.[0]?.longitude || dataset[0].longitude,
   })
+
+  console.log(zipUrl)
+  console.log(SearchIcon)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     event.preventDefault()
@@ -128,6 +133,8 @@ const Root = (): JSX.Element => {
             </MapConsumer>
             <TileLayer
               url={`https://api.mapbox.com/styles/v1/rizqiyi/ckwsae4xm850314o2904zuayz/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAP_BOX_ACCESS_TOKEN}`}
+              // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             {!loading &&
               drainase?.data?.map((data, idx) => (
@@ -236,6 +243,8 @@ const Root = (): JSX.Element => {
                   </CustomPopup>
                 </Marker>
               ))}
+            {/* eslint-disable-next-line global-require */}
+            {/* <Shapefile zipUrl={zipUrl} /> */}
           </MapContainer>
         </Box>
       </ClippedDrawer>

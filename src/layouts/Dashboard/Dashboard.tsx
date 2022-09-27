@@ -42,7 +42,7 @@ const Dashboard = (): JSX.Element => {
     [deleteStatusDrainase, page, rowsPerPage],
     {
       order_by: 'desc',
-      page: page || 1,
+      page: page === 0 ? 1 : page + 1,
       perPage: rowsPerPage,
     }
   )
