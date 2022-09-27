@@ -105,7 +105,7 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
             marginLeft="12px"
           >
             <Typography variant="subtitle1" fontWeight={600}>
-              WebGIS Drainase
+            WebGIS Prasarana Jalan
             </Typography>
             <Typography variant="subtitle2" fontWeight={600}>
               Kabupaten Bojonegoro
