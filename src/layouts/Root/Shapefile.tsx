@@ -10,6 +10,8 @@ interface IShapeFile {
 const Index: React.FC<IShapeFile> = ({ zipUrl }: IShapeFile) => {
   const map = useMap()
 
+  console.log(window.location)
+
   useEffect(() => {
     const geo = Leaflet.geoJSON(
       { type: 'Feature' },
@@ -29,7 +31,7 @@ const Index: React.FC<IShapeFile> = ({ zipUrl }: IShapeFile) => {
     ).addTo(map)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    shp(`http://localhost:3000${zipUrl}`).then((data: any) => {
+    shp(`${window.location.origin}${zipUrl}`).then((data: any) => {
       geo.addData(data)
     })
   }, [])
