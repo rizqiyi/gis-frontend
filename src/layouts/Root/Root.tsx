@@ -76,8 +76,6 @@ const Root = (): JSX.Element => {
     setValue(newValue)
   }
 
-  console.log(window.location)
-
   return (
     <Box>
       <ClippedDrawer path={path} setPath={setPath} setPosition={setPosition}>
