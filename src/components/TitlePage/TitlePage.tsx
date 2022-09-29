@@ -11,6 +11,7 @@ const TitlePage = (): JSX.Element => {
     dashboard: 'Dashboard',
     drainase: 'Drainase Management',
     'user-management': 'User Management',
+    shapefile: 'Shapefile',
     settings: 'Pengaturan Profile Pengguna',
   }
 
@@ -18,6 +19,7 @@ const TitlePage = (): JSX.Element => {
     dashboard: 'Overview',
     drainase: 'Drainase Management',
     'user-management': 'User Management',
+    shapefile: 'Shapefile Management',
     settings: 'Atur Profile Pengguna',
   }
 

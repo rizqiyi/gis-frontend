@@ -74,6 +74,16 @@ export default [
     exact: true,
   },
   {
+    path: '/shapefile',
+    private: true,
+    component: lazy(async () => {
+      await new Promise((resolve) => setTimeout(resolve, TIMEOUT))
+
+      return import('@pages/Shapefile')
+    }),
+    exact: true,
+  },
+  {
     path: '/user-management/edit/:id',
     private: true,
     component: lazy(async () => {

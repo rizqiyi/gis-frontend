@@ -25,6 +25,7 @@ const index: React.FC<IBreadcrumbs> = ({
     dashboard: 'Dashboard',
     drainase: 'Drainase Management',
     'user-management': 'User Management',
+    shapefile: 'Shapefile Management',
     settings: 'Pengaturan Profile Pengguna',
   }
 
