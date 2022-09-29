@@ -18,6 +18,7 @@ import UserIcon from '@icons/user-ic.svg'
 import ProfileSettingIcon from '@icons/settings-profile-ic.svg'
 import LogoutIcon from '@icons/logout-ic.svg'
 import MapsIcon from '@icons/maps-ic.svg'
+import MapsIconWhite from '@icons/maps-ic-white.svg'
 import DefaultProfile from '@illust/profile-default.svg'
 import truncate from '@helpers/truncate'
 import { getCurrentUser } from '@helpers/jwt-decode'
@@ -134,6 +135,18 @@ const PrivateDrawer: React.FC<IPrivateDrawer> = ({
             <img src={DrainaseIcon} width="20px" height="20px" alt="home" />
             <Box sx={{ marginLeft: '13px', color: '#ffffff' }}>
               <Typography variant="subtitle1">Drainase</Typography>
+            </Box>
+          </Box>
+          <Box
+            onClick={() => navigate('/shapefile')}
+            sx={{ marginTop: '24px' }}
+            className={`${classes.cardMenu} ${
+              matchPathname('shapefile') ? classes.cardMenuActive : ''
+            }`}
+          >
+            <img src={MapsIconWhite} width="20px" height="20px" alt="home" />
+            <Box sx={{ marginLeft: '13px', color: '#ffffff' }}>
+              <Typography variant="subtitle1">Shapefile</Typography>
             </Box>
           </Box>
           {currentUser.role_name === 'Super Admin' && (
