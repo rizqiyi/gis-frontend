@@ -10,8 +10,6 @@ interface IShapeFile {
 const Index: React.FC<IShapeFile> = ({ zipUrl }: IShapeFile) => {
   const map = useMap()
 
-  console.log(window.location)
-
   useEffect(() => {
     const geo = Leaflet.geoJSON(
       { type: 'Feature' },
