@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Skeleton, Checkbox, FormControlLabel, Radio } from '@mui/material'
 import Accordion from '@components/Accordion'
 import BASIC_MAP, { IBasicMap } from '@/constant/basic-map'
@@ -23,9 +23,6 @@ const CardListDrainase: React.FC = (): JSX.Element => {
     setFilterDrainase,
     filterDrainase,
   } = useMapContext()
-  const [districtQuery, setDistrictQuery] = useState<string>('')
-
-  console.log(filterDrainase)
 
   return (
     <Box

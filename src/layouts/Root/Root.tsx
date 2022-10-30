@@ -60,7 +60,7 @@ const Root = (): JSX.Element => {
   const classes = useStyles()
   const [value, setValue] = useState<number>(0)
   const [openSearchModal, setOpenSearchModal] = useState<boolean>(false)
-  const [path, setPath] = useState<string>('A')
+  // const [path, setPath] = useState<string>('A')
   const { drainase, loading } = useDrainase(true, [], {
     // street_path: path,
     perPage: 99999,
@@ -80,7 +80,7 @@ const Root = (): JSX.Element => {
 
   return (
     <Box>
-      <ClippedDrawer path={path} setPath={setPath} setPosition={setPosition}>
+      <ClippedDrawer>
         <Box>
           <MapContainer center={[position.lat, position.lng]} zoom={30}>
             <Box position="relative" left="38px" top="38px" zIndex={999}>

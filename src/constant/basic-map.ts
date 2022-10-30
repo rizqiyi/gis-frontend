@@ -7,6 +7,7 @@ import village from '@shp/village.zip'
 
 export interface IBasicMap {
   title: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   url: string | any
 }
 
