@@ -2,23 +2,30 @@ import React, { useContext, useReducer } from 'react'
 import DistrictUrl from '@shp/district.zip'
 import TYPES from './types'
 
+interface IFilterDrainase {
+  value: string
+  manage: string
+}
+
 type InitValue = {
   basicMap: string
   setBasicMap: (v: string) => void
   filterDrainase: Array<string>
-  setFilterDrainase: (v: string) => void
+  filterManage: Record<string, boolean>
+  setFilterDrainase: (v: IFilterDrainase) => void
 }
 
 type Action = {
   type: TYPES
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any
+  payload: any | IFilterDrainase
 }
 
 const initValue: InitValue = {
   basicMap: DistrictUrl,
   setBasicMap: () => {},
   filterDrainase: [],
+  filterManage: { A: false, B: false },
   setFilterDrainase: () => {},
 }
 
@@ -40,15 +47,23 @@ const REDUCER = (state: InitValue, action: Action): InitValue => {
     case TYPES.SET_FILTER_DRINASE:
       return {
         ...state,
-        filterDrainase: [...state.filterDrainase, payload],
+        filterDrainase: [...state.filterDrainase, payload?.value],
+        filterManage: {
+          ...state.filterManage,
+          [payload?.manage]: !state.filterManage[payload?.manage],
+        },
       }
 
     case TYPES.REMOVE_FILTER_DRAINASE:
       return {
         ...state,
         filterDrainase: state.filterDrainase.filter(
-          (drainase) => drainase !== payload
+          (drainase) => drainase !== payload?.value
         ),
+        filterManage: {
+          ...state.filterManage,
+          [payload?.manage]: false,
+        },
       }
 
     default:
@@ -62,9 +77,9 @@ const MapProvider: React.FC<IMapProvider> = ({ children }: IMapProvider) => {
   const setBasicMap = (payload: string) =>
     dispatch({ type: TYPES.SET_BASIC_MAP, payload })
 
-  const setFilterDrainase = (payload: string) => {
+  const setFilterDrainase = ({ value, manage }: IFilterDrainase) => {
     const isDuplicate = state.filterDrainase.findIndex(
-      (drainase: string) => drainase === payload
+      (drainase: string) => drainase === value
     )
 
     dispatch({
@@ -72,7 +87,7 @@ const MapProvider: React.FC<IMapProvider> = ({ children }: IMapProvider) => {
         isDuplicate > -1
           ? TYPES.REMOVE_FILTER_DRAINASE
           : TYPES.SET_FILTER_DRINASE,
-      payload,
+      payload: { value, manage },
     })
   }
 
@@ -83,6 +98,7 @@ const MapProvider: React.FC<IMapProvider> = ({ children }: IMapProvider) => {
         setBasicMap,
         filterDrainase: Array.from(new Set(state.filterDrainase)),
         setFilterDrainase,
+        filterManage: state.filterManage,
       }}
     >
       {children}

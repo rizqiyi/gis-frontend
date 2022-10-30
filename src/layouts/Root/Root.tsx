@@ -76,7 +76,9 @@ const Root = (): JSX.Element => {
     setValue(newValue)
   }
 
-  const { filterDrainase } = useMapContext()
+  const { filterDrainase, filterManage } = useMapContext()
+
+  console.log(filterManage)
 
   return (
     <Box>
@@ -137,8 +139,10 @@ const Root = (): JSX.Element => {
             />
             {!loading &&
               drainase?.data
-                ?.filter((filteredDrainase) =>
-                  filterDrainase.includes(filteredDrainase.street_name)
+                ?.filter(
+                  (filteredDrainase) =>
+                    filterDrainase.includes(filteredDrainase.street_name) &&
+                    filterManage[filteredDrainase.street_path]
                 )
                 ?.map((data, idx) => (
                   <Marker
