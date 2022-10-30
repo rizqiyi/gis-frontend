@@ -17,6 +17,7 @@ import LogoutIcon from '@icons/logout-ic.svg'
 import CardInfoDrawer from '../CardInfoDrawer'
 import CardListDrainase from '../CardListDrainase'
 import useStyles from './ClippedDrawer.styles'
+import CardListDrainaseNew from '../CardListDrainaseNew'
 
 const drawerWidth = 420
 
@@ -159,11 +160,12 @@ const ClippedDrawer: React.FC<IClippedDrawer> = ({
         >
           <CardInfoDrawer />
         </Box>
-        <CardListDrainase
+        <CardListDrainaseNew />
+        {/* <CardListDrainase
           path={path}
           setPath={setPath}
           setPosition={setPosition}
-        />
+        /> */}
       </Drawer>
       <Box component="main" sx={{ width: '100%' }}>
         <Toolbar sx={{ marginTop: '9px' }} />

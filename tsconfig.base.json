@@ -8,6 +8,7 @@
       "@layouts/*": ["src/layouts/*"],
       "@helpers/*": ["src/helpers/*"],
       "@images/*": ["src/images/*"],
+      "@shp/*": ["src/shp/*"],
       "@illust/*": ["src/images/illustrations/*"],
       "@icons/*": ["src/images/icons/*"],
       "@constant/*": ["src/constant/*"],

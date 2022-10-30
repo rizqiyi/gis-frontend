@@ -18,7 +18,7 @@ import StreetInfo from './partials/StreetInfo'
 import DetailStreet from './partials/DetailStreet'
 import SeachDialog from './partials/SearchDialog'
 import Shapefile from './Shapefile'
-import zipUrl from '../../shp/district.zip'
+import MapProvider, { useMapContext } from './partials/context'
 
 interface TabPanelProps {
   children: React.ReactNode
@@ -61,8 +61,8 @@ const Root = (): JSX.Element => {
   const [value, setValue] = useState<number>(0)
   const [openSearchModal, setOpenSearchModal] = useState<boolean>(false)
   const [path, setPath] = useState<string>('A')
-  const { drainase, loading } = useDrainase(true, [path], {
-    street_path: path,
+  const { drainase, loading } = useDrainase(true, [], {
+    // street_path: path,
     perPage: 99999,
   })
   const [position, setPosition] = useState<IPosition>({
@@ -75,6 +75,8 @@ const Root = (): JSX.Element => {
 
     setValue(newValue)
   }
+
+  const { filterDrainase } = useMapContext()
 
   return (
     <Box>
@@ -134,114 +136,120 @@ const Root = (): JSX.Element => {
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             {!loading &&
-              drainase?.data?.map((data, idx) => (
-                <Marker
-                  position={[data.latitude, data.longitude]}
-                  icon={CustomMarker}
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={`${data.district}_${idx}`}
-                  eventHandlers={{
-                    click: () =>
-                      setPosition({ lat: data.latitude, lng: data.longitude }),
-                  }}
-                >
-                  <CustomPopup autoPan={false} closeButton={false}>
-                    <Tabs
-                      value={value}
-                      onChange={handleChange}
-                      aria-label="basic tabs example"
-                      sx={{
-                        width: '100%',
-                        padding: '17px 24px 0 24px',
-                      }}
-                      centered
-                      textColor="primary"
-                      indicatorColor="primary"
-                    >
-                      <Tab
-                        label={
-                          <Typography
-                            variant="subtitle1"
-                            gutterBottom
-                            fontWeight={600}
-                          >
-                            Drainase Kiri
-                          </Typography>
-                        }
-                        {...a11yProps(0)}
-                      />
-                      <Tab
-                        label={
-                          <Typography
-                            variant="subtitle1"
-                            gutterBottom
-                            fontWeight={600}
-                          >
-                            Drainase Kanan
-                          </Typography>
-                        }
-                        {...a11yProps(1)}
-                      />
-                    </Tabs>
-                    <TabPanel value={value} index={0}>
-                      <Slider className={classes.slider} {...sliderConfig}>
-                        {data.left_images_drainase.map(
-                          ({ image_path, image_name }: IDrainaseImages) => (
-                            <Box key={image_name}>
-                              <img
-                                width="392px"
-                                style={{ objectFit: 'cover' }}
-                                height="250px"
-                                src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
-                                alt={image_name}
-                              />
-                            </Box>
-                          )
-                        )}
-                      </Slider>
-                      <StreetInfo data={data} />
-                      <DetailStreet
-                        data={{
-                          typical: data.left_typical,
-                          drainase_depth: data.left_drainase_depth,
-                          drainase_width: data.left_drainase_width,
-                          drainase_condition: data.left_drainase_condition,
+              drainase?.data
+                ?.filter((filteredDrainase) =>
+                  filterDrainase.includes(filteredDrainase.street_name)
+                )
+                ?.map((data, idx) => (
+                  <Marker
+                    position={[data.latitude, data.longitude]}
+                    icon={CustomMarker}
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={`${data.district}_${idx}`}
+                    eventHandlers={{
+                      click: () =>
+                        setPosition({
+                          lat: data.latitude,
+                          lng: data.longitude,
+                        }),
+                    }}
+                  >
+                    <CustomPopup autoPan={false} closeButton={false}>
+                      <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="basic tabs example"
+                        sx={{
+                          width: '100%',
+                          padding: '17px 24px 0 24px',
                         }}
-                        note={data.note}
-                      />
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                      <Slider className={classes.slider} {...sliderConfig}>
-                        {data.right_images_drainase.map(
-                          ({ image_path, image_name }: IDrainaseImages) => (
-                            <Box key={image_name}>
-                              <img
-                                width="392px"
-                                style={{ objectFit: 'cover' }}
-                                height="250px"
-                                src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
-                                alt={image_name}
-                              />
-                            </Box>
-                          )
-                        )}
-                      </Slider>
-                      <StreetInfo data={data} />
-                      <DetailStreet
-                        data={{
-                          typical: data.right_typical,
-                          drainase_depth: data.right_drainase_depth,
-                          drainase_width: data.right_drainase_width,
-                          drainase_condition: data.right_drainase_condition,
-                        }}
-                        note={data.note}
-                      />
-                    </TabPanel>
-                  </CustomPopup>
-                </Marker>
-              ))}
-            {/* eslint-disable-next-line global-require */}
-            <Shapefile zipUrl={zipUrl} />
+                        centered
+                        textColor="primary"
+                        indicatorColor="primary"
+                      >
+                        <Tab
+                          label={
+                            <Typography
+                              variant="subtitle1"
+                              gutterBottom
+                              fontWeight={600}
+                            >
+                              Drainase Kiri
+                            </Typography>
+                          }
+                          {...a11yProps(0)}
+                        />
+                        <Tab
+                          label={
+                            <Typography
+                              variant="subtitle1"
+                              gutterBottom
+                              fontWeight={600}
+                            >
+                              Drainase Kanan
+                            </Typography>
+                          }
+                          {...a11yProps(1)}
+                        />
+                      </Tabs>
+                      <TabPanel value={value} index={0}>
+                        <Slider className={classes.slider} {...sliderConfig}>
+                          {data.left_images_drainase.map(
+                            ({ image_path, image_name }: IDrainaseImages) => (
+                              <Box key={image_name}>
+                                <img
+                                  width="392px"
+                                  style={{ objectFit: 'cover' }}
+                                  height="250px"
+                                  src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
+                                  alt={image_name}
+                                />
+                              </Box>
+                            )
+                          )}
+                        </Slider>
+                        <StreetInfo data={data} />
+                        <DetailStreet
+                          data={{
+                            typical: data.left_typical,
+                            drainase_depth: data.left_drainase_depth,
+                            drainase_width: data.left_drainase_width,
+                            drainase_condition: data.left_drainase_condition,
+                          }}
+                          note={data.note}
+                        />
+                      </TabPanel>
+                      <TabPanel value={value} index={1}>
+                        <Slider className={classes.slider} {...sliderConfig}>
+                          {data.right_images_drainase.map(
+                            ({ image_path, image_name }: IDrainaseImages) => (
+                              <Box key={image_name}>
+                                <img
+                                  width="392px"
+                                  style={{ objectFit: 'cover' }}
+                                  height="250px"
+                                  src={`${process.env.REACT_APP_API_URI_IMAGEKIT}${image_path}`}
+                                  alt={image_name}
+                                />
+                              </Box>
+                            )
+                          )}
+                        </Slider>
+                        <StreetInfo data={data} />
+                        <DetailStreet
+                          data={{
+                            typical: data.right_typical,
+                            drainase_depth: data.right_drainase_depth,
+                            drainase_width: data.right_drainase_width,
+                            drainase_condition: data.right_drainase_condition,
+                          }}
+                          note={data.note}
+                        />
+                      </TabPanel>
+                    </CustomPopup>
+                  </Marker>
+                ))}
+            <Shapefile />
           </MapContainer>
         </Box>
       </ClippedDrawer>
@@ -254,4 +262,10 @@ const Root = (): JSX.Element => {
   )
 }
 
-export default Root
+const WithMapContext: React.FC = (): JSX.Element => (
+  <MapProvider>
+    <Root />
+  </MapProvider>
+)
+
+export default WithMapContext
