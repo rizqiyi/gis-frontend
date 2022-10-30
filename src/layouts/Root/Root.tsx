@@ -148,13 +148,13 @@ const Root = (): JSX.Element => {
                     icon={CustomMarker}
                     // eslint-disable-next-line react/no-array-index-key
                     key={`${data.district}_${idx}`}
-                    eventHandlers={{
-                      click: () =>
-                        setPosition({
-                          lat: data.latitude,
-                          lng: data.longitude,
-                        }),
-                    }}
+                    // eventHandlers={{
+                    //   click: () =>
+                    //     setPosition({
+                    //       lat: data.latitude,
+                    //       lng: data.longitude,
+                    //     }),
+                    // }}
                   >
                     <CustomPopup autoPan={false} closeButton={false}>
                       <Tabs

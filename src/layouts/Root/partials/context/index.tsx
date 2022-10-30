@@ -47,7 +47,9 @@ const REDUCER = (state: InitValue, action: Action): InitValue => {
     case TYPES.SET_FILTER_DRINASE:
       return {
         ...state,
-        filterDrainase: [...state.filterDrainase, payload?.value],
+        filterDrainase: Array.from(
+          new Set([...state.filterDrainase, payload?.value])
+        ),
         filterManage: {
           ...state.filterManage,
           [payload?.manage]: !state.filterManage[payload?.manage],
@@ -62,7 +64,7 @@ const REDUCER = (state: InitValue, action: Action): InitValue => {
         ),
         filterManage: {
           ...state.filterManage,
-          [payload?.manage]: false,
+          [payload?.manage]: !state.filterManage[payload?.manage],
         },
       }
 
@@ -77,26 +79,18 @@ const MapProvider: React.FC<IMapProvider> = ({ children }: IMapProvider) => {
   const setBasicMap = (payload: string) =>
     dispatch({ type: TYPES.SET_BASIC_MAP, payload })
 
-  const setFilterDrainase = ({ value, manage }: IFilterDrainase) => {
-    const isDuplicate = state.filterDrainase.findIndex(
-      (drainase: string) => drainase === value
-    )
-
+  const setFilterDrainase = ({ value, manage }: IFilterDrainase) =>
     dispatch({
-      type:
-        isDuplicate > -1
-          ? TYPES.REMOVE_FILTER_DRAINASE
-          : TYPES.SET_FILTER_DRINASE,
+      type: TYPES.SET_FILTER_DRINASE,
       payload: { value, manage },
     })
-  }
 
   return (
     <MapContext.Provider
       value={{
         basicMap: state.basicMap,
         setBasicMap,
-        filterDrainase: Array.from(new Set(state.filterDrainase)),
+        filterDrainase: state.filterDrainase,
         setFilterDrainase,
         filterManage: state.filterManage,
       }}
