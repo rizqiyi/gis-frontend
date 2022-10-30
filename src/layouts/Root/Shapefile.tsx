@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useMap } from 'react-leaflet'
 import Leaflet from 'leaflet'
 import shp from 'shpjs'
+import { useMapContext } from './partials/context'
 
-interface IShapeFile {
-  zipUrl: string
-}
-
-const Index: React.FC<IShapeFile> = ({ zipUrl }: IShapeFile) => {
+const Index: React.FC = () => {
   const map = useMap()
+  const { basicMap } = useMapContext()
 
   useEffect(() => {
     const geo = Leaflet.geoJSON(
@@ -29,12 +27,16 @@ const Index: React.FC<IShapeFile> = ({ zipUrl }: IShapeFile) => {
     ).addTo(map)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    shp(`${window.location.origin}${zipUrl}`).then((data: any) => {
+    shp(`${window.location.origin}${basicMap}`).then((data: any) => {
       geo.addData(data)
     })
-  }, [])
+
+    return () => {
+      map.removeLayer(geo)
+    }
+  }, [basicMap])
 
   return null
 }
 
-export default Index
+export default memo(Index)

@@ -15,29 +15,18 @@ import { Menu, MenuItem, Tooltip } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LogoutIcon from '@icons/logout-ic.svg'
 import CardInfoDrawer from '../CardInfoDrawer'
-import CardListDrainase from '../CardListDrainase'
 import useStyles from './ClippedDrawer.styles'
+import CardListDrainaseNew from '../CardListDrainaseNew'
 
 const drawerWidth = 420
 
-interface IPosition {
-  lat: number | string
-  lng: number | string
-}
-
 interface IClippedDrawer {
-  setPosition: React.Dispatch<React.SetStateAction<IPosition>>
-  setPath: React.Dispatch<React.SetStateAction<string>>
-  path: string
   children: React.ReactNode
 }
 
 // eslint-disable-next-line react/prop-types
 const ClippedDrawer: React.FC<IClippedDrawer> = ({
   children,
-  setPosition,
-  setPath,
-  path,
 }: IClippedDrawer): JSX.Element => {
   const classes = useStyles()
   const navigate = useNavigate()
@@ -159,11 +148,12 @@ const ClippedDrawer: React.FC<IClippedDrawer> = ({
         >
           <CardInfoDrawer />
         </Box>
-        <CardListDrainase
+        <CardListDrainaseNew />
+        {/* <CardListDrainase
           path={path}
           setPath={setPath}
           setPosition={setPosition}
-        />
+        /> */}
       </Drawer>
       <Box component="main" sx={{ width: '100%' }}>
         <Toolbar sx={{ marginTop: '9px' }} />

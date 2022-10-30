@@ -79,3 +79,8 @@ export interface IDrainaseForm {
   description: string
   is_published: boolean
 }
+
+export interface IDistrict {
+  success: boolean
+  data: { street_name: string }[]
+}
