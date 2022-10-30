@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import React, { useState } from 'react'
 import { Box, Button, Fade, Typography } from '@mui/material'
 import Input from '@components/Input'
@@ -8,7 +9,7 @@ import { Form, Formik } from 'formik'
 import Table from '@components/Table'
 import { useDrainase } from '@services/hooks/dashboard'
 import api from '@/services/common'
-import { getAccessToken } from '@/helpers/jwt-decode'
+import { getAccessToken, getCurrentUser } from '@/helpers/jwt-decode'
 import CSnackbar from '@/components/Snackbar'
 import FilterIc from '@icons/filter-ic.svg'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
@@ -35,6 +36,7 @@ const Drainase = (): JSX.Element => {
 
   const [page, setPage] = useState<number>(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(5)
+  const { manage } = getCurrentUser()
 
   const { drainase, loading } = useDrainase(
     false,
@@ -47,10 +49,20 @@ const Drainase = (): JSX.Element => {
       domain.sta,
       page,
       rowsPerPage,
+      manage,
     ],
     Object.values(domain).some((d) => !!d)
-      ? { ...domain, page: page === 0 ? 1 : page + 1, perPage: rowsPerPage }
-      : { page: page === 0 ? 1 : page + 1, perPage: rowsPerPage },
+      ? {
+          ...domain,
+          page: page === 0 ? 1 : page + 1,
+          perPage: rowsPerPage,
+          street_path: manage,
+        }
+      : {
+          page: page === 0 ? 1 : page + 1,
+          perPage: rowsPerPage,
+          street_path: manage,
+        },
     true
   )
 

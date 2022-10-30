@@ -32,6 +32,7 @@ const Dashboard = (): JSX.Element => {
   const [page, setPage] = useState<number>(0)
 
   const handleChangePage = (event: unknown, newPage: number) => setPage(newPage)
+  const { manage } = getCurrentUser()
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -39,11 +40,12 @@ const Dashboard = (): JSX.Element => {
 
   const { drainase, loading } = useDrainase(
     false,
-    [deleteStatusDrainase, page, rowsPerPage],
+    [deleteStatusDrainase, page, rowsPerPage, manage],
     {
       order_by: 'desc',
       page: page === 0 ? 1 : page + 1,
       perPage: rowsPerPage,
+      street_path: manage,
     }
   )
   const { users, loading: loadingUser } = useUsers([deleteStatusUsers], {
