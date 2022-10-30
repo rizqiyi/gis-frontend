@@ -22,6 +22,7 @@ const CardListDrainase: React.FC = (): JSX.Element => {
     setBasicMap,
     setFilterDrainase,
     filterDrainase,
+    filterManage,
   } = useMapContext()
 
   return (
@@ -66,9 +67,14 @@ const CardListDrainase: React.FC = (): JSX.Element => {
                       checked={
                         filterDrainase.findIndex(
                           (drainase: string) => drainase === street_name
-                        ) > -1
+                        ) > -1 && filterManage.B
                       }
-                      onChange={(e) => setFilterDrainase(e.target.value)}
+                      onChange={(e) =>
+                        setFilterDrainase({
+                          value: e.target.value,
+                          manage: 'B',
+                        })
+                      }
                     />
                   }
                 />
@@ -91,9 +97,14 @@ const CardListDrainase: React.FC = (): JSX.Element => {
                       checked={
                         filterDrainase.findIndex(
                           (drainase: string) => drainase === street_name
-                        ) > -1
+                        ) > -1 && filterManage.A
                       }
-                      onChange={(e) => setFilterDrainase(e.target.value)}
+                      onChange={(e) =>
+                        setFilterDrainase({
+                          value: e.target.value,
+                          manage: 'A',
+                        })
+                      }
                     />
                   }
                 />
