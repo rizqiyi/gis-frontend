@@ -25,8 +25,6 @@ const CardListDrainase: React.FC = (): JSX.Element => {
     filterManage,
   } = useMapContext()
 
-  console.log(filterDrainase)
-
   return (
     <Box
       sx={{ padding: '0 30px' }}

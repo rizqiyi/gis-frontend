@@ -78,8 +78,6 @@ const Root = (): JSX.Element => {
 
   const { filterDrainase, filterManage } = useMapContext()
 
-  console.log(filterManage)
-
   return (
     <Box>
       <ClippedDrawer>
