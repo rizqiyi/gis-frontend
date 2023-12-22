@@ -55,9 +55,9 @@ const CardListDrainase: React.FC = (): JSX.Element => {
         <Skeleton />
       ) : (
         <Accordion title="Data Saluran Drainase Jalur 1">
-          {districtB?.data.length === 0
+          {districtB?.data?.length === 0
             ? 'Tidak ada data'
-            : districtB?.data?.map(({ street_name }) => (
+            : districtB?.data?.map(({ street_name }, idx: number) => (
                 <FormControlLabel
                   key={street_name}
                   label={street_name}
@@ -67,7 +67,7 @@ const CardListDrainase: React.FC = (): JSX.Element => {
                       checked={
                         filterDrainase.findIndex(
                           (drainase: string) => drainase === street_name
-                        ) > -1 && filterManage.B
+                        ) === idx && filterManage.B
                       }
                       onChange={(e) =>
                         setFilterDrainase({
@@ -85,9 +85,9 @@ const CardListDrainase: React.FC = (): JSX.Element => {
         <Skeleton />
       ) : (
         <Accordion title="Data Saluran Drainase Jalur 2">
-          {districtA?.data.length === 0
+          {districtA?.data?.length === 0
             ? 'Tidak ada data'
-            : districtA?.data?.map(({ street_name }) => (
+            : districtA?.data?.map(({ street_name }, idx: number) => (
                 <FormControlLabel
                   key={street_name}
                   label={street_name}
@@ -97,7 +97,7 @@ const CardListDrainase: React.FC = (): JSX.Element => {
                       checked={
                         filterDrainase.findIndex(
                           (drainase: string) => drainase === street_name
-                        ) > -1 && filterManage.A
+                        ) === idx && filterManage.A
                       }
                       onChange={(e) =>
                         setFilterDrainase({

@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { Box, Fade, Typography } from '@mui/material'
 import { MapContainer, TileLayer, Marker, MapConsumer } from 'react-leaflet'
+import Leaflet from 'leaflet'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import dataset from '@constant/dataset'
@@ -82,7 +83,12 @@ const Root = (): JSX.Element => {
     <Box>
       <ClippedDrawer>
         <Box>
-          <MapContainer center={[position.lat, position.lng]} zoom={30}>
+          <MapContainer
+            preferCanvas
+            renderer={Leaflet.canvas()}
+            center={[position.lat, position.lng]}
+            zoom={30}
+          >
             <Box position="relative" left="38px" top="38px" zIndex={999}>
               <Box position="absolute">
                 <Box
@@ -131,8 +137,8 @@ const Root = (): JSX.Element => {
               }}
             </MapConsumer>
             <TileLayer
-              // url={`https://api.mapbox.com/styles/v1/rizqiyi/ckwsae4xm850314o2904zuayz/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAP_BOX_ACCESS_TOKEN}`}
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              url={`https://api.mapbox.com/styles/v1/rizqiyi/ckwsae4xm850314o2904zuayz/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAP_BOX_ACCESS_TOKEN}`}
+              // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             {!loading &&
