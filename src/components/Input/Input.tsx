@@ -28,9 +28,6 @@ const CustomInput = styled(
     '&:after': {
       borderBottom: 'none',
     },
-    '&:focused': {
-      border: 'none',
-    },
     '.MuiFilledInput-input': {
       padding: '14px',
     },
@@ -61,7 +58,7 @@ const CustomInput = styled(
       // borderColor: theme.palette.primary.main,
       border: isFieldError
         ? `2.2px solid ${theme.palette.error.main}`
-        : `2px solid ${theme.palette.primary.main}`,
+        : `1px solid ${theme.palette.primary.main}`,
     },
   },
 }))

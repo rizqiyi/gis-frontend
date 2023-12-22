@@ -56,18 +56,6 @@ const REDUCER = (state: InitValue, action: Action): InitValue => {
         },
       }
 
-    case TYPES.REMOVE_FILTER_DRAINASE:
-      return {
-        ...state,
-        filterDrainase: state.filterDrainase.filter(
-          (drainase) => drainase !== payload?.value
-        ),
-        filterManage: {
-          ...state.filterManage,
-          [payload?.manage]: !state.filterManage[payload?.manage],
-        },
-      }
-
     default:
       return state
   }

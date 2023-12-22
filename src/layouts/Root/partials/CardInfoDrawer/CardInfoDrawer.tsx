@@ -28,7 +28,7 @@ const CardInfoDrawer = (): JSX.Element => {
             className={classes.textCount}
             variant="h3"
           >
-            {data?.total}
+            {data?.total || 0}
           </Typography>
         </Box>
         <Box>
